@@ -33,6 +33,18 @@ Some of the machine readable external devices might be USB keys, sensors, contro
 #### Communication #### 
 The external devices that are used for the communication between the computers and remote devices (?) can be grouped under this category. An example of these devices might be modems or digital line servers (?) 
 
+We can also group IO devices in two categories: **block devices** and **character devices**. 
+
+**Block devices** store the information in units that are fixed-size. These units are called blocks. The size of these blocks is predetermined (e.g., 512 bytes). Here even if only a small portion of data is needed, the whole block that consists that portion is retrieved. Each of these blocks has a unique address. And these addresses identify the location of these blocks on the device. Through this way, blocks can be accessed. 
+
+When reading from a block, the system specifies the starting block address and also how many blocks to read. Then the IO device transfers the requested blocks to the system's memory. And when writing to the block, the system specifies the startinb block address. Then the IO device writes the data to the specified block.
+
+**Hard disks**, **CD-ROMs**, **USB sticks** can be given as examples of block devices because these devices store the data in fixed-size blocks. 
+
+**Character devices**, on the other hand, processes the data in a sequential manner. Unlike block devices, they do not store the information in fixed-size units. And because data is processed one character or one byte at a time sequentially and it is not stored in fixed-size units, these devices do not have addressing scheme. And that's why they are not addressable. You can't access a specific charcater or byte by its address for example.
+
+Some examples of character devices are: **keyboards**, **mice**, **printers**, **network interfaces (?)**
+
 One note is that IO devices are separate hardware components. These are connected to the CPU through a bus or other communication channels. But there are also some other devices that are directly integrated to the CPU. These are called accelerators. 
 
 Unlike IO devices that are typically accessed through an interface such as APIs, the accelerators can be invoked by applications with CPU instructions or registers without utilizing the traditional IO path through the operating system. 
@@ -130,7 +142,6 @@ The performance of the IO is affected by many different factors:
                                       Output                            
 
 ```
-
 
 
 
