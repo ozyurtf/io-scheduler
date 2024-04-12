@@ -172,6 +172,14 @@ When the CPU needs to communicate with keyboard, for instance, it sends commands
 
 One note is that IO controllers can generate interrupts to notify the CPU about important events. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the IO controllers send these interrupt signals to the CPU using the bus. Once the CPU receives these interrupt signals, it invokes the appropriate interrupt handler routine to process the interrupt and then communicate with the IO controller.
 
+So if we consider the IO controller to be part of an IO device, we can say that an IO device has two main components: **mechanical component** and **electronic component** 
+
+Mechanical components are the physical components that are used in the IO devices to perform some functions. Mouse ball, scroll wheel can be given as examples of mechanical components. But as we might guess, many modern IO devices don't have these kinds of mechanical components anymore since they are replaced with electronic equivalents 
+
+Electronic component consists of the electronic circuitry and IO controllers that manage the functionality of the device and handle the communication between the device and the rest of the system. 
+
+# Controller and Device
+
 
 
 
