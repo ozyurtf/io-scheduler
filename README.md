@@ -143,9 +143,31 @@ The performance of the IO is affected by many different factors:
 
 ```
 
-IO controller, also known as peripheral controller, is a hardware component. It manages the communication and data transfer between the CPU and IO devices such as disk, network. It acts like an intermediate layer between the IO devices and CPU and through this way the CPU doesn't have to control & communicate with the IO devices directly. 
+Memory IO interconnect is a data communication channel (like bus). It is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
 
-Memory IO interconnect is a data communication channel (like bus). It is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components are handled this way. 
+IO controller, also known as peripheral controller, is another hardware component. It manages the communication and data transfer between the CPU and IO devices such as disk, network. It acts like an intermediate layer between the IO devices and CPU and through this way the CPU doesn't have to control & communicate with the IO devices directly. 
+
+```
+
+                                  --------------    ---------------    ----------------
+                                  |  Monitor   |    |  Keyboard   |    |  Hard Disk   |  
+                                  |            |    |             |    |    Drive     | 
+                                  --------------    ---------------    ----------------
+                                         |                 |                  | 
+------------    --------------    --------------    --------------    ----------------
+|   Main   |    |    CPU     |    |   Video    |    |  Keyboard  |    |   Hard Disk  |
+|  Memory  |    |            |    | Controller |    | Controller |    |   Controller |  
+------------    --------------    --------------    --------------    ----------------
+     |                |                  |                 |                  |
+     |                |                  |                 |                  |
+-------------------------------------------------------------------------------------------
+|                                            Bus                                          |
+-------------------------------------------------------------------------------------------
+
+```
+
+
+
 
 
 
