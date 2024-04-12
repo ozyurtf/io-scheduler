@@ -82,6 +82,28 @@ Now let's talk about the challenges behind managing IO devices.
 
 # IO Devices: Challenges
 
+Different IO devices perform a wide range of different tasks. 
+
+Some of these devices might be input devices such as keyboard, mouse, or scanner since they receive input from the user. Some of them, such as printers, speakers, display might be labeled as output devices since they show some kind of output to the users. 
+
+And some of these devices such as hard disk drive, solid state drive, etc. might be storage devices.
+
+In addition the components with wich these IO devices communicate with may show great differences as well. For example, we can observe device-to-device, device-to-system, device-to-application, or device-to-user partnerships. 
+
+The rate at which they transfer data may be different across different IO devices as well. 
+
+All of these diversities makes it very hard to design a single interface and management system valid for all the IO devices (expandability).
+
+Another challenge is designing an IO system. For instance, it is hard to design an IO system that is flexible and that can accept the new devices or that can scale as needed. And another challenge is adding the ability to handle device failures and maintain data integrity to the IO system (resilience). 
+
+Also, the performance of the IO is affected by many different factors: 
+- the time it takes to access data from an IO device (access latency)
+- the amount of data transferred from the IO device to the system or from system to the IO device in a given time period (throughput)
+- 
+
+
+
+
 
 
 
