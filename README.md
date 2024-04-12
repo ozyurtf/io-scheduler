@@ -166,6 +166,13 @@ IO controller, also known as peripheral controller, is another hardware componen
 
 ```
 
+As we can see above, IO controllers are physically connected to the memory IO interconnect (bus) on the motherboard. They have dedicated interfaces and ports that plug into the bus and this allows the IO controllers to send and receive signals over the bus. They communicate with the memory and CPU through this bus. The bus in here enables the exchange of data and signals between IO controllers and the rest of the system.
+
+When the CPU needs to communicate with keyboard, for instance, it sends commands and data to the keyboard controller over the bus. The keyboard controller receives these commands and data from the bus and translates them into the keyboard-specific signals and protocols. Similarly, when the keyboard needs to send data to the CPU or memory, the keyboard controller receives the data from the keyboard and sends it over the bus to the CPU or main memory.
+
+One note is that IO controllers can generate interrupts to notify the CPU about important events. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the IO controllers send these interrupt signals to the CPU using the bus. Once the CPU receives these interrupt signals, it invokes the appropriate interrupt handler routine to process the interrupt and then communicate with the IO controller.
+
+
 
 
 
