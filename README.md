@@ -224,16 +224,8 @@ Here portnum parameter represents the IO port number of the control register tha
 
 User-level applications and programs cannot access to the IO port space directly. They must do a system call. This protection is necessary because we want to prevent unauthorizied access to the IO devices and see that IO operations are done in a controlled manner. 
 
-
-
-
-
-
-
-
-
-
 # Memory-Mapped IO
+
 
 
 
