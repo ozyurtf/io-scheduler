@@ -182,7 +182,61 @@ Electronic component consists of the electronic circuitry and IO controllers tha
 
 So we talked about IO controllers. Each of these controllers has few registers. By writing data to registers and reading data from them, the operating system can control the IO device. 
 
-There are also buffers in the IO device. These buffers are basically temporary storage areas. They hold the data that is transferred from the IO device to the operating system or from the operating system to the IO device. And the operating system can read data from these buffers or write data to them. 
+There are also buffers in the IO device. They are the sections of memory within the device and they play the role of temporary storage areas. They hold the data that is transferred from the IO device to the operating system or from the operating system to the IO device. And the operating system can read data from these buffers or write data to them. 
+
+The operating system needs to know a couple of things to manage the data transfers from/to these buffers: 
+
+- location address of the buffer: This specifies where the buffer is located in the memory
+- location address of the IO object: IO devices often work with specific units of data. These can be disk sectors (each sector is a fixed-size block of data that can be read or written as a single unit), video frames (each frame represents a single image or a portion of image displayed on the screen), etc. and they are called IO objects. The location of an IO object refers to the address that identifies where the IO object (e.g. disk sector, video frame, etc.) are located within the IO device's address space.
+- size of data to transfer: When data is transferred from the operating system to the IO device or from the IO device to the operating system, the size/the amount of the data that will be transferred from/to buffers must be known by the operating system. Because this ensures that the appropriate amount of data is transferred and prevents buffer overflows or underflows.
+
+Okay but how does this communication happen between the registers and buffers ? There are two ways: 
+
+1) IO Port Space
+2) Memory-Mapped IO
+
+# IO Port Space
+
+IO port is a physical or logical interface and the data is transferred from the CPU to the IO device or from the IO device to the CPU through this interface. A physical interface in here refers to the actual and physical hardware connection and the data is transferred through this connection. USB ports, ethernal ports, HDMI ports can be given examples of physical interfaces. 
+
+Logical interface, on the other hand, refers to a representation of the connection between the CPU and IO devices. It defines the rules, protocols, and formats used for data exchange between the IO devices and CPU. 
+
+Each IO port is associated with a specific IO device. For example, we observe separate IO ports for keyboard, mouse, display output etc. These IO ports are associated with registers, and the CPU communicates with the IO devices using these registers. 
+
+And the set of all possible IO port numbers assigned to the control registers of the IO devices in the system form the IO port space. The IO port space is an address space separate from the memory address space that is used by the CPU. Each IO device has its own range of IO port numbers allocated within the IO port space.
+
+IO ports are accessed with specialized IO instructions or commands that are provided by the CPU. These instructions or commands specify the address of the port to be accessed and direction of data transfer. An IO port number is a **numerical identifier** that is assigned to the a specific IO port. CPU uses these IO port numbers to identify and access a specific IO port.
+
+Control registers are special registers that are located within the IO device's internal circuitry. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
+
+Control registers may store information such as 
+- current state/status of the device
+- commands/instructions
+- configuration parameters that determine how the device operates
+- data that is transferred between the CPU and IO device
+- etc.
+
+In addition, one note is that IO port space is protected and only the kernel can access to the IO port space. And the kernel uses special privileged instructions to access to the IO port space. These instructions can only be executed in the kernel mode. We can see some examples of the privileged instructions in below: 
+- in portnum, target: It reads data from the IO port portnum and stores it in the target register or memory location.
+- out portnum, source: This writes data from the source register or memory location to the IO port portnum.
+
+Here portnum parameter represents the IO port number of the control register that is accessed. 
+
+User-level applications and programs cannot access to the IO port space directly. They must do a system call. This protection is necessary because we want to prevent unauthorizied access to the IO devices and see that IO operations are done in a controlled manner. 
+
+
+
+
+
+
+
+
+
+
+# Memory-Mapped IO
+
+
+
 
 
 
