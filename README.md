@@ -94,12 +94,44 @@ The rate at which they transfer data may be different across different IO device
 
 All of these diversities makes it very hard to design a single interface and management system valid for all the IO devices (expandability).
 
-Another challenge is designing an IO system. For instance, it is hard to design an IO system that is flexible and that can accept the new devices or that can scale as needed. And another challenge is adding the ability to handle device failures and maintain data integrity to the IO system (resilience). 
+Another challenge is designing an IO system. For instance, it is hard to design an IO system that is flexible and that can accept the new devices or that can scale as needed (expandability). 
 
-Also, the performance of the IO is affected by many different factors: 
+Adding the ability to handle device failures and maintain data integrity to the IO system (resilience) is difficult as well. 
+
+Also, different IO devices are used by different users. And each of these users may have different requirements. Designing an IO system that meets all of these requirements and expectations might be challenging. 
+
+The performance of the IO is affected by many different factors: 
 - the time it takes to access data from an IO device (access latency)
 - the amount of data transferred from the IO device to the system or from system to the IO device in a given time period (throughput)
-- 
+- the type and speed of the communication channel (e.g., bus, network) between the IO devices and the system.
+- the organization and management of different memory channels (e.g., cache, main memory, storage) (memory hierarchy)
+- the operating system (it plays an important role in terms of managing IO devices, and scheduling IO operations)
+
+```
+-------------                  Interrupts
+| Processor |----------------------------------------------          
+-------------          |                 |                |       
+                       |                 |                |        
+-------------          |                 |                |
+|   Cache   |          |                 |                |
+-------------          |                 |                |
+                       |                 |                |
+------------------------------------------------------------------
+|                     Memory IO Interconnect                     |          
+------------------------------------------------------------------
+      |              |  |              |  |              | | 
+------------    --------------    --------------    --------------
+|   Main   |    |    I/O     |    |    I/O     |    |    I/O     |
+|  Memory  |    | Controller |    | Controller |    | Controller | 
+------------    --------------    --------------    --------------
+                  |       |             |                 |
+                  |       |             |                 |
+                Disk     Disk        Graphics          Network
+                                      Output                            
+
+```
+
+
 
 
 
