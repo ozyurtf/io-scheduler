@@ -180,10 +180,9 @@ Electronic component consists of the electronic circuitry and IO controllers tha
 
 # Controller and Device
 
+So we talked about IO controllers. Each of these controllers has few registers. By writing data to registers and reading data from them, the operating system can control the IO device. 
 
-
-
-
+There are also buffers in the IO device. These buffers are basically temporary storage areas. They hold the data that is transferred from the IO device to the operating system or from the operating system to the IO device. And the operating system can read data from these buffers or write data to them. 
 
 
 
