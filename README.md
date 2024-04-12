@@ -78,6 +78,11 @@ And the operating system provides commands to the low-level interface. It allows
 Low-level interface is responsible from communicating with the IO devices such as monitors, mouses, disk drives.
 
 ```
+Now let's talk about the challenges behind managing IO devices.
+
+# IO Devices: Challenges
+
+
 
 
 
