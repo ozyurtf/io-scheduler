@@ -226,6 +226,16 @@ User-level applications and programs cannot access to the IO port space directly
 
 # Memory-Mapped IO
 
+This is another method of handling communication between the IO devices and CPU. The communication is done by mapping the IO device's control registers and status registers into the same address space with the system's address space. 
+
+So in this method, a portion of the address space is reserved for the registers of the IO devices. The operating system basically assigns some specific memory addresses to these registers and then CPU can be able to read and write to these addresses in the address space using regular memory load and store instructions. 
+
+When we were using IO Port Space method, we were using separate instructions that are designed for the IO operations specifically. These instructions were distinct from the instructions of accessing to the regular memory address space and they were being used to communicate with the IO devices. However, these separate instructions are not needed anymore when we reserve a portion of the address space for the IO operations in memory-mapped IO method. 
+
+
+
+
+
 
 
 
