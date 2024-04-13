@@ -37,6 +37,7 @@ The IO devices that are used for the **communication between the computers and r
 
 Aside from these, depending on how they process the information, we can group the IO devices under two categories: **block devices** and **character devices**.
 
+### Block Devices ###
 **Block devices**, for example, **store** the **information in units that are fixed-size**. And **these fixed-size units are called blocks**. The **size** of these blocks is **predetermined** (e.g., 512 bytes). Even if only a small portion of data is needed, the **whole block** that consists that portion is retrieved. **Each** of these **blocks** has a **unique address**. And these **addresses** **identify** the **location of these blocks on the IO device**. Through this way, blocks can be accessed. 
 
 For instance, when reading from a block, the **system specifies the starting block address** and also **how many blocks to read**. Then **the IO device transfers the requested blocks to the system's memory**. 
@@ -45,6 +46,7 @@ When writing to the block, on the other hand, the system specifies the starting 
 
 **Hard disks**, **CD-ROMs**, **USB sticks** can be given as examples of **block devices** because **these devices** **store the data** in **fixed-size blocks**. 
 
+### Character Devices ###
 **Character devices**, on the other hand, **processes the data** in a **sequential manner**. Unlike block devices, they **do not store the information in fixed-size units**. **Data** is **processed one character or one byte at a time sequentially** and it is **not stored in fixed-size units**. Therefore, **these devices do not have addressing scheme**. In other words, they are **not addressable**. You **can't access a specific charcater or byte by its address** for example.
 
 Some examples of character devices are: **keyboards**, **mice**, **printers**, **network interfaces** _(Network interface is a hardware component. It provides a physical interface between the device and Wi-Fi signals and allows the computer to connect to a network)_
