@@ -378,10 +378,10 @@ some instructions that started a long time ago may still be in the holding buffe
 
 An interrupt after which we can observe a well-defined state is called a precise interrupt. These kinds of interrupts have the following 4 features: 
 
-1) The program counter is saved in a known place (e.g., a special register that is only accessible through kernel mode.
-2) All instructions before the instruction that is pointed by the program counter have finished their executions.
-3) There is no instruction beyond the instruction that is pointed by the program counter that started its execution.
-4) The execution state of the instruction that is pointed by the program counter is known.
+1) The program counter is saved in a known place (e.g., a special register that is only accessible through kernel mode. _(Saving program counter allows the CPU to know where to continue execution after interrupt is handled)_
+2) All instructions before the instruction that is pointed by the program counter have finished their executions. _(This means that any changes these instructions made to the CPU's registers or memory are completed. And no incomplete modifications exist at that moment)_
+3) There is no instruction beyond the instruction that is pointed by the program counter that started its execution. _(This ensures that the interrupt does not affect the execution of the next instructions)_
+4) The execution state of the instruction that is pointed by the program counter is known. _(In other words CPU knows whether the instruction completed its execution, just started its execution, etc. Knowing these is helpful for handling the execution after the interrupt is handled)_
 
 
 
