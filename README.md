@@ -79,7 +79,7 @@ In those cases the operating system is responsible from **detecting** and **hand
 -------------------
   read(), write()   
 -------------------
-   File System*
+    File System 
 -------------------
  Operating System
 -------------------
@@ -351,12 +351,37 @@ This may not be the case in modern computers.
 
 Today, modern CPUs use a method that is called pipelining. Basically, the execution of an instruction is broken into multiple stages (e.g., fetching, decoding, executing, etc.) These stages are overlapped and this allows the execution of multiple instructions simultaneously. 
 
+
+```
+Fetch unit -> Decode unit -> Execute unit
+
+```
+
 And when an interrupt occurs, we might see some instructions that have completed their executions, some instructions waiting to enter the pipeline of fetching + decoding + executing, and some others that are in the middle of their executions etc.
 
 In these cases, when an interrupt occurs, the value of the program counter will be pointing to the address of the next instruction that will be fetched instead of pointing to the address of the instruction that has just completed its execution.
 
+In the situation like below
+
+```
+Fetch unit -> Decode unit                         Execute Unit
+                          \                     /
+                           \____ Holding Buffer - Execute Unit   
+                           /                    \ 
+                          /                       Execute Unit
+Fetch unit -> Decode unit
 
 
+```
+
+some instructions that started a long time ago may still be in the holding buffer or waiting to enter the execute unit and that's why they may not have started. Other instructions that started recently may be almost done and when the interrupt occurs, many instructions may be at various states of completeness and the relationship between them and the program counter might be weak because the program counter may not directly correspond to the instruction that caused the interrupt.
+
+An interrupt after which we can observe a well-defined state is called a precise interrupt. These kinds of interrupts have the following 4 features: 
+
+1) The program counter is saved in a known place (e.g., a special register that is only accessible through kernel mode.
+2) All instructions before the instruction that is pointed by the program counter have finished their executions.
+3) There is no instruction beyond the instruction that is pointed by the program counter that started its execution.
+4) The execution state of the instruction that is pointed by the program counter is known.
 
 
 
