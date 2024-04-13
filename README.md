@@ -414,12 +414,82 @@ After reviewing the IO hardware, now let's take a look at the IO software. We ca
 - **Device independence**: We should be able to write programs that can access to any of the IO device without having to specify the device in advance. For instance, a program should be able to read a file from DVD, hard disk, USB stick etc. without being modified for each of them separately. Or when someone type ```sort <input> output``` this should work with all kinds of disks or keyboard and the output should go to any kind of disk or screen. If problems occur due to the underlying differences in these IO devices, it is the operating system's responsibility to take care of these problems.
 - **Uniform naming**: The name of a file/device should be string/integer and it should not depend on the IO device. Through this way, users can access files using the same naming convention without having to know which specific device corresponds to that file. For example, if a USB stick is mounted on top of _/usr/documents/_, copying a file to the _/usr/documents/_ basically copies that file to the USB stick. Through this way, all files are addressed with a path name which makes everything convenient.
 - **Error handling**: The goal is to handle the errors as close to the hardware as possible. If IO device controller detects an error, it should first try to fix the error. If it is something that it cannot solve, then the IO device driver should try to handle the problem. One way to handle it might be reading the block again if the error is a read error since sometimes some problems may go away if the operation is repeated. Most of the times, errors can be recovered at a low level without users being aware of them.
+- **Handling shared and dedicated devices**: Some IO devices (e.g., disks) can be used by many users at the same time. These are called sharable devices. But this is not valid for some other IO devices (e.g., printers) which are called dedicated devices. The operating system must be able to manage both shared devices and dedicated devices properly.
 
 One of the issues of IO software is synchronous (blocking) and asynchronous transfers that are driven by interrupts. Most of the times, the CPU starts the transfer and starts doing another task until an interrupt notification comes to it. This is asynchronous transfer because it is driven by interrupts.
 
 And another issue of IO software is buffering. Most of the times, the data coming from the IO device cannot be stored in wherever its final destination is directly. So in those cases, we should store these data in temporary locations which are called buffers.
 
 
+# Three Ways of Performing IO 
 
+## Programmed IO 
+The simplest form of IO is to make the CPU all the IO operations. This method is called **programmed IO**.
 
+```
++--------------------+
+|     User Space     |
+|                    |
+|                    |
+|                    |
+|                    |
+|     ABCDEFGH       |             Page
+| (String to print)  |          +----------+
++--------------------+          |          |
+|   Kernel Space     |          |          |
+|                    |          |          |
+|                    |          |          |
++--------------------+          +----------+
+
++--------------------+
+|     User Space     |
+|                    |
+|                    |
+|                    |
+|                    |
+|                    |              Page
+|                    |          +----------+
++--------------------+          |  A       |
+|   Kernel Space     |          |          |
+|                    |          |          |
+|     |              |          |          |
+|     v              |          |          |
+|     ABCDEFGH       |          |          |
++--------------------+          +----------+
++--------------------+
+|     User Space     |
+|                    |
+|                    |
+|                    |
+|                    |
+|                    |              Page
+|                    |          +----------+
++--------------------+          |  AB      |
+|   Kernel Space     |          |          |
+|                    |          |          |
+|      |             |          |          |
+|      v             |          |          |
+|     ABCDEFGH       |          |          |
++--------------------+          +----------+
+
++--------------------+
+|     User Space     |
+|                    |
+|                    |
+|                    |
+|                    |
+|                    |              Page
+|                    |          +----------+
++--------------------+          |  ABC      |
+|   Kernel Space     |          |          |
+|                    |          |          |
+|       |            |          |          |
+|       v            |          |          |
+|     ABCDEFGH       |          |          |
++--------------------+          +----------+
+
+.
+.
+.
+```
 
