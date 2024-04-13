@@ -364,14 +364,11 @@ In these cases, when an interrupt occurs, the value of the program counter will 
 In the situation like below
 
 ```
-Fetch unit -> Decode unit                         Execute Unit
+Fetch unit -> Decode unit                          Execute Unit
                           \                     /
-                           \____ Holding Buffer - Execute Unit   
-                           /                    \ 
-                          /                       Execute Unit
-Fetch unit -> Decode unit
-
-
+                            --- Holding Buffer  -  Execute Unit                     
+                          /                     \  
+Fetch unit -> Decode unit                          Execute Unit
 ```
 
 some instructions that started a long time ago may still be in the holding buffer or waiting to enter the execute unit and that's why they may not have started. Other instructions that started recently may be almost done and when the interrupt occurs, many instructions may be at various states of completeness and the relationship between them and the program counter might be weak because the program counter may not directly correspond to the instruction that caused the interrupt.
@@ -383,6 +380,9 @@ An interrupt after which we can observe a well-defined state is called a precise
 3) There is no instruction beyond the instruction that is pointed by the program counter that started its execution. _(This ensures that the interrupt does not affect the execution of the next instructions)_
 4) The execution state of the instruction that is pointed by the program counter is known. _(In other words CPU knows whether the instruction completed its execution, just started its execution, etc. Knowing these is helpful for handling the execution after the interrupt is handled)_
 
+If the CPU handles parallel and out-of-order execution, if it can execute multiple instructions simultaneously, ensuring that interrupts are precise is crucial. Because precise interrupts can help us to maintain a consistent and predictable state even when the instructions are executed out-of-order or in parallel.
+
+If an interrupt does not meet these requirements, it is called imprecise interrupt. And we can see how they look like in below:
 
 ```
                     +----------------------+                       +----------------------+
@@ -405,8 +405,5 @@ Program Counter --> +----------------------+  Program Counter -->  +------------
                        Precise Interrupt                              Imprecise Interrupt
 
 ```
-
-
-
 
 
