@@ -35,7 +35,7 @@ Disk drives can be seen as IO devices because they read data from the disk platt
 #### Communication #### 
 The IO devices that are used for the **communication between the computers and remote devices** (?) can be grouped under this category. An example of these devices might be **modems** or **digital line servers (?)** 
 
-Aside from these, IO devices can be grouped under two categories depending on how they process the information: **block devices** and **character devices**.
+Aside from these, depending on how they process the information, we can group the IO devices under two categories: **block devices** and **character devices**.
 
 **Block devices**, for example, **store** the **information in units that are fixed-size**. And **these fixed-size units are called blocks**. The **size** of these blocks is **predetermined** (e.g., 512 bytes). Even if only a small portion of data is needed, the **whole block** that consists that portion is retrieved. **Each** of these **blocks** has a **unique address**. And these **addresses** **identify** the **location of these blocks on the IO device**. Through this way, blocks can be accessed. 
 
@@ -51,18 +51,17 @@ Some examples of character devices are: **keyboards**, **mice**, **printers**, *
 
 One note is that IO devices are separate hardware components. These are **connected** to the **CPU** through a **bus** or **other communication channels**. But there are also some **other devices that are directly integrated to the CPU**. These are called **accelerators**. 
 
-Unlike IO devices that are typically accessed through an interface such as APIs, the accelerators can be invoked by applications with CPU instructions or registers without utilizing the traditional IO path through the operating system. 
+That's why unlike IO devices that are typically accessed through an interface, the **accelerators** can be **invoked** by **applications** with **CPU instructions** or **registers** without utilizing the traditional IO path through the operating system. 
 
-In addition, the IO devices such as keyboards, mouses, etc. are designed for data input, output and storage of the data while accelerators are the devices that are designed to perform specific computational tasks. For example, an encryiption device which is an accelerator can generate secure keys using random number generators. 
-A compression device, which is another accelerator, applies a specific compression algorithm to the input data.
+In addition, the **traditional** **IO devices** such as **keyboards**, **mouses**, etc. are **designed** for **data input, output** and **storage of the data** while **accelerators** are the devices that are designed to **perform specific computational** tasks. For example, an **encryiption device**, which is an accelerator, can **generate secure keys** using random number generators. A **compression device**, which is another accelerator, **applies a specific compression algorithm to the input data**.
 
-So in summary, we can think the accelerators more like a functional unit in the CPU and less like an IO device. 
+So in summary, we can think the **accelerators** more like a **functional unit** **in the CPU** and **less like an IO device**. 
 
 Okay but who is managing these devices and the IO operations ? 
 
 # Operating System and IO 
 
-All these IO devices are controlled by the operating system. But how ? 
+Basically all these IO devices that are mentioned in previous section are controlled by the operating system. But how ? 
 - The operating system sends commands to the IO devices to start an operation. These operations might be reading data from a USB key, writing data to the disk drive, or may be reading data from a mouse. These commands are sent through device drivers. Device drivers can be seen as software/programs/code that allows the operating system to interact with the external device without having to know the hardware of the external devices.
 - Once these operations are done in the IO devices, these devices send a signal (interrupts) to the CPU to get its attention and warn it that the operation is done. The operating system is responsible from catching and handling these interrupts. But what if an error (e.g., communication timeouts, data corruption, device failures, etc.) happens and the IO operations are not completed as a result of this error ?
 
