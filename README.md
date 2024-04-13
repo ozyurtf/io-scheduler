@@ -232,7 +232,15 @@ So in this method, a portion of the address space is reserved for the registers 
 
 When we were using IO port space method, we were using separate instructions that are designed for the IO operations specifically. These instructions were distinct from the instructions of accessing to the regular memory address space and they were being used to communicate with the IO devices. However, these separate instructions are not needed anymore when we reserve a portion of the address space for the IO operations in memory-mapped IO method. Also in the IO port space, an address space that is separate from the memory address space was reserved for the IO devices and each IO device was being assigned an IO port numbers within this IO port space. And when CPU wanted to access the device registers, it was using special IO instructions (e.g. in and out instructions) specifying the IO port address. In memory-mapped IO, each IO device's registers are mapped to a specific address in the memory address space through pagetable and with this way, no special IO instructions are required in this method. 
 
-When the CPU 
+When the CPU wants to perform a load operation or store operation on IO device's corresponding control registers in the memory address space, the IO device itselfs monitors these memory accesses. And the range of memory addresses IO device should monitor is predetermined. When a load or store operation is requested within this range, the IO device acts accordingly. 
+
+The modern computers today use memory-mapped IO method in general.
+
+# Advantages of Memory-Mapped IO 
+
+1) Because IO devices can be accessed using a regular load and store instructions, device drivers (in other words software/programs that control and communicate with hardware devices) can be written entirely in a high-level language like C and there is no need to use specialized assembly instructions/code to interact with devices.
+2) As long as we keep the memory addresses assigned to the IO devices' registers out of the memory addresses assigned to the user-level applications, no special protection is needed.
+3) Because we map the IO devices' registers to the memory address space, any CPU instruction that reference to these address spaces (e.g., read, write, load, store etc.) can be used to access/manipulate the IO devices' control registers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
 
 
 
