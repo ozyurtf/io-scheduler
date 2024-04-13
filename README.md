@@ -384,6 +384,28 @@ An interrupt after which we can observe a well-defined state is called a precise
 4) The execution state of the instruction that is pointed by the program counter is known. _(In other words CPU knows whether the instruction completed its execution, just started its execution, etc. Knowing these is helpful for handling the execution after the interrupt is handled)_
 
 
+```
+                    +----------------------+                       +----------------------+
+                    |     Not executed     |                       |     Not executed     |    
+                    +----------------------+                       +----------------------+
+                    |     Not executed     |                       |     10% executed     |     
+                    +----------------------+                       +----------------------+
+                    |     Not executed     |                       |     40% executed     |                          
+                    +----------------------+                       +----------------------+
+                    |     Not executed     |                       |     35% executed     |
+Program Counter --> +----------------------+  Program Counter -->  +----------------------+
+                    |    Fully executed    |                       |     20% executed     |                      
+                    +----------------------+                       +----------------------+
+                    |    Fully executed    |                       |     60% executed     |                         
+                    +----------------------+                       +----------------------+
+                    |    Fully executed    |                       |     80% executed     |                          
+                    +----------------------+                       +----------------------+
+                    |    Fully executed    |                       |    Fully executed    |                               
+                    +----------------------+                       +----------------------+
+                       Precise Interrupt                              Imprecise Interrupt
+
+```
+
 
 
 
