@@ -243,20 +243,74 @@ The modern computers today use memory-mapped IO method in general.
 3) Because we map the IO devices' registers to the memory address space, any CPU instruction that reference to these address spaces (e.g., read, write, load, store etc.) can be used to access/manipulate the IO devices' control registers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
 
 
+# The Potential Issue of Caching Device Control Registers
 
+As we explained previously, memory mapped IO treats IO devices' control registers as memory addresses. Therefore, CPU caches can try to cache the values of these registers from the memory address space. And these cached values may not reflect the actual state of the IO device. In that kind of case, we observe data corruption and incorrect behavior. 
 
+To solve this problem, we can use a mechanism that disable caching operation for certain memory regions. We can use a "cache disabled bit" in the PTE and make the memory addresses that correspond to IO device registers non-cachable. Through this way, we can ensure that CPU does not cache the values read from these addresses.
 
+# Interrupts
 
+```
+|------|     CPU responds to the interrupt     |-------------|    
+|      |-------------------------------------->|  Interrupt  |<-------- Disk
+| CPU  |                                       |  Controller |<-------- Clock  
+|      |      Controller issues interrupt      |             |<-------- Keyboard 
+|      |<------------------------------------- |             |<-------- Printer
+|------|                                       |-------------|
+    |                                                 |
+    |                                                 | 
+-------------------------------------------------------------------------------------------
+|                                            Bus                                          |
+-------------------------------------------------------------------------------------------
+```
 
+Anytime an IO device wants attention, it causes an interrupt. And one of the times when the IO device wants attention is when the IO device finishes its operation.
 
+When the CPU receives an interrupt, it detects the interrupt, and saves the current state of the execution. 
 
+```
+       +-----+
+       | CPU |
+       +--+--+
+         Ʌ  |
+         |  |
+     IRQ |  | ACK 
+         |  v
+       +-----+
+       | PIC |-----------------------------         
+       +--+--+   |   |     |     |        |      
+          |      |   |     |     |        |   
+          |      |   |     |     |        |   
+          |      |   |     |     |        |   
+       +--+--+   |   |     |     |        |   
+       | DC_a|   |   |     |     |        |   
+       +-----+   |   |     |     |        |   
+                 |   |     |     |        |   
+       +-----+   |   |     |     |        |          
+       | DC_b|----   |     |     |        |   
+       +-----+       |     |     |        |   
+                     |     |     |        |   
+       +-----+       |     |     |        |   
+       | DC_c|--------     |     |        |   
+       +-----+             |     |        |   
+                           |     |        |   
+       +-----+             |     |        |        
+       | DC_d|--------------     |        |   
+       +-----+                   |        |    
+                                 |        |     
+       +-----+                   |        |         
+       | DC_e|-------------------         |    
+       +-----+                            |     
+                                          |           
+          .                               |   
+          .                               |           
+          .                               |   
+                                          |   
+       +-----+                            |     
+       | DC_h|----------------------------
+       +-----+
 
-
-
-
-
-
-
-
+```
 
 
