@@ -441,6 +441,8 @@ The simplest form of IO is to make the CPU all the IO operations. This method is
 |                    |          |          |
 +--------------------+          +----------+
 
+############################################
+
 +--------------------+
 |     User Space     |
 |                    |
@@ -456,6 +458,9 @@ The simplest form of IO is to make the CPU all the IO operations. This method is
 |     v              |          |          |
 |     ABCDEFGH       |          |          |
 +--------------------+          +----------+
+
+############################################
+
 +--------------------+
 |     User Space     |
 |                    |
@@ -472,6 +477,8 @@ The simplest form of IO is to make the CPU all the IO operations. This method is
 |     ABCDEFGH       |          |          |
 +--------------------+          +----------+
 
+############################################
+
 +--------------------+
 |     User Space     |
 |                    |
@@ -480,7 +487,7 @@ The simplest form of IO is to make the CPU all the IO operations. This method is
 |                    |
 |                    |              Page
 |                    |          +----------+
-+--------------------+          |  ABC      |
++--------------------+          |  ABC     |
 |   Kernel Space     |          |          |
 |                    |          |          |
 |       |            |          |          |
@@ -491,5 +498,6 @@ The simplest form of IO is to make the CPU all the IO operations. This method is
 .
 .
 .
+
 ```
 
