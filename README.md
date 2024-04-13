@@ -345,11 +345,16 @@ Message signalled interrupts provide high degree of programmability in interrupt
 
 # Issues with Interrupt Processing 
 
-In old systems, whether or not there was a pending interrupt was being checked after each instruction was finished its execution. So after executing some instructions if an interrupt occurs, this means that all the instructions up to that instruction after which interrupt is generated have been executed completely and no instructions have executed yet after that instruction.
+In old systems, whether or not there was a pending interrupt was being checked after each instruction was finished its execution. So after executing some instructions, if an interrupt occurred, this means that all the instructions up to that instruction after which interrupt was generated had been executed completely and no instructions were executed yet after that instruction.
 
 This may not be the case in modern computers. 
 
-Assuming that the three stages of the CPU is **fetching data**, **decoding it**, and **executing**, we might observe multiple instructions in different stages of execution simulatenously. And when an interrupt occurs, we might see some instructions that have completed their executions, some instructions waiting to enter the pipeline of fetching + decoding + executing, and some instructions that are in the middle of their executions etc.
+Today, modern CPUs use a method that is called pipelining. Basically, the execution of an instruction is broken into multiple stages (e.g., fetching, decoding, executing, etc.) These stages are overlapped and this allows the execution of multiple instructions simultaneously. 
+
+And when an interrupt occurs, we might see some instructions that have completed their executions, some instructions waiting to enter the pipeline of fetching + decoding + executing, and some others that are in the middle of their executions etc.
+
+In these cases, when an interrupt occurs, the value of the program counter will be pointing to the address of the next instruction that will be fetched instead of pointing to the address of the instruction that has just completed its execution.
+
 
 
 
