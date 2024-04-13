@@ -427,6 +427,13 @@ And another issue of IO software is buffering. Most of the times, the data comin
 The simplest form of IO is to make the CPU all the IO operations. This method is called **programmed IO**.
 
 ```
+copy_from_user(buffer, p, count);
+for (i = 0; i < count; i++) {
+    while (*printer_status_reg != READY) {};
+    *printer_data_register = p[i];
+}
+return_to_user();                
+
 +--------------------+
 |     User Space     |
 |                    |
