@@ -61,13 +61,15 @@ Okay but who is managing these devices and the IO operations ?
 
 # Operating System and IO 
 
-Basically all these IO devices that are mentioned in previous section are controlled by the operating system. But how ? 
-- The operating system sends commands to the IO devices to start an operation. These operations might be reading data from a USB key, writing data to the disk drive, or may be reading data from a mouse. These commands are sent through device drivers. Device drivers can be seen as software/programs/code that allows the operating system to interact with the external device without having to know the hardware of the external devices.
-- Once these operations are done in the IO devices, these devices send a signal (interrupts) to the CPU to get its attention and warn it that the operation is done. The operating system is responsible from catching and handling these interrupts. But what if an error (e.g., communication timeouts, data corruption, device failures, etc.) happens and the IO operations are not completed as a result of this error ?
+Operating system plays the role of an **interface/layer** _(set of rules, and protocols that govern the exchange of data and commands between the operating system, applications and hardware devices)_ **between the devices and the rest of the system**. 
 
-In those cases the operating system is responsible from detecting and handling these errors as well. Some ways to handle these errors might be retrying the operation, notifying the user about the error, etc.
+And basically all these **IO devices** that are mentioned in previous section are **controlled** **by** the **operating system**. 
 
-Operating system plays the role of an interface/layer (set of rules, and protocols that govern the exchange of data and commands between the operating system, applications and hardware devices) between the devices and the rest of the system. 
+But how ? 
+- The **operating system** **sends commands** to the **IO devices** to **start an operation**. These operations might be **reading data** from a USB key, **writing data to the disk drive**, or may be **reading data from a mouse**. These **commands** are **sent through device drivers**. Device drivers can be seen as **software/programs/code that allows the operating system** to **interact** with the **external device** **without having to know the hardware of the external devices**.
+- Once these **operations are done** in the IO devices, these devices **send** a signal **(interrupts)** to the **CPU** to get its attention and warn it that the operation is done. The operating system is responsible from catching and handling these interrupts. But **what if an error** (e.g., communication timeouts, data corruption, device failures, etc.) **happens** and the **IO operations are not completed** as a result of this error ?
+
+In those cases the operating system is responsible from **detecting** and **handling these errors** as well. Some ways to handle these errors might be **retrying the operation**, **notifying the user** about the error, etc.
 
 ```
 -------------------
@@ -340,6 +342,13 @@ The PCI (bus) detects this write operation and then delivers the interrupt to th
 Message signalled interrupts provide high degree of programmability in interrupt handling. In other words the IO devices can be configured to create specific interrupts based on their requirements when we use message signalled interrupts. 
 
 # Issues with Interrupt Processing 
+
+In old systems, whether or not there was a pending interrupt was being checked after each instruction was finished its execution. So after executing some instructions if an interrupt occurs, this means that all the instructions up to that instruction after which interrupt is generated have been executed completely and no instructions have executed yet after that instruction.
+
+This may not be the case in modern computers. 
+
+Assuming that the three stages of the CPU is **fetching data**, **decoding it**, and **executing**, we might observe multiple instructions in different stages of execution simulatenously. And when an interrupt occurs, we might see some instructions that have completed their executions, some instructions waiting to enter the pipeline of fetching + decoding + executing, and some instructions that are in the middle of their executions etc.
+
 
 
 
