@@ -426,6 +426,18 @@ And another issue of IO software is buffering. Most of the times, the data comin
 ## Programmed IO 
 The simplest form of IO is to make the CPU all the IO operations. This method is called **programmed IO**.
 
+Let's give an example. Assume that you want to print the string "ABCDEFGH" with printer. 
+
+In the first step, the software stores this string in buffer in user space. Then the user process makes a system call to open the printer. If the printer is currently being used by another process, this system call will fail and either return an error to the user process or will block its system call until the printer becomes available depending on the OS. 
+
+Once the printer is available to use, the user process makes a system call and asks the printer to print the string on the printer. After this system call, the OS copies the buffer that contains the string of "ABCDEFGH" from user space to an array in kernel space. Let's call this array `p`. 
+
+It then checks if the printer is available at that moment. If the printer is not available, the operating system waits until it becomes available. Once the printer is available, the OS copies the first character to the printer's data register using memory mapped IO. 
+
+Copying the first character to the printer's data register activates the printer. And after that printer prints the first character "A" and marks the second character "B" as the next character to be printed.
+
+The key feature of programmed IO is that the CPU continuously checks the device to see whether it can accept a new character. This behavior is called busy waiting or polling. The process is visualized in below:
+
 ```
 copy_from_user(buffer, p, count);
 for (i = 0; i < count; i++) {
@@ -439,8 +451,9 @@ return_to_user();
 |                    |
 |                    |
 |                    |
-|                    |
-|     ABCDEFGH       |             Page
+|    +--------+      |
+|    |ABCDEFGH|      |
+|    +--------+      |              Page
 | (String to print)  |          +----------+
 +--------------------+          |          |
 |   Kernel Space     |          |          |
@@ -463,7 +476,9 @@ return_to_user();
 |                    |          |          |
 |     |              |          |          |
 |     v              |          |          |
-|     ABCDEFGH       |          |          |
+|    +--------+      |          |          |    
+|    |ABCDEFGH|      |          |          |
+|    +--------+      |          |          |   
 +--------------------+          +----------+
 
 ############################################
@@ -481,7 +496,9 @@ return_to_user();
 |                    |          |          |
 |      |             |          |          |
 |      v             |          |          |
-|     ABCDEFGH       |          |          |
+|    +--------+      |          |          |    
+|    |ABCDEFGH|      |          |          |
+|    +--------+      |          |          |   
 +--------------------+          +----------+
 
 ############################################
@@ -499,12 +516,18 @@ return_to_user();
 |                    |          |          |
 |       |            |          |          |
 |       v            |          |          |
-|     ABCDEFGH       |          |          |
+|    +--------+      |          |          |    
+|    |ABCDEFGH|      |          |          |
+|    +--------+      |          |          |   
 +--------------------+          +----------+
 
-.
-.
-.
+...
 
 ```
+
+Even though the programmed IO is a simple method to handle IO operations, it is inefficient in systems where CPU has other works to do due to busy waiting. But if the time that is needed to print a character is short, or in other systems where CPU does not have other things to do, busy waiting and programmed IO is okay to use.
+
+## Interrupt Driven IO
+
+Now let's 
 
