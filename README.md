@@ -277,40 +277,60 @@ When the CPU receives an interrupt, it detects the interrupt, and saves the curr
          |  |
      IRQ |  | ACK 
          |  v
-       +-----+
-       | PIC |-----------------------------         
-       +--+--+   |   |     |     |        |      
-          |      |   |     |     |        |   
-          |      |   |     |     |        |   
-          |      |   |     |     |        |   
-       +--+--+   |   |     |     |        |   
-       | DC_a|   |   |     |     |        |   
-       +-----+   |   |     |     |        |   
-                 |   |     |     |        |   
-       +-----+   |   |     |     |        |          
-       | DC_b|----   |     |     |        |   
-       +-----+       |     |     |        |   
-                     |     |     |        |   
-       +-----+       |     |     |        |   
-       | DC_c|--------     |     |        |   
-       +-----+             |     |        |   
-                           |     |        |   
-       +-----+             |     |        |        
-       | DC_d|--------------     |        |   
-       +-----+                   |        |    
-                                 |        |     
-       +-----+                   |        |         
-       | DC_e|-------------------         |    
-       +-----+                            |     
-                                          |           
-          .                               |   
-          .                               |           
-          .                               |   
-                                          |   
-       +-----+                            |     
-       | DC_h|----------------------------
-       +-----+
++-------------------+
+|        PIC        |
+| 0 1 2 3 4  ...  7 |      
++-------------------+   
+  Ʌ Ʌ Ʌ Ʌ Ʌ  ...  Ʌ        
+  | | | | |       |
+  | | | | |       +--------------------------+ 
+  | | | | +------------------------+         |     
+  | | | +--------------------+     |         |     
+  | | +----------------+     |     |         |    
+  | |                  |     |     |         |   
+  | +--------------+   |     |     |         |    
+  +---------+      |   |     |     |         |  
+            |      |   |     |     |         | 
+         +--+--+   |   |     |     |         |   
+         | DC_a|   |   |     |     |         |   
+         +-----+   |   |     |     |         |   
+                   |   |     |     |         |   
+         +-----+   |   |     |     |         |          
+         | DC_b|----   |     |     |         |   
+         +-----+       |     |     |         |   
+                       |     |     |         |   
+         +-----+       |     |     |         |   
+         | DC_c|--------     |     |         |   
+         +-----+             |     |         |   
+                             |     |         |   
+         +-----+             |     |         |        
+         | DC_d|--------------     |         |   
+         +-----+                   |         |    
+                                   |         |     
+         +-----+                   |         |         
+         | DC_e|-------------------          |    
+         +-----+                             |     
+                                             |           
+            .                                |   
+            .                                |           
+            .                                |   
+                                             |   
+         +-----+                             |     
+         | DC_h|-----------------------------+
+         +-----+
 
 ```
+PIC in here an programmable interrupt controller. It is basically responsible from receiving interrupt requests from various device controllers and forwarding them to the CPU. 
+
+When an IO device controller wants to send an interrupt, it sends an interrupt request to this programmabe interrupt controller. All the interrupt requests coming from device controllers are sent to the programmable interrupt controller.
+
+The PIC then sends the interrupt request that has the highest priority to the CPU. And the CPU acknowledges that it received interrupt request and applies necessary actions. 
+
+# Message Signaled Interrupts
+
+So the hardware lines, physical electrical connection or a signal path, between the IO device and programmable interrupt controller are too limited because of pin count restrictions on the CPU and motherboard. Because of this, as the number of devices in a system increases, the limited number of interrupt lines becomes a bottleneck.
+
+
+
 
 
