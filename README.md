@@ -548,29 +548,30 @@ DMA controller is a hardware component. It is typically integrated into the moth
 DMA controller is connected to the system bus and therefore it can access to the main memory directly. And through this way, it can initiate and manage data transfers between IO devices and main memory directly. 
 
 DMA controller contains several key components: 
-- Control registers:
 - Address registers:
 - Count registers:
-- Status register
+- Control registers:
+- Status register: 
 - Bus interface: 
 
 ```
-+----------+                    +-------------+
-|          |                    |             |
-|   CPU    |   CPU programs     |     DMA     |
-|          |   DMA controller   |  Controller |
-|          |                    |  +-------+  |
-|          |---------------------->|Address|  |
-|          |                    |  +-------+  |
-|          |                    |  | Count |  |
-|          |                    |  +-------+  |
-+----------+                    |  |Control|  |
-     Ʌ                          |  +-------+  |   
-     |                          +-------------+
-     |                              |    
-     +------------------------------+
-           Interrupt when done
-                                        
 
+
++----------+                    +-------------+                    +--------------------+
+|          |                    |             |                    |   Disk Controller  |  
+|   CPU    |   1) CPU programs  |     DMA     |                    |    +----------+    |      
+|          |   DMA controller   |  Controller |                    |    | Buffer   |    |
+|          |                    |  +-------+  |                    |    |          |    |
+|          |---------------------->|Address|  |                    |    +----------+    |                 
+|          |                    |  +-------+  |                    |                    |
+|          |                    |  | Count |  |                    |                    |
+|    Ʌ     |                    |  +-------+  |                    |                    |
++----|-----+                    |  |Control|  |       Ack          |                    |
+     |                          |  +-------+  |<---------------------     Ʌ             |   
+     |                          +-------------+                    +------|-------------+
+     |                                |  |                                |
+     +--------------------------------+  +---------------------------------
+           Interrupt when done                 2) DMA requests transfer
+                                                      to memory
 ```
 
