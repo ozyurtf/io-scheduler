@@ -548,30 +548,35 @@ DMA controller is a hardware component. It is typically integrated into the moth
 DMA controller is connected to the system bus and therefore it can access to the main memory directly. And through this way, it can initiate and manage data transfers between IO devices and main memory directly. 
 
 DMA controller contains several key components: 
-- Address registers:
-- Count registers:
+- Address registers: Holds the address the data will come from and destination address.
+- Count registers: Keeps track of the number of characters or bytes remaining to be transferred.
 - Control registers:
-- Status register: 
-- Bus interface: 
+- Status register: Provides information about the status of the DMA transfer.
+- Bus interface: The bus in here allows the DMA controller to communicate with the CPU, memory, and IO devices.
 
 ```
-
-
-+----------+                    +-------------+                    +--------------------+
-|          |                    |             |                    |   Disk Controller  |  
-|   CPU    |   1) CPU programs  |     DMA     |                    |    +----------+    |      
-|          |   DMA controller   |  Controller |                    |    | Buffer   |    |
-|          |                    |  +-------+  |                    |    |          |    |
-|          |---------------------->|Address|  |                    |    +----------+    |                 
-|          |                    |  +-------+  |                    |                    |
-|          |                    |  | Count |  |                    |                    |
-|    Ʌ     |                    |  +-------+  |                    |                    |
-+----|-----+                    |  |Control|  |       Ack          |                    |
-     |                          |  +-------+  |<---------------------     Ʌ             |   
-     |                          +-------------+                    +------|-------------+
-     |                                |  |                                |
-     +--------------------------------+  +---------------------------------
-           Interrupt when done                 2) DMA requests transfer
-                                                      to memory
+                                                                          +-------+
+                                                                          | Drive |
+                                                                          +-------+
+                                                                              |  
+                                                                              |            
++----------+                    +-------------+                    +--------------------+          +-------------+
+|          |                    |             |                    |   Disk Controller  |          |     Main    |    
+|   CPU    |   1) CPU programs  |     DMA     |                    |    +----------+    |          |    Memory   |      
+|          |   DMA controller   |  Controller |                    |    |  Buffer  |    |          |             |
+|          |                    |  +-------+  |                    |    |          |    |          |             |
+|          |---------------------->|Address|  |                    |    +----------+    |          |             |                
+|          |                    |  +-------+  |                    |             |      |          |             |
+|          |                    |  | Count |  |                    |             |      |          |    Ʌ        |
+|    Ʌ     |                    |  +-------+  |                    |             |      |          |    |        |
++--+-|-----+                    |  |Control|  |       Ack          |             |      |          |    |        |
+   | |                          |  +-------+  |<---------------------     Ʌ      |      |          |    |        |   
+   | |                          +---+--+--+---+                    +------|--+---|------+          +----|--+-----+
+   | |                              |  |  |                               |  |   |                      |  | 
+   | +------------------------------+  |  +-------------------------------+  |   +----------------------+  |   
+   |       Interrupt when done         |        2) DMA requests transfer     |       3) Data transferred   |      
+   |                                   |               to memory             |                             |  
+   +-----------------------------------+-------------------------------------+-----------------------------+       
+                                                   BUS
 ```
 
