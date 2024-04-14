@@ -549,9 +549,9 @@ DMA controller is connected to the system bus and therefore it can access to the
 
 DMA controller contains several key components: 
 - Address registers: Holds the address the data will come from and destination address.
-- Data registers:
+- Data registers: It stores the transferred data temporarily. 
 - Data count : Keeps track of the number of characters or bytes remaining to be transferred.
-- Control unit: This is used to control the overall operation of the DMA controller. It includes information that indicates whether an interrupt should be generated after the transfer is completed, whether the data transfer is in single, block, or demand mode, whether the transfer is from memory to IO device or from IO device to memory. The control register is generally programmed by the CPU before DMA transfer is initiated.
+- Control unit: This is used to control the overall operation of the DMA controller. The control unit receives DMA request and sends DMA acknowledge. It generates interrupts when the data transfer is completed
 - Bus interface: The bus in here allows the DMA controller to communicate with the CPU, memory, and IO devices.
 
 When transfer is initiated, CPU programs the DMA controller by writing the necessary information into the control registers of the DMA controller. 
@@ -583,9 +583,10 @@ We can see the visualization of this process in below:
 |    Ʌ     |                    |  |Count  |  |                    |      Ʌ      |      |          |    Ʌ        |
 |    |     |                    |  +-------+  |                    |      |      |      |          |    |        |                
 |    |     |                    |  |Control|  |                    |      |      |      |          |    |        |
-|    |     |                    |  |Logic  |  |    Acknowledge     |      |      |      |          |    |        |              
-|    |     |                    |  +------|+  |<---------------------     |      |      |          |    |        |   
-+----|-----+                    +---+--+--|---+                    +------|--+---|------+          +----|--+-----+
+|    |     |                    |  |Logic  |  |    Acknowledge     |      |      |      |          |    |        |
+|    |     |                    |  ||     ||<-------------------------    |      |      |          |    |        |                                   
+|    |     |                    |  +|-----|+  |                    |      |      |      |          |    |        |   
++----|-----+                    +---|--+--|---+                    +------|--+---|------+          +----|--+-----+
    | |                              |  |  |                               |  |   |                      |  | 
    | +------------------------------+  |  +-------------------------------+  |   +----------------------+  |   
    |       Interrupt when done         |      2) DMA requests transfer       |      3) Data transferred    |      
@@ -594,6 +595,22 @@ We can see the visualization of this process in below:
                                                    BUS
 ```
 
-Now let's look at the DMA controller in more detail. 
+# Alternative DMA Configurations
+
+## Single Bus - Detached DMA
+
+## Single Bus - Integrated DMA 
+
+## IO Bus 
+
+# DMA and Memory Protection
+
+As we learned previously, DMA allows the IO devices to access to main memory directly. Therefore, we may observe unauthorized access to memory regions, and data corruption if the process is not properly managed. 
+
+To address these issues, we use a method called IOMMU. IOMMU is a hardware component. It acts as a memory protection and translation layer for the DMA operations. But how ? 
+
+The operating system creates a translation table in the IOMMU. This translation table maps the virtual addresses that are used by the IO devices to the physical memory addresses.
+
+
 
 
