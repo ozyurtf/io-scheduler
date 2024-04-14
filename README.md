@@ -706,6 +706,10 @@ The device drivers may include logging mechanisms for the purpose of recording i
 
 They are also responsible from managing the power requirements of the devices they control. (e.g., putting the device into low-power state when necessary)
 
+One note is that device drivers must be able to deal with multiple devices of the same type simultaneously. This means that device driver code must be able to allow multiple threads/processes to execute the same driver concurrently.
+
+Lastly, device drivers should also be prepared for the events like device removal or device plugging. When a device is removed, for instance, its device driver should release the resources associated with that device for instance. 
+
 ```
    Abstract
    commands
@@ -730,10 +734,15 @@ They are also responsible from managing the power requirements of the devices th
       |
       |
       V
-  +--------+
-  | Device |
-  +--------+
+ +--------+
+ | Device |
+ +--------+
 ```
+
+## Device Independent IO Software
+
+
+
 
 
 
