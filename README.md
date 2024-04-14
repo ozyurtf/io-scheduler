@@ -529,5 +529,48 @@ Even though the programmed IO is a simple method to handle IO operations, it is 
 
 ## Interrupt Driven IO
 
-Now let's 
+When the IO device is ready for data transfer or when it completes the IO operation, CPU can be notified about these with interrupts. We call this method interrupt driven IO. And with this method, the CPU won't have to do busy waiting and it can handle other tasks while waiting for the IO device and this increases the efficiency. 
+
+Basically when an IO operation is initiated by a process, system call is made to the operating system. And if the IO device is not ready to do the required IO operation, the system call is blocked and marked as waiting by the operating system. In the mean time, the operating system continues executing and scheduling other processes while the IO operation is waiting.  Once the IO device becomes ready to run the IO operation,  it raises an interrupt and this interrupt is sent to the CPU which indicates that the IO device requires attention. After CPU is notified about the fact that IO device is ready to run the IO operation, CPU first saves its current execution context. Then the interrupt handler determines which IO device raised the interrupt and then takes appropriate actions. If the interrupt handler decides that the IO device is ready for data transfer, the CPU initiates the transfer between the IO device and memory and it copies the data from memory to IO device or IO device to memory. 
+
+Using interrupts in this scenario prevents CPU from busy waiting which would waste CPU cycles.
+
+After the data transfer is completed by the CPU from the memory to IO device or IO device to memory, the process is unblocked and scheduler is invoked. And scheduler then determines which process should be executed by the CPU next based on scheduling algorithm.
+
+## Direct Memory Access (DMA) 
+
+But the thing is it is not efficient for the CPU to request data from the IO device one byte or one character at a time since this is time-consuming and inefficient. 
+
+DMA is a technique that is used to allow the IO devices to transfer data to/from the main memory directly. In this scenario, CPU is not used during the data transfer. And this process is handled by the DMA controller. 
+
+DMA controller is a hardware component. It is typically integrated into the motherbaord. In some cases, we can see them as integrated to the IO devices such as disk controllers. 
+
+DMA controller is connected to the system bus and therefore it can access to the main memory directly. And through this way, it can initiate and manage data transfers between IO devices and main memory directly. 
+
+DMA controller contains several key components: 
+- Control registers:
+- Address registers:
+- Count registers:
+- Status register
+- Bus interface: 
+
+```
++----------+                    +-------------+
+|          |                    |             |
+|   CPU    |   CPU programs     |     DMA     |
+|          |   DMA controller   |  Controller |
+|          |                    |  +-------+  |
+|          |---------------------->|Address|  |
+|          |                    |  +-------+  |
+|          |                    |  | Count |  |
+|          |                    |  +-------+  |
++----------+                    |  |Control|  |
+     Ʌ                          |  +-------+  |   
+     |                          +-------------+
+     |                              |    
+     +------------------------------+
+           Interrupt when done
+                                        
+
+```
 
