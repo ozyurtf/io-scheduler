@@ -652,7 +652,9 @@ The idea in here is similar how applications are restricted to what memory they 
 
 ## Device Drivers 
 
+Device drivers are software modules and they are prepared specifically for each IO devices. They basically provide an interface so that the operating system can interact with the devices through this interface. The codes in the device drivers are tailored to control and communicate with a particular IO device. They encapsulate the low-level details of the device and abstract them from the operating system.
 
+They are responsible from reading data from the IO devices' registers and writing data to them.
 
 
 
