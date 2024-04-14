@@ -696,6 +696,14 @@ The drivers of the character devices (e.g., keyboards, serial ports) must follow
 
 ```
 
+When an IO device is detected/connected, the IO device is initialized by the IO device driver. The initialization may include setting up the necessary data structures, preparing the device for operations, etc. Device drivers also receive read and write requests from higher-level software layers such as the operating system or applications. These requests come in abstract and standardized in general and they are independent from the specific details of the IO device. 
+
+The IO device drivers translates these requests into a form that is suitable for IO device, executes them, and facilitates the data transfer between the device and the system.
+
+When the IO devices generate interrupt, these interrupts are handled in the interrupt handler in the device driver.
+
+The device drivers may include logging mechanisms for the purpose of recording important events or status information that is related to the IO device. 
+
 
 
 
