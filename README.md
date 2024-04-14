@@ -741,7 +741,13 @@ Lastly, device drivers should also be prepared for the events like device remova
 
 ## Device Independent IO Software
 
+There are several capabilites that should be provided by the device independent IO software: 
 
+1) The software should provide an interface through which different device drivers can interact _(uniform interfacing for device drvers)_. The main goal in here is to make all the devices appear the same to the operating system regardless of their specific hardware characteristics. And we can do this by functions for each group of devices that share similar properties (e.g., display devices, storage devices, network devices, etc.) By providing this uniform interface, the operating system can interact with different IO devices using the same functions and this simplifies the device management. Also, the device independent IO software layer maps the symbolic device names (e.g., "printer", "disk", et.c) to the appropriate device drivers. When the operating system wants to communicate with a device, it uses its symbolic name and this symbolic name is translated to the corresponding driver. Through this way, the operating system can refer to  devices using logical names instead of hardware specific details. 
+2) It should handle buffering of data transfer between the IO device and operating system _(buffering)_
+3) It should report any errors when they occur with the use of IO devices _(error reporting)_
+4) It should be able to allocate and also release the dedicated devices when needed.
+5) The size of the blocks provided by the IO software for data transfer should be standardized and independent from the IO devices.
 
 
 
