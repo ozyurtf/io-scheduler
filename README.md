@@ -749,6 +749,36 @@ There are several capabilites that should be provided by the device independent 
 4) It should be able to allocate and also release the dedicated devices when needed.
 5) The size of the blocks provided by the IO software for data transfer should be standardized and independent from the IO devices.
 
+# Examples of IO Devices
+
+## Clocks 
+
+### Clock Hardware
+
+In older computer systems, the clock was directly tied to the alternating current power line frequency and the alternating current power line frequency was determining the clock speed of the computer. In these systems, an interrupt was being sent to the CPU on every voltage cycle of the power line. In other words, the CPU was interrupted at a fixed frequency based on the power line. This method is simple but inflexible. It can reduce the CPU utilization because CPU might be interrupted very frequently.
+
+In modern computer systems, a crystal oscillator is used instead of relying on the power line frequency. The crystal oscillator generates a stable and high-frequency clock signal. It produces a consistent oscillation at a specific frequency. This signal is fed to the counter which is decremented at each pulse. Once the counter gets to 0, it generates interrupt.
+
+### Clock Software
+
+So basically, the main thing clock hardware does is to generate interrupts at known intervals Everything else must be done by the software -- clock driver. The duties of the clock driver are like these: 
+
+- Maintaining the time of day
+- Preventing processes from running longer than they are allowed to
+- Accounting for CPU usage
+- Handling alarm system call that are made by the processes
+- Providing timers that monitor microcontroller (?) programs to see if they are out of control or have stopped operating. These timers are called watchdog timers.
+- Gathering statistics, monitoring and profiling.
+
+## User Interfaces
+
+### Keyboard
+
+### Mouse 
+
+### Monitor
+
+
 
 
 
