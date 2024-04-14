@@ -704,6 +704,39 @@ When the IO devices generate interrupt, these interrupts are handled in the inte
 
 The device drivers may include logging mechanisms for the purpose of recording important events or status information that is related to the IO device. 
 
+They are also responsible from managing the power requirements of the devices they control. (e.g., putting the device into low-power state when necessary)
+
+```
+   Abstract
+   commands
+      |
+      |
+      V      
+  +--------+
+  | Device |           
+  | Driver | 
+  +--------+
+      Ʌ
+      |
+      | Detailed
+      | commands
+      | 
+      V
++------------+
+|   Device   |
+| Controller |
++------------+
+      Ʌ
+      |
+      |
+      V
+  +--------+
+  | Device |
+  +--------+
+```
+
+
+
 
 
 
