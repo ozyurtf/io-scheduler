@@ -611,6 +611,49 @@ To address these issues, we use a method called IOMMU. IOMMU is a hardware compo
 
 The operating system creates a translation table in the IOMMU. This translation table maps the virtual addresses that are used by the IO devices to the physical memory addresses.
 
+If IO device DMA to an address and there is no translation, an interrupt/exception is raised.
+
+The idea in here is similar how applications are restricted to what memory they can access using pagetable (MMU). 
+
+```
+       +---------------------------+
+       |        Main Memory        |
+       +---------------------------+    
+          Ʌ                      Ʌ 
+          |                      |
+          |                      |
+      +-------+             +--------+
+      | IOMMU |             |  MMU   |
+      +-------+             +--------+
+          Ʌ                      Ʌ
+          |                      |  
+   Device | addresses    Virtual | addresses
+          |                      | 
+          |                      |            
+      IO Device                 CPU       
+```
+
+# Software Layers for IO
+
+```
+         
+    +--------------------------------+
+    |     User-level IO software     |
+    +--------------------------------+
+    | Device-independent OS software |       
+    +--------------------------------+
+    |         Device Drivers         |
+    |         +----------------------+        
+    |         |  Interrupt handlers  |
++---+---------+----------------------+---+
+|               Hardware                 |
++----------------------------------------+
+```
+
+## Device Drivers 
+
+
+
 
 
 
