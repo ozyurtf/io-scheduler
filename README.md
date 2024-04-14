@@ -549,9 +549,9 @@ DMA controller is connected to the system bus and therefore it can access to the
 
 DMA controller contains several key components: 
 - Address registers: Holds the address the data will come from and destination address.
-- Count registers: Keeps track of the number of characters or bytes remaining to be transferred.
-- Control registers: This is used to control the overall operation of the DMA controller. It includes information that indicates whether an interrupt should be generated after the transfer is completed, whether the data transfer is in single, block, or demand mode, whether the transfer is from memory to IO device or from IO device to memory. The control register is generally programmed by the CPU before DMA transfer is initiated.
-- Status register: Provides information about the status of the DMA transfer.
+- Data registers:
+- Data count : Keeps track of the number of characters or bytes remaining to be transferred.
+- Control unit: This is used to control the overall operation of the DMA controller. It includes information that indicates whether an interrupt should be generated after the transfer is completed, whether the data transfer is in single, block, or demand mode, whether the transfer is from memory to IO device or from IO device to memory. The control register is generally programmed by the CPU before DMA transfer is initiated.
 - Bus interface: The bus in here allows the DMA controller to communicate with the CPU, memory, and IO devices.
 
 When transfer is initiated, CPU programs the DMA controller by writing the necessary information into the control registers of the DMA controller. 
@@ -573,17 +573,23 @@ We can see the visualization of this process in below:
 |          |   1) CPU programs  |             |                    |    +----------+    |          |             |      
 |          |   DMA controller   |             |                    |    |  Buffer  |    |          |             |
 |          |                    |  +-------+  |                    |    |          |    |          |             |
-|          |---------------------->|Address|  |                    |    +----------+    |          |             |                
+|          |---------------------->|Address|  |                    |    +----------+    |          |             |
+|          |                    |  |Regist |  |                    |             |      |          |             |                                        
 |          |                    |  +-------+  |                    |             |      |          |             |
-|          |                    |  | Count |  |                    |             |      |          |    Ʌ        |
+|          |                    |  |Data   |  |                    |             |      |          |    Ʌ        |
+|          |                    |  |Regist |  |                    |             |      |          |    |        |           
 |          |                    |  +-------+  |                    |             |      |          |    |        |
-|    Ʌ     |                    |  |Control|  |       Ack          |             |      |          |    |        |
+|          |                    |  |Data   |  |                    |             |      |          |    |        |
+|          |                    |  |Count  |  |                    |             |      |          |    |        |
+|          |                    |  +-------+  |                    |             |      |          |    |        |                
+|    Ʌ     |                    |  |Control|  |                    |             |      |          |    |        |
+|    |     |                    |  |Logic  |  |    Acknowledge     |             |      |          |    |        |              
 |    |     |                    |  +-------+  |<---------------------     Ʌ      |      |          |    |        |   
 +----------+                    +---+--+--+---+                    +------|--+---|------+          +----|--+-----+
    | |                              |  |  |                               |  |   |                      |  | 
    | +------------------------------+  |  +-------------------------------+  |   +----------------------+  |   
-   |       Interrupt when done         |        2) DMA requests transfer     |       3) Data transferred   |      
-   |                                   |               to memory             |                             |  
+   |       Interrupt when done         |      2) DMA requests transfer       |      3) Data transferred    |      
+   |                                   |             to memory               |                             |  
    +-----------------------------------+-------------------------------------+-----------------------------+       
                                                    BUS
 ```
