@@ -652,9 +652,49 @@ The idea in here is similar how applications are restricted to what memory they 
 
 ## Device Drivers 
 
-Device drivers are software modules and they are prepared specifically for each IO devices. They basically provide an interface so that the operating system can interact with the devices through this interface. The codes in the device drivers are tailored to control and communicate with a particular IO device. They encapsulate the low-level details of the device and abstract them from the operating system.
+Device drivers are software modules and they are prepared specifically for each IO device. They basically provide an interface so that the operating system can interact with the devices through this interface. The codes in the device drivers are tailored to control and communicate with a particular IO device. They encapsulate the low-level details of the device and abstract them from the operating system.
 
-They are responsible from reading data from the IO devices' registers and writing data to them.
+They are responsible from reading data from the IO devices' registers and writing data to them. They include interrupt handlers which are the procedures (e.g., processing the interrupt, communicating with the IO device, performing any other necessary actions etc.) that are followed after an interrupt is generated.
+
+Device drivers are provided by the manufacturer of the IO devices and integrated to the operating system's kernel. They are integrated either as built-in components or as loadable modules which basically allow the device drivers to be loaded into the kernel. If they are integrated as built-in, however, they are compiled to the kernel directly and they are always available.
+
+In addition, the device drivers must follow standard interfaces that are defined by the operating systems. These interfaces are different in block devices and character devices because how these devices process the data is different. 
+
+The drivers of the block devices (e.g., hard drives, USB storage devices) must follow a specific interface that includes operations like reading and writing blocks of data. 
+
+The drivers of the character devices (e.g., keyboards, serial ports) must follow another type of interface that deals with individual characters of bytes of data.
+
+```
+               User process       
+                    |
++-------------------|--------------------+----------------
+|           +----------------+           | 
+|           |  User program  |           |  User space
+|           +----------------+           |
++-------------------|--------------------+----------------
+|                   |                    |
+|   +--------------------------------+   |
+|   |  Rest of the operating system  |   |
+|   +--------------------------------+   |
+|       |           |            |       |
+|   +-------+   +---------+   +------+   |  Kernel space
+|   |Printer|   |Camcorder|   |CDRom |   |
+|   |driver |   |driver   |   |driver|   |  
+|   +-------+   +---------+   +------+   |
+|       |           |            |       |
++-------|-----------|------------|-------+----------------
+|       |           |            |       |    
+|       V           V            V       |
+|   Printer     Camcorder    CD-Rom      |  Hardware
+|   controller  controller   controller  | 
+|       |           |            |       |
++-------|-----------|------------|-------+----------------
+|       |           |            |       | 
+|       V           V            V       |  Devices  
+|   Printer     Camcorder    CD-Rom      |    
++----------------------------------------+----------------
+
+```
 
 
 
