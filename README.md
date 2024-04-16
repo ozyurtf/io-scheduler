@@ -841,21 +841,84 @@ And for this method to work, IO device drivers should be structured as kernel th
 - Cylinder: It is the collection of tracks located at the same position across all surfaces of the disk. If a vertical line passes through the tracks at the same location on each surface, it forms a cylindrical shape for example. That's why we call this cylinder.
 
 ```
+Surface 1
++--------------------+--------------------+
+|   Track 1                               | 
+|   +----------------+----------------+   |
+|   |   Track 2                       |   | 
+|   |   +------------+------------+   |   |
+|   |   |   Track 3               |   |   | 
+|   |   |   +--------+--------+   |   |   |
+|   |   |   | Sector |        |   |   |   |
+|   |   |   +--------+        |   |   |   | 
+|   |   |   |                 |   |   |   |   
+|   |   |   +--------+--------+   |   |   |
+|   |   |                         |   |   |
+|   |   +------------+------------+   |   |   
+|   |                                 |   |   
+|   +----------------+----------------+   |
+|                                         |
++---------------------+-------------------+
+
+Surface 2
++--------------------+--------------------+
+|   Track 1                               | 
+|   +----------------+----------------+   |
+|   |   Track 2                       |   | 
+|   |   +------------+------------+   |   |
+|   |   |   Track 3               |   |   | 
+|   |   |   +--------+--------+   |   |   |
+|   |   |   |                 |   |   |   |
+|   |   |   |                 |   |   |   | 
+|   |   |   |                 |   |   |   |   
+|   |   |   +--------+--------+   |   |   |
+|   |   |                         |   |   |
+|   |   +------------+------------+   |   |   
+|   |                                 |   |   
+|   +----------------+----------------+   |
+|                                         |
++---------------------+-------------------+
+
+Surface 3
++--------------------+--------------------+
+|   Track 1                               | 
+|   +----------------+----------------+   |
+|   |   Track 2                       |   | 
+|   |   +------------+------------+   |   |
+|   |   |   Track 3               |   |   | 
+|   |   |   +--------+--------+   |   |   |
+|   |   |   |                 |   |   |   |
+|   |   |   |                 |   |   |   | 
+|   |   |   |                 |   |   |   |   
+|   |   |   +--------+--------+   |   |   |
+|   |   |                         |   |   |
+|   |   +------------+------------+   |   |   
+|   |                                 |   |   
+|   +----------------+----------------+   |
+|                                         |
++---------------------+-------------------+
+
+
+In here Track 2 in Surface 1, 2 and 3 create cylinder for instance.
+
+```
+
+```
                                                      Direction of disk rotation
                               <--------------------------------------------------------------------------
 
                |              1 Sector                   |   Intersector gap   |              1 Sector                   |    
----------------|-----------------------------------------|---------------------|-----------------------------------------|---
-  Ʌ            |                                         |      +---------+    |                                         | 
+  Ʌ -----------|-----------------------------------------|---------------------|-----------------------------------------|---
+  |            |                                         |      +---------+    |                                         | 
   |            |                                         |     / RW Head /|    |                                         | 
   |            |                                         |    +---------+ |    |                                         |
   |            +-----------------------------------------+    | +-----+ | |    +-----------------------------------------+
 Track   ...    | Preamble |    4096 Data bits    | E C C |    | |     | | |    | Preamble |    4096 Data bits    | E C C | ... 
-Width          +-----------------------------------------+    | +-+ +-+ |/     +-----------------------------------------+
+  |            +-----------------------------------------+    | +-+ +-+ |/     +-----------------------------------------+
   |                                                           +---|-|---+  
   |                                                               | |
-  V                                                               | |
-------------------------------------------------------------------|-|--------------------------------------------------------
+  |                                                               | |
+  V --------------------------------------------------------------|-|--------------------------------------------------------
                                                         Direction | | Disk
                                                                of | | arm
                                                               arm | | 
@@ -863,3 +926,10 @@ Width          +-----------------------------------------+    | +-+ +-+ |/     +
                                                                   | |
                                                                     
 ```
+RW (Read-write) head is an electromagnetic device. It consists of a tiny metal coil and a magnetic pole that generates or senses the magnetic fields on the disk surface. It is responsible from reading data from and writing data to the surface of the disk. During the read operation, the RW head senses the magnetic patterns on the disk and converts them into electrical signals that represent stored data. During the write operation, the RW head receives electrical signals from the disk storage controller and generates magnetic fields to record the data onto the disk surface. The RW head is mounted on the disk arm and flies very close to the disk surface without touching it.
+
+The disk arm is a mechanical component that holds and positions the RW head over the desired track on the disk surface. The disk arm moves the RW head radially. 
+
+And the direction of arm motion refers to the path along which the disk arm moves the RW head across the disk surface. 
+
+# Hard Disk Performance
