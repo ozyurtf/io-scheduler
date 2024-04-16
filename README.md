@@ -773,6 +773,17 @@ So basically, the main thing clock hardware does is to generate interrupts at kn
 ## User Interfaces
 
 ### Keyboard
+Keyboards contain simplified a processor that handles the basic functions of the keyboard. This processor communicates with the keyboard controller in the motherboard using a port.
+
+When a key is pressed by the user in the keyboard and when a key is released, an interrupt is generated and is sent to the IO port of the keyboard.
+
+And then the information from the IO port of the keyboard is extracted by the keyboard driver which is basically a software component of the keyboard and which interacts with the hardware of the keyboard
+
+The number that is stored in the IO port when a key event occurs is called the **scan code** which typically 8 bits long. 7 bits of this for the code and 1 bit to indicate whether the key was pressed or released. 
+
+When a key is pressed in the keyboard, an ASCII code is generated and it is immediately sent to the program without any further-processing. And the program interprets and handle these raw ASCII codes. This is called **raw mode** or **noncanonical mode**. In the raw mode, the program handles all the low-level details such as interpreting special keys, handling backspaces, etc.
+
+If the keyboard driver handles the raw ASCII code and it processes the intraline editing and delivers the corrected lines to the user program, we call this **cooked mode** or **canonical mode**.
 
 ### Mouse 
 
