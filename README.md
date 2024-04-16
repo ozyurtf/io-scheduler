@@ -781,13 +781,25 @@ And then the information from the IO port of the keyboard is extracted by the ke
 
 The number that is stored in the IO port when a key event occurs is called the **scan code** which typically 8 bits long. 7 bits of this for the code and 1 bit to indicate whether the key was pressed or released. 
 
-When a key is pressed in the keyboard, an ASCII code is generated and it is immediately sent to the program without any further-processing. And the program interprets and handle these raw ASCII codes. This is called **raw mode** or **noncanonical mode**. In the raw mode, the program handles all the low-level details such as interpreting special keys, handling backspaces, etc.
+When a key is pressed in the keyboard, an ASCII code is generated and it is immediately sent to the program without any further-processing. And the program interprets and handle these raw ASCII codes. This is called **raw mode** or **noncanonical mode**. In the raw mode, the program handles all the low-level details such as interpreting special keys, handling backspaces, etc. In the raw mode, the program maintains its own buffer to store the received ASCII codes until they are processed. 
 
 If the keyboard driver handles the raw ASCII code and it processes the intraline editing and delivers the corrected lines to the user program, we call this **cooked mode** or **canonical mode**.
 
+When a user presses a key in the keyboard, for instance, the keyboard driver stores it in a buffer, handles backspaces, deletes characters, etc., and waits until the user presses the enter or until any other line terminating event before sending the complete line to the program.
+
+In either way, a **buffer** is **needed** to store characters.
+
 ### Mouse 
 
-### Monitor
+Mouse only indicates **changes in position** (delta x, delta y). 
+
+# IO Software Layer
+
+We want the operating system to operate without being concerned/bothered about the low-level details of the interrupt handling process. In other words, the goal is to minimize the impact of interrupts on the overall system and keep the interrupt handling process confined to a specific part of the operating system. That's why interrupts are hidden from most of the operating system so that as little of the operating system as possible knows about them. But how to hide interrupts ? 
+
+Well the execution of the IO device driver that initiates an IO operation can be suspended until the IO operating finishes and the interrupt is handled. In other words, the device driver that initiated an IO operation can block until the IO operation is completed. And in the meantime, the IO operation is handled by the IO device controller (not CPU), and it generates interrupt once the IO operation is done.
+
+This approach allows the device driver to wait for the IO operation to complete without constantly checking for its completion. 
 
 
 
