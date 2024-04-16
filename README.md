@@ -835,3 +835,31 @@ And for this method to work, IO device drivers should be structured as kernel th
 
 # Hard Disk (Magnetic) Architecture 
 
+- Surface: We see one or more surfaces (platters) in a hard disk. Each surface is divided into a group of circular tracks.
+- Track: A track is a group of sectors that are arranged in a circular pattern on the surface of the disk. Each track is further divided into smaller units that are called sectors. 
+- Sector: A sector is a group of bytes and the smallest unit of data that can be read from the disk or written into the disk.
+- Cylinder: It is the collection of tracks located at the same position across all surfaces of the disk. If a vertical line passes through the tracks at the same location on each surface, it forms a cylindrical shape for example. That's why we call this cylinder.
+
+```
+                                                     Direction of disk rotation
+                              <--------------------------------------------------------------------------
+
+                                                           |   Intersector gap   |     
+-----------------------------------------------------------|---------------------|---------------------------------------------
+    Ʌ                                                      |      +---------+    |  
+    |                                                      |     / RW Head /|    |
+    |                             1 Sector                 |    +---------+ |    |                1 Sector 
+    |            +-----------------------------------------+    | +-----+ | |    +-----------------------------------------+
+Track Width      | Preamble |    4096 Data bits    | E C C |    | |     | | |    | Preamble |    4096 Data bits    | E C C | .. 
+    |            +-----------------------------------------+    | +-+ +-+ |/     +-----------------------------------------+
+    |                                                           +---|-|---+  
+    |                                                               | |
+    V                                                               | |
+--------------------------------------------------------------------|-|--------------------------------------------------------
+                                                          Direction | | Disk
+                                                                 of | | arm
+                                                                arm | | 
+                                                             motion | |  
+                                                                    | |
+                                                                    
+```
