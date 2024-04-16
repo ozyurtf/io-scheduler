@@ -933,3 +933,38 @@ The disk arm is a mechanical component that holds and positions the RW head over
 And the direction of arm motion refers to the path along which the disk arm moves the RW head across the disk surface. 
 
 # Hard Disk Performance
+
+**Seek time**: It is the time that is required to put the RW head over the desired cylinder (track) on the disk surface.
+**Rotational delay**: It is the time that is required for the desired sector to rotate underneath the RW heads. It depends on the disk's rotational speed which is measured in the number of revolutions per minute (rpm)
+**Transfer bytes**: It is the amount of data in bytes that is read/writen from/to the disk surface. 
+
+To calculate the total time data, for instace, we sum up the seek time, half of the rotational delay, and the transfer time. 
+
+When the RW head is put on the desired track (cylinder), it needs to wait for the specific sector that contains the requested data before it starts reading/writing operation. And the actual rotational delay can vary. Therefore, we generally assume that the RW head will need to wait for half a rotation to reach the desired sector. That's why we used half of the rotational delay when we give the calculatation of total time to transfer data. 
+
+As we can imagine, there are more sectors in the sectors that are located in more outside tracks compared to the tracks that are located in more inner side. That's why data transfer rate is higher when we read from outer tracks compared to inner tracks.
+
+Disk transfer bandwith, which is also known as disk transfer rate, refers to the amount of data that can be read/written to/from a disk in a given amount of time. 
+
+When the data we want to read is small, the seek time and rotational delay affect the performance the most because the amount of data that is transferred is quite small. That's why a significant portion of the disk transfer bandwitdh is wasted because the time that is spent on seeking and rotating is much larger compared to the actual data transfer time. To improve the performance we need disk scheduling algorithms to reduce seek time.
+
+On the other hand, the rate of disk transfer bandwith that is utilized increases as the size of data that will be transferred increases because larger block size means more data that is transferred in a single operation. 
+
+# Observations 
+
+# Disk Scheduling 
+
+## FIFO (FCFS) 
+
+## Shortest Seek Time First (SSTF) 
+
+## Elevator (Scan) 
+
+## Look 
+
+## Circular Scan (C-Scan) 
+
+## Circular Look (C-Look)
+
+
+
