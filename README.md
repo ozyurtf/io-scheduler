@@ -797,21 +797,31 @@ Mouse only indicates **changes in position** (delta x, delta y).
 
 We want the operating system to operate without being concerned/bothered about the low-level details of the interrupt handling process. In other words, the goal is to minimize the impact of interrupts on the overall system and keep the interrupt handling process confined to a specific part of the operating system. That's why interrupts are hidden from most of the operating system so that as little of the operating system as possible knows about them. But how to hide interrupts ? 
 
-Well the execution of the IO device driver that initiates an IO operation can be suspended until the IO operating finishes and the interrupt is handled. In other words, after initializing the necessary data structures and registers for the IO operation, the IO device driver can start an IO operation by sending commands to the IO device controller and block until the IO operation is completed. 
+Well the execution of the thread in the IO device driver that initiates an IO operation can be suspended until the IO operating finishes and the interrupt is handled. In other words, after initializing the necessary data structures and registers for the IO operation, the a thread in the IO device driver can start an IO operation by sending commands to the IO device controller and block until the IO operation is completed. 
 
-And in the meantime, the IO operation is handled by the IO device controller (not CPU. Once the IO operation is completed, it generates an interrupt. 
+And in the meantime, the IO operation is handled by the IO device controller (not CPU). Once the IO operation is completed, it generates an interrupt. 
 
-And after interrupt is handled, the interrupt handler is invoked to handle the interrupt and perform post IO processing. And then the interrupt handler unblocks the thread in the IO device driver that initiated the IO operation so that it can continue its execution from where it lefts off.
+After this interrupt is generated, the interrupt handler is invoked to handle the interrupt and perform post IO processing. Then the interrupt handler unblocks the thread in the IO device driver that initiated the IO operation so that it can continue its execution from where it lefts off.
 
 This method allows the device driver to wait for the IO operation to complete without constantly checking for its completion. 
 
-And for this method to work, device drivers should be structured as kernel threads or processes. Each driver should have its own state, stack, program counter, etc. so that they can operate independently and handle IO operations concurrently.
+And for this method to work, IO device drivers should be structured as kernel threads or processes. Each driver should have its own state, stack, program counter, etc. so that they can operate independently and handle IO operations concurrently.
 
+# Main Functionalities and Responsibilities of Device Drivers 
 
+## Character Drivers
+- **Discovery**
+- **Read/write data**
 
-
-
-
-
-
-
+## Disk Storage
+- **Discovery**
+- **Read block**
+- **Write block** 
+- **Interrupt management**
+  
+## Network Cards
+- **Discovery**
+- **Send packet**
+- **Receive packet**
+- **Interrupt management**
+- **Throttling**
