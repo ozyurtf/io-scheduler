@@ -1,0 +1,40 @@
+2024.04.19 14:31:05 INFO  Started: Metals version 1.2.2+102-8e3b9cea-SNAPSHOT in folders '/Users/ozyurtf/Documents/ms-cs/spring-2024/operating-systems/labs/lab4' for client Visual Studio Code 1.88.1.
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@793c2cf1]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@3fdb7019]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@793c2cf1]
+2024.04.19 14:31:05 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2024.04.19 14:31:06 WARN  no build tool detected in workspace '/Users/ozyurtf/Documents/ms-cs/spring-2024/operating-systems/labs/lab4'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2024.04.19 14:31:06 WARN  Build server is not auto-connectable.
+Apr 19, 2024 2:31:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 8
+Apr 19, 2024 2:31:13 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 17
+Apr 19, 2024 2:31:16 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 26
+Apr 19, 2024 2:32:00 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 66
+Apr 19, 2024 2:47:07 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 297
+Apr 19, 2024 4:31:20 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 730
+Apr 19, 2024 4:42:31 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 776
+Apr 19, 2024 5:00:08 PM org.eclipse.lsp4j.jsonrpc.RemoteEndpoint handleCancellation
+WARNING: Unmatched cancel notification for request id 978
+2024.04.19 23:54:00 INFO  Shutting down server
+2024.04.19 23:54:00 INFO  shutting down Metals
+2024.04.19 23:54:00 INFO  Exiting server
+2024.04.20 20:32:15 INFO  Started: Metals version 1.2.2+102-8e3b9cea-SNAPSHOT in folders '/Users/ozyurtf/Documents/ms-cs/spring-2024/operating-systems/labs/lab4' for client Visual Studio Code 1.88.1.
+SLF4J: Class path contains multiple SLF4J providers.
+SLF4J: Found provider [scribe.slf4j.ScribeServiceProvider@20268aa5]
+SLF4J: Found provider [ch.qos.logback.classic.spi.LogbackServiceProvider@41ef2e89]
+SLF4J: See https://www.slf4j.org/codes.html#multiple_bindings for an explanation.
+SLF4J: Actual provider is of type [scribe.slf4j.ScribeServiceProvider@20268aa5]
+2024.04.20 20:32:15 WARN  Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2024.04.20 20:32:15 WARN  no build tool detected in workspace '/Users/ozyurtf/Documents/ms-cs/spring-2024/operating-systems/labs/lab4'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2024.04.20 20:32:15 WARN  Build server is not auto-connectable.
+2024.04.21 09:53:06 INFO  Shutting down server
+2024.04.21 09:53:06 INFO  shutting down Metals
+2024.04.21 09:53:06 INFO  Exiting server
