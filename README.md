@@ -66,40 +66,53 @@ Okay but who is managing the IO operations and all of these devices ?
 
 # Operating System and IO 
 
-Operating system plays the role of an **interface/layer** _(set of rules, and protocols that govern the exchange of data and commands between the operating system, applications and hardware devices)_ **between the devices and the rest of the system**. 
+**Operating system** plays the role of an **interface/layer** _(set of rules, and protocols that govern the exchange of data and commands between the applications and hardware devices)_ **between the devices and the rest of the system**. 
 
-And basically all these **IO devices** that are mentioned in previous section are **controlled** **by** the **operating system**. 
+And basically all the **IO devices** that are mentioned in previous section are **controlled** **by** the **operating system**. 
 
 But how ? 
-- The **operating system** **sends commands** to the **IO devices** to **start an operation**. These operations might be **reading data** from a USB key, **writing data to the disk drive**, or may be **reading data from a mouse**. These **commands** are **sent through device drivers**. Device drivers can be seen as **software/programs/code that allows the operating system** to **interact** with the **external device** **without having to know the hardware of the external devices**.
-- Once these **operations are done** in the IO devices, these devices **send** a signal **(interrupts)** to the **CPU** to get its attention and warn it that the operation is done. The operating system is responsible from catching and handling these interrupts. But **what if an error** (e.g., communication timeouts, data corruption, device failures, etc.) **happens** and the **IO operations are not completed** as a result of this error ?
+- The **operating system** **sends commands** to the **IO devices** to **start an operation**. These operations might be **reading data** from a USB key, **writing data to the disk drive**, or may be **reading data from a mouse**. These **commands** are **sent through device drivers**. _(Device drivers can be seen as **software/programs/code that allows the operating system** to **interact** with the **external device without having to know the hardware of the external devices**.)_
+- Once these **operations are done** in the IO devices, these IO devices **send** a signal **(interrupts)** to the **interrupt handler** to get its attention and warn it that the operation is basically done. Then the **interrupt handler** **takes** the necessary **actions** and **notifies the CPU abpout this interrupt**. 
+
+But **what if an error** (e.g., communication timeouts, data corruption, device failures, etc.) **happens** and the **IO operations are not completed** as a result of this error ?
 
 In those cases the operating system is responsible from **detecting** and **handling these errors** as well. Some ways to handle these errors might be **retrying the operation**, **notifying the user** about the error, etc.
 
+We can see the position of the operating system in the figure below: 
+
 ```
--------------------
+-------------------------
    Applications     
--------------------
-  read(), write()   
--------------------
-    File System 
--------------------
- Operating System
--------------------
-Low-Level Interface
--------------------
-    IO Devices
--------------------
-
-At the top level of this hieararchy, there are applications which are basically programs that perform specific tasks and interact with the file system to read and write data. And this reading and writing operations are done with the read() and write() system calls.
-
-File system is a data structure that is used by the operating system to organize, store, and retrieve files/directories on a storage device. It provides a set of rules for these kinds of operations. It handles some tasks such as file creation, deletion, renaming, and permissions management. It also maintains metadata about files/directories. When read or write request is made, the file system translates these operations into a low-level operations that the operating system can understand.
-
-And the operating system provides commands to the low-level interface. It allows the file system to interact with the hardware. Memory management, process scheduling are handled in here.
-
-Low-level interface is responsible from communicating with the IO devices such as monitors, mouses, disk drives.
-
+-------------------------
+   read(), write()   
+-------------------------
+   File System 
+-------------------------
+   Operating System
+-------------------------
+   Low-Level Interface
+   (Device drivers,
+   direct memory
+   access controllers,
+   interrupt controllers,
+   hardware interfaces
+   and communication
+   protocols)
+-------------------------
+   IO Devices
+-------------------------
 ```
+
+At the top level of this hieararchy, there are **applications** which are basically programs that perform specific tasks and **interact with the file system** to **read and write data**. And this reading and writing operations are done with the **read() and write() system calls.**
+
+**File system** is a **data structure** that is **used by the operating system** to **organize, store, and retrieve files/directories** on a **storage device**. 
+
+It **provides** a **set of rules** for these kinds of **operations**. It handles some tasks such as **file creation, deletion, renaming, and permissions management**. It also **maintains metadata about files/directories**. When **read or write request is made**, the **file system translates these operations into a low-level operations that the operating system can understand**.
+
+And the **operating system**, as we mentioned earlier, acts like an **intermediate layer** between the **programs** and **hardware devices**. It provides **commands to the low-level interface** and **allows the file system** to **interact with the hardware**. **Memory management, process scheduling** are also **handled in here**.
+
+**Low-level interface** refers to the **low-level software components** that **enable communication with the IO devices** such as monitors, mouses, disk drives. It contains components such as **device drivers, hardware interfaces and communication protocols, direct memory access controllers, interrupt controllers**.
+
 Now let's talk about the challenges behind managing IO devices.
 
 # IO Devices: Challenges
