@@ -2,9 +2,9 @@
 
 Before starting, let's first explain the concept of IO operation. 
 
-**IO operation** is basically the process of **moving data from some external devices to the processor (CPU)** and **from the processor (CPU) to the external devices** using some **modules (codes)** and **buffers (temporary storage location in the CPU).** That's why we can call these external devices as IO devices as well. 
+**IO operation** is basically the process of **moving data** from **some external devices** to the **processor (CPU)** and from the **processor (CPU)** to the **external devices** using **modules (codes)** and **buffers (temporary storage location in the CPU).** That's why we can call these external devices as IO devices as well because they do an IO operation. 
 
-And IO devices are the components that allow the computer to communicate/interact with the outside environment. The CPU interacts with the outside world through this way. 
+In addition, **IO devices** are the components that **allow** the computer to **communicate/interact with the outside environment**. The CPU interacts with the outside world through this way. 
 
 We can see the illustration of the IO devices below:
 
@@ -24,42 +24,42 @@ Some of the examples of IO devices are mouse, display, keyboard, disks, network,
 
 And based on the **type of operations they make**, we can **group** these devices in **three categories**: 
 
-### Human Readable ###
-**Printers, keyboards, mouses, terminals** are some of the IO devices that can be managed/read by humans directly. That's why these devices can be grouped under this category. As we might guess, these IO devices are **suitable for communicating with the user**. 
+### 1) Human Readable ###
+**Printers, keyboards, mouses, terminals, video displays** are some of the IO devices that can be managed/read by humans directly. That's why these devices can be grouped under this category. As we might guess, these IO devices are **suitable for communicating with the user**. 
 
-### Machine Readable ### 
+### 2) Machine Readable ### 
 Some of the examples of machine readable external devices are **USB keys, sensors, IO device controllers, and disk drives.** 
 
-Disk drives can be seen as IO devices because they read data from the disk platters and transfer this data to the CPU or main memory whenever this transfer is requested. And disk drives can be seen as a **machine readable** device because **they store and retrieve data in a format that can be processed by a computer (machine) without human intervention**.
+Disk drive can be seen as an IO device because they **read data from the disk platters** and **transfer this data to the CPU** or **main memory** whenever this transfer is requested. And disk drives can be seen as a **machine readable** device because **they store and retrieve data in a format that can be processed by a computer (machine) without human intervention**.
 
-### Communication ###
-The IO devices that are used for the **communication between the computers and remote devices** (?) can be grouped under this category. An example of these devices might be **modems** or **digital line servers (?)** 
+### 3) Communication ###
+The IO devices that are used for the **communication between the computers and remote devices** can be grouped under this category. An example of these devices might be **modems** or **digital line servers** 
 
-Aside from these, depending on how they process the information, we can group the IO devices under two categories: **block devices** and **character devices**.
+Aside from these 3 categories, we can group the IO devices under two categories depending on how they process the information: **block devices** and **character devices**.
 
-### Block Devices ###
-**Block devices**, for example, **store** the **information in units that are fixed-size**. And **these fixed-size units are called blocks**. The **size** of these blocks is **predetermined** (e.g., 512 bytes). Even if only a small portion of data is needed, the **whole block** that consists that portion is retrieved. **Each** of these **blocks** has a **unique address**. And these **addresses** **identify** the **location of these blocks on the IO device**. Through this way, blocks can be accessed. 
+**Block devices**, for example, **store** the **information in units that are fixed-size**. And **these fixed-size units are called blocks**. The **size** of these blocks is **predetermined** (e.g., 512 bytes). Even if only a small portion of data is needed, the **whole block** that consists that portion is retrieved. **Each** of these **blocks** has a **unique address**. And these **addresses** **identify** the **location of these blocks on the IO device**. The blocks can be accessed through this way. 
 
-For instance, when reading from a block, the **system specifies the starting block address** and also **how many blocks to read**. Then **the IO device transfers the requested blocks to the system's memory**. 
+For instance, when reading from a block, the **system specifies the starting block address** and also **how many blocks to read** after the starting block. Then **the IO device transfers the requested blocks to the system's memory**. 
 
-When writing to the block, on the other hand, the system specifies the starting block address. Then the IO device writes the data to the specified block.
+When **writing to the block**, on the other hand, the system **specifies the starting block address**. Then the **IO device writes the data** to the **specified block**.
 
 **Hard disks**, **CD-ROMs**, **USB sticks** can be given as examples of **block devices** because **these devices** **store the data** in **fixed-size blocks**. 
 
-### Character Devices ###
-**Character devices**, on the other hand, **processes the data** in a **sequential manner**. Unlike block devices, they **do not store the information in fixed-size units**. **Data** is **processed one character or one byte at a time sequentially** and it is **not stored in fixed-size units**. Therefore, **these devices do not have addressing scheme**. In other words, they are **not addressable**. You **can't access a specific charcater or byte by its address** for example.
+**Character devices**, on the other hand, **processes the data** in a **sequential manner**. Unlike block devices, they **do not store the information in fixed-size units**. **Data** is **processed one character** or **one byte at a time** sequentially and it is **not stored in fixed-size units**. Therefore, **these devices do not have addressing scheme**. In other words, they are **not addressable**. So you **can't access a specific charcater or byte by its address** for example.
 
 Some examples of character devices are: **keyboards**, **mice**, **printers**, **network interfaces** _(Network interface is a hardware component. It provides a physical interface between the device and Wi-Fi signals and allows the computer to connect to a network)_
 
-One note is that IO devices are separate hardware components. These are **connected** to the **CPU** through a **bus** or **other communication channels**. But there are also some **other devices that are directly integrated to the CPU**. These are called **accelerators**. 
+One note is that **IO devices** are **separate hardware components**. These are **connected** to the **CPU** through a **bus** or **other communication channels**. But there are also some **other devices that are integrated to the CPU**. These are called **accelerators**. They contain **arithmetic logic unit** (it performs arithmetic & logical operations), **control unit** (it fetches and decodes instructions and controls the operation of the CPU), **registers** (these are temporary storage locations for data and addresses that are used during the execution of an instruction) and **cache** (small and fast storing unit that is used to store frequently accessed data and instructions). 
 
-That's why unlike IO devices that are typically accessed through an interface, the **accelerators** can be **invoked** by **applications** with **CPU instructions** or **registers** without utilizing the traditional IO path through the operating system. 
+**Accelerators** are **more tightly integrated** to the **CPU** through a **high-speed interconnects or buses** and they can be **invoked** by **applications** with **CPU instructions** (?) or **registers** (?) without utilizing the traditional IO path through the operating system. 
 
-In addition, the **traditional** **IO devices** such as **keyboards**, **mouses**, etc. are **designed** for **data input, output** and **storage of the data** while **accelerators** are the devices that are designed to **perform specific computational** tasks. For example, an **encryiption device**, which is an accelerator, can **generate secure keys** using random number generators. A **compression device**, which is another accelerator, **applies a specific compression algorithm to the input data**.
+In addition, the **traditional** **IO devices** such as **keyboards**, **mouses**, etc. are **designed** for **data input, output** and **storage of the data** while **accelerators** are the devices that are designed to **perform specific computational** tasks. 
+
+For example, an **encryiption device**, which is an accelerator, can **generate secure keys** using random number generators. A **compression device**, which is another accelerator, **applies a specific compression algorithm to the input data**. Other examples of accelerators are GPUs and TPUs.
 
 So in summary, we can think the **accelerators** more like a **functional unit** **in the CPU** and **less like an IO device**. 
 
-Okay but who is managing these devices and the IO operations ? 
+Okay but who is managing the IO operations and all of these devices ? 
 
 # Operating System and IO 
 
