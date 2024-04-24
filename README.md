@@ -27,15 +27,15 @@ Some of the examples of IO devices are mouse, display, keyboard, disks, network,
 
 And based on the **type of operations they make**, we can **group** these devices in **three categories**: 
 
-### 1) Human Readable ###
+### 1) Human Readable Devices ###
 **Printers, keyboards, mouses, terminals, video displays** are some of the IO devices that can be managed/read by humans directly. That's why these devices can be grouped under this category. As we might guess, these IO devices are **suitable for communicating with the user**. 
 
-### 2) Machine Readable ### 
+### 2) Machine Readable Devices ### 
 Some of the examples of machine readable external devices are **USB keys, sensors, IO device controllers, and disk drives.** 
 
 Disk drive can be seen as an IO device because they **read data from the disk platters** and **transfer this data to the CPU** or **main memory** whenever this transfer is requested. And disk drives can be seen as a **machine readable** device because **they store and retrieve data in a format that can be processed by a computer (machine) without human intervention**.
 
-### 3) Communication ###
+### 3) Communication Devices ###
 The IO devices that are used for the **communication between the computers and remote devices** can be grouped under this category. An example of these devices might be **modems** or **digital line servers** 
 
 Aside from these 3 categories, we can group the IO devices under two categories depending on how they process the information: **block devices** and **character devices**.
