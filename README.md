@@ -1,10 +1,13 @@
 # IO Scheduler
 
+## IO Operation
 Before starting, let's first explain the concept of IO operation. 
 
 **IO operation** is basically the process of **moving data** from **some external devices** to the **processor (CPU)** and from the **processor (CPU)** to the **external devices** using **modules (codes)** and **buffers (temporary storage location in the CPU).** That's why we can call these external devices as IO devices as well because they do an IO operation. 
 
-In addition, **IO devices** are the components that **allow** the computer to **communicate/interact with the outside environment**. The CPU interacts with the outside world through this way. 
+## IO Devices
+
+**IO devices** are the components that **allow** the computer to **communicate/interact with the outside environment**. The CPU interacts with the outside world through this way. 
 
 We can see the illustration of the IO devices below:
 
