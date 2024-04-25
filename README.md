@@ -241,18 +241,30 @@ And the **set of all possible IO port numbers** **assigned to the control regist
 
 An **IO port number** is a **numerical identifier** that is **assigned to the a specific IO port**. **CPU uses these IO port numbers to identify and access a specific IO port.**
 
-**Control registers** are **special registers** that are **located within the IO device's internal circuitry**. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
+**Control registers** are **special registers** that are **located within the IO device controller**. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
+
+When IO request is made, CPU writes instructions to the control registers in the IO device controller. These instructions refer to the operation that should be performed. The IO device controller interprets these instructions from its control registers and starts executing these instructions. If data needs to be transferred between the IO device and main memory, the IO device can interact with the main memory through various methods: IO port space, memory mapped IO, or direct memory access (DMA). And once the data transfer and IO operation is done, the IO device controller updates its status registers to indicate that the operation is done and notifies the CPU by generating an interrupt. 
+
+So there is a control register in the IO device controller and basically the instructions of an IO operation is written to here by the CPU and then the IO device controller uses whatever the instruction is in its control registers and execute it. And the IO operation is executed by the IO device controller (not by the CPU). And CPU writes the information to the control register of IO device controller through the IO port that is associated with that specific IO device controller. Here is how this process works in step by step: 
+
+1) The CPU prepares the instructions and data required for the IO operation.
+2) The CPU determines the IO port number associated with the target I/O device controller.
+3) The CPU performs a write operation to the specified IO port.
+4) The write operation transfers the instructions and data from the CPU to the IO port.
+5) The IO device controller, which is connected to the IO port, receives the information.
+6) The information is stored in the appropriate control registers within the IO device controller.
+7) The IO device controller interprets the instructions and data from its control registers and executes the requested IO operation accordingly.
 
 Control registers may store information such as 
-- current state/status of the device
-- commands/instructions
-- configuration parameters that determine how the device operates
-- data that is transferred between the CPU and IO device
+- current state/status of the IO device
+- commands/instructions for the IO device
+- configuration parameters that determine how the device operates (e.g., information about operating mode such as input mode, output mode, or bidirectional mode, communication protocols, timing-related aspects, etc.)
+- interrupt configuration and status
 - etc.
 
 In addition, one note is that IO port space is protected and only the kernel can access to the IO port space. And the kernel uses special privileged instructions to access to the IO port space. These instructions can only be executed in the kernel mode. We can see some examples of the privileged instructions in below: 
-- in portnum, target: It reads data from the IO port portnum and stores it in the target register or memory location.
-- out portnum, source: This writes data from the source register or memory location to the IO port portnum.
+- `in portnum, target`: It reads data from the IO port portnum and stores it in the target register or memory location.
+- `out portnum, source`: This writes data from the source register or memory location to the IO port portnum.
 
 Here portnum parameter represents the IO port number of the control register that is accessed. 
 
@@ -270,7 +282,7 @@ When the CPU wants to perform a load operation or store operation on IO device's
 
 The modern computers today use memory-mapped IO method in general.
 
-# Advantages of Memory-Mapped IO 
+#### Advantages of Memory-Mapped IO 
 
 1) Because IO devices can be accessed using a regular load and store instructions, device drivers (in other words software/programs that control and communicate with hardware devices) can be written entirely in a high-level language like C and there is no need to use specialized assembly instructions/code to interact with devices.
 2) As long as we keep the memory addresses assigned to the IO devices' registers out of the memory addresses assigned to the user-level applications, no special protection is needed.
