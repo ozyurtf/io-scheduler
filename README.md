@@ -92,12 +92,12 @@ We can see the position of the operating system in the figure below:
 -------------------------
    Low-Level Interface
    (Device drivers,
-   direct memory
-   access controllers,
-   interrupt controllers,
-   hardware interfaces
-   and communication
-   protocols)
+    direct memory
+    access controllers,
+    interrupt controllers,
+    hardware interfaces
+    and communication
+    protocols)
 -------------------------
    IO Devices
 -------------------------
@@ -131,20 +131,20 @@ All of these diversities **makes it very hard to design a single interface and m
 
 Another **challenge** is **designing an IO system**. For instance, it is **hard to design an IO system that is** flexible and that can accept the new devices or that can scale as needed (expandability). 
 
-Adding the ability to handle device failures and maintain data integrity to the IO system (resilience) is difficult as well. 
+Adding the **ability to handle device failures** and **maintain data integrity to the IO system (resilience)** is difficult as well. 
 
-Also, different IO devices are used by different users. And each of these users may have different requirements. Designing an IO system that meets all of these requirements and expectations might be challenging. 
+Also, **different IO devices** are **used by different users**. And **each of these users may have different requirements**. **Designing an IO system** that **meets all of these requirements and expectations might be challenging**. 
 
-The performance of the IO is affected by many different factors: 
-- the time it takes to access data from an IO device (access latency)
-- the amount of data transferred from the IO device to the system or from system to the IO device in a given time period (throughput)
-- the type and speed of the communication channel (e.g., bus, network) between the IO devices and the system.
-- the organization and management of different memory channels (e.g., cache, main memory, storage) (memory hierarchy)
-- the operating system (it plays an important role in terms of managing IO devices, and scheduling IO operations)
+The **performance** of the **IO operation** is **affected by** many different factors: 
+- the **time** it **takes to access data** from an IO device **(access latency)**
+- the **amount of data transferred from the IO device to the system** or **from system to the IO device** in a given time period **(throughput)**
+- the **type** and **speed of the communication channel** (e.g., bus, network) **between the IO devices and the system**.
+- the **organization and management of different memory channels** (e.g., cache, main memory, storage) **(memory hierarchy)**
+- the **operating system** (it plays an important role in terms of managing IO devices, and scheduling IO operations)
 
 ```
 +-----------+                  Interrupts
-| Processor |----------------------------------------------          
+| Processor |<---------+-----------------+----------------+          
 +-----------+          |                 |                |       
       |                |                 |                |        
 +-----------+          |                 |                |
@@ -152,7 +152,7 @@ The performance of the IO is affected by many different factors:
 +-----------+          |                 |                |
       |                |                 |                |
 +----------------------------------------------------------------+
-|                     Memory IO Interconnect                     |          
+|                              Bus                               |          
 +----------------------------------------------------------------+
       |              |  |              |  |              | | 
 +----------+    +------------+    +------------+    +------------+
@@ -166,9 +166,9 @@ The performance of the IO is affected by many different factors:
 
 ```
 
-Memory IO interconnect is a data communication channel (like bus). It is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
+Bus in here is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
 
-IO controller, also known as peripheral controller, is another hardware component. It manages the communication and data transfer between the CPU and IO devices such as disk, network. It acts like an intermediate layer between the IO devices and CPU and through this way the CPU doesn't have to control & communicate with the IO devices directly. 
+**IO controller**, also known as peripheral controller, is another **hardware component**. It **manages the communication and data transfer between the CPU and IO devices such as disk, network**. It acts like an **intermediate layer between the IO devices and CPU** and thanks to these IO devices, the CPU doesn't have to control & communicate with the IO devices directly. 
 
 ```
 
@@ -177,10 +177,10 @@ IO controller, also known as peripheral controller, is another hardware componen
                                   |            |    |             |    |    Drive     | 
                                   +------------+    +-------------+    +--------------+
                                          |                 |                  | 
-+----------+    +------------+    +------------+    +------------+    +--------------+
-|   Main   |    |    CPU     |    |   Video    |    |  Keyboard  |    |   Hard Disk  |
-|  Memory  |    |            |    | Controller |    | Controller |    |   Controller |  
-+----------+    +------------+    +------------+    +------------+    +--------------+
++----------+    +------------+    +------------+    +------------+     +--------------+
+|   Main   |    |    CPU     |    |   Video    |    |  Keyboard  |     |   Hard Disk  |
+|  Memory  |    |            |    | Controller |    | Controller |     |   Controller |  
++----------+    +------------+    +------------+    +------------+     +--------------+
      |                |                  |                 |                  |
      |                |                  |                 |                  |
 +-----------------------------------------------------------------------------------------+
@@ -189,19 +189,28 @@ IO controller, also known as peripheral controller, is another hardware componen
 
 ```
 
-As we can see above, IO controllers are physically connected to the memory IO interconnect (bus) on the motherboard. They have dedicated interfaces and ports that plug into the bus and this allows the IO controllers to send and receive signals over the bus. They communicate with the memory and CPU through this bus. The bus in here enables the exchange of data and signals between IO controllers and the rest of the system.
+As we can see above, **IO controllers** are **physically connected** to the **memory IO interconnect (bus)** on the motherboard. They have **dedicated interfaces and ports** that **plug into the bus** and **this allows the IO controllers to send and receive signals over the bus**. They **communicate with the memory and CPU through this bus**. The **bus** in here **enables** the **exchange of data and signals between IO controllers and the rest of the system**.
 
 When the CPU needs to communicate with keyboard, for instance, it sends commands and data to the keyboard controller over the bus. The keyboard controller receives these commands and data from the bus and translates them into the keyboard-specific signals and protocols. Similarly, when the keyboard needs to send data to the CPU or memory, the keyboard controller receives the data from the keyboard and sends it over the bus to the CPU or main memory.
 
-One note is that IO controllers can generate interrupts to notify the CPU about important events. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the IO controllers send these interrupt signals to the CPU using the bus. Once the CPU receives these interrupt signals, it invokes the appropriate interrupt handler routine to process the interrupt and then communicate with the IO controller.
+Here is more detailed data flow between different components: 
+
+1) When the CPU executes an instruction or tries to access data, it checks the registers first.
+2) If the data that is required by the CPU is not found in these registers, then the CPU checks the cache.
+3) If the data that is required by the CPU is found in the cache, this data is retrieved from the cache to the CPU so that the CPU can processes it.
+4) If the data that is required by the CPU is not found in the cache, the CPU requests the dat from the main memory. And then the main memory sends the requested data to the CPU. The copy of the data is stored in the cache as well so that it can be accessed faster in the future.
+5) If the CPU wants to communicate with an IO device, it sends commands and data to the IO controller of that device. And the IO controller handles the data transfer between the CPU and IO device.
+6) Data is sent to the CPU with IO controller. And then the CPU processes this data and store it in registers, cache or main memory.
+
+One note is that **IO controllers** can **generate interrupts** to **notify the CPU** about **important events**. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the **IO controllers send these interrupt signals to the CPU using the bus**. **Once the CPU receives these interrupt signals**, it **invokes the appropriate interrupt handler** routine to **process the interrupt** and then **communicate with the IO controller**.
 
 So if we consider the IO controller to be part of an IO device, we can say that an IO device has two main components: **mechanical component** and **electronic component** 
 
-Mechanical components are the physical components that are used in the IO devices to perform some functions. Mouse ball, scroll wheel can be given as examples of mechanical components. But as we might guess, many modern IO devices don't have these kinds of mechanical components anymore since they are replaced with electronic equivalents 
+**Mechanical components** are the **physical components** that are **used in the IO devices** to **perform some functions**. Mouse ball, scroll wheel can be given as examples of mechanical components. But as we might guess, many modern IO devices don't have these kinds of mechanical components anymore since they are replaced with electronic equivalents 
 
-Electronic component consists of the electronic circuitry and IO controllers that manage the functionality of the device and handle the communication between the device and the rest of the system. 
+**Electronic component** consists of the **electronic circuitry** and **IO controllers** that manage the functionality of the device and handle the communication between the device and the rest of the system. 
 
-# Controller and Device
+## Controller and Device
 
 So we talked about IO controllers. Each of these controllers has few registers. By writing data to registers and reading data from them, the operating system can control the IO device. 
 
