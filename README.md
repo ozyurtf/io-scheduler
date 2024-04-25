@@ -312,31 +312,41 @@ The modern computers today use memory-mapped IO method in general.
 ## Interrupts
 
 ```
-+------+     CPU responds to the interrupt     +-------------+    
-|      |-------------------------------------->|  Interrupt  |<-------- Disk
-| CPU  |                                       |  Controller |<-------- Clock  
-|      |      Controller issues interrupt      |             |<-------- Keyboard 
-|      |<------------------------------------- |             |<-------- Printer
-+------+                                       +-------------+
-    |                                                 |
-    |                                                 | 
++-----+   3) CPU responds to the interrupt    +--------------+   1) IO operation is finished 
+|     |-------------------------------------->|  Interrupt   |<-------------------------------- Disk
+| CPU |                                       |  Controller  |<-------------------------------- Clock  
+|     |   2) Controller issues interrupt      |  (Handler)   |<-------------------------------- Keyboard 
+|     |<------------------------------------- |              |<-------------------------------- Printer
++-----+                                       +--------------+
+   |                                                 |
+   |                                                 | 
 +-----------------------------------------------------------------------------------------+
 |                                            Bus                                          |
 +-----------------------------------------------------------------------------------------+
 ```
 
-Anytime an IO device wants attention, it causes an interrupt. And one of the times when the IO device wants attention is when the IO device finishes its operation.
+**Anytime an IO device wants attention**, it **causes an interrupt**. And one of the times when the IO device wants attention is **when the IO device finishes its operation**.
 
-When the CPU receives an interrupt, it detects the interrupt, and saves the current state of the execution. 
+### Interrupt Controller
+
+When an interrupt is generated, it is sent to interrupt controller/handler which is basically a hardware component that manages the interrupts coming from different devices and sources. And the interrupt controller/handler issues the interrupt and sends it tothe CPU. **CPU detects the interrupt**, **saves the current state of the execution**, and **responds appropriately** for that interrupt. 
+
+#### Programmable Interrupt Controller (PIC)
+
+PIC is a type of **interrupt controller** that is basically **responsible from receiving interrupt requests** from various device controllers and **forwarding them to the CPU**. 
+
+When an **IO device controller** wants to **send an interrupt**, it **sends an interrupt request to this programmabe interrupt controller**. All the interrupt requests coming from device controllers are sent to the programmable interrupt controller.
+
+The programmable interrupt controller then **sends the interrupt request** that has the **highest priority** **to the CPU**. And the **CPU acknowledges that it received interrupt request and takes some necessary actions**. 
 
 ```
        +-----+
        | CPU |
        +--+--+
-         Ʌ  |
-         |  |
-     IRQ |  | ACK 
-         |  v
+         Ʌ |
+         | |
+     IRQ | | ACK 
+         | v
 +-------------------+
 |        PIC        |
 | 0 1 2 3 4  ...  7 |      
@@ -352,23 +362,23 @@ When the CPU receives an interrupt, it detects the interrupt, and saves the curr
   +---------+      |   |     |     |         |  
             |      |   |     |     |         | 
          +--+--+   |   |     |     |         |   
-         | DC_a|   |   |     |     |         |   
+         | DCa |   |   |     |     |         |   
          +-----+   |   |     |     |         |   
                    |   |     |     |         |   
          +-----+   |   |     |     |         |          
-         | DC_b|----   |     |     |         |   
+         | DCb |----   |     |     |         |   
          +-----+       |     |     |         |   
                        |     |     |         |   
          +-----+       |     |     |         |   
-         | DC_c|--------     |     |         |   
+         | DCc |--------     |     |         |   
          +-----+             |     |         |   
                              |     |         |   
          +-----+             |     |         |        
-         | DC_d|--------------     |         |   
+         | DCd |--------------     |         |   
          +-----+                   |         |    
                                    |         |     
          +-----+                   |         |         
-         | DC_e|-------------------          |    
+         | DCe |-------------------          |    
          +-----+                             |     
                                              |           
             .                                |   
@@ -376,34 +386,30 @@ When the CPU receives an interrupt, it detects the interrupt, and saves the curr
             .                                |   
                                              |   
          +-----+                             |     
-         | DC_h|-----------------------------+
+         | DCh |-----------------------------+
          +-----+
 
 ```
-PIC in here an programmable interrupt controller. It is basically responsible from receiving interrupt requests from various device controllers and forwarding them to the CPU. 
 
-When an IO device controller wants to send an interrupt, it sends an interrupt request to this programmabe interrupt controller. All the interrupt requests coming from device controllers are sent to the programmable interrupt controller.
+But the **issue** with the PIC is that the **hardware lines, physical electrical connection or a signal path between the IO device and programmable interrupt controller are too limited** because of pin count restrictions on the CPU and motherboard. Because of this, as the **number of devices in a system increases**, the **limited number of interrupt lines becomes a bottleneck**.
 
-The PIC then sends the interrupt request that has the highest priority to the CPU. And the CPU acknowledges that it received interrupt request and applies necessary actions. 
+That's why we can take a look at **another mechanism/method that can handle the interrupts.**
 
-# Message Signaled Interrupts
+#### Message Signaled Interrupts
 
-So the hardware lines, physical electrical connection or a signal path, between the IO device and programmable interrupt controller are too limited because of pin count restrictions on the CPU and motherboard. Because of this, as the number of devices in a system increases, the limited number of interrupt lines becomes a bottleneck.
+In message signaled interrupts, the **IO device writes the data that describes the interrupt to the designated memory-mapped IO address**. And the **act of writing the data to this specific memory address triggers the interrupt**. This mechanism is called **message signaled interrupts**. 
 
-So there is another mechanism in which the IO device writes the data that describes the interrupt to the designated memory-mapped IO address. And the act of writing the data to this specific memory address triggers the interrupt. This mechanism is called Message signaled interrupts. 
+The **PCI (bus)** **detects** this **write operation** and then **delivers the interrupt to the appropriate CPU** based on the information written to the memory address. 
 
-The PCI (bus) detects this write operation and then delivers the interrupt to the appropriate CPU based on the information written to the memory address. 
+**Message signalled interrupts provide high degree of programmability in interrupt handling.** In other words the **IO devices can be configured to create specific interrupts based on their requirements when we use message signalled interrupts**. 
 
-Message signalled interrupts provide high degree of programmability in interrupt handling. In other words the IO devices can be configured to create specific interrupts based on their requirements when we use message signalled interrupts. 
-
-# Issues with Interrupt Processing 
+### Issues with Interrupt Processing 
 
 In old systems, whether or not there was a pending interrupt was being checked after each instruction was finished its execution. So after executing some instructions, if an interrupt occurred, this means that all the instructions up to that instruction after which interrupt was generated had been executed completely and no instructions were executed yet after that instruction.
 
 This may not be the case in modern computers. 
 
 Today, modern CPUs use a method that is called pipelining. Basically, the execution of an instruction is broken into multiple stages (e.g., fetching, decoding, executing, etc.) These stages are overlapped and this allows the execution of multiple instructions simultaneously. 
-
 
 ```
 Fetch unit -> Decode unit -> Execute unit
