@@ -224,8 +224,8 @@ The **operating system** **needs to know** a couple of things **to manage the da
 
 Okay but how does this **communication** happen **between** the **control registers and buffers** ? There are two ways: 
 
-**1) IO Port Space**
-**2) Memory-Mapped IO**
+1) **IO Port Space**
+2) **Memory-Mapped IO**
 
 ### IO Port Space
 
