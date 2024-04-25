@@ -212,22 +212,22 @@ So if we consider the IO controller to be part of an IO device, we can say that 
 
 ## Controller and Device
 
-So we talked about IO controllers. Each of these controllers has few registers. By writing data to registers and reading data from them, the operating system can control the IO device. 
+So we talked about IO device controllers. Each of these **IO device controllers has few registers**. By **writing data to registers** and **reading data from them**, the **operating system can control the IO device**. 
 
-There are also buffers in the IO device. They are the sections of memory within the device and they play the role of temporary storage areas. They hold the data that is transferred from the IO device to the operating system or from the operating system to the IO device. And the operating system can read data from these buffers or write data to them. 
+There are also **buffers in the IO device**. They are the **sections of memory within the device** and they play the role of **temporary storage areas**. They **hold the data that is transferred from the IO device to the operating system or from the operating system to the IO device**. And the **operating system can read data from these buffers or write data to them**. 
 
-The operating system needs to know a couple of things to manage the data transfers from/to these buffers: 
+The **operating system** **needs to know** a couple of things **to manage the data transfers from/to these buffers**: 
 
-- location address of the buffer: This specifies where the buffer is located in the memory
-- location address of the IO object: IO devices often work with specific units of data. These can be disk sectors (each sector is a fixed-size block of data that can be read or written as a single unit), video frames (each frame represents a single image or a portion of image displayed on the screen), etc. and they are called IO objects. The location of an IO object refers to the address that identifies where the IO object (e.g. disk sector, video frame, etc.) are located within the IO device's address space.
-- size of data to transfer: When data is transferred from the operating system to the IO device or from the IO device to the operating system, the size/the amount of the data that will be transferred from/to buffers must be known by the operating system. Because this ensures that the appropriate amount of data is transferred and prevents buffer overflows or underflows.
+- **location address of the buffer**: This specifies where the buffer is located in the memory.
+- **location address of the IO object**: IO devices often work with specific units of data. These can be disk sectors (each sector is a fixed-size block of data that can be read or written as a single unit), video frames (each frame represents a single image or a portion of image displayed on the screen), etc. and they are called IO objects. The location of an IO object refers to the address that identifies where the IO object (e.g. disk sector, video frame, etc.) are located within the IO device's address space.
+- **size of data to transfer**: When data is transferred from the operating system to the IO device or from the IO device to the operating system, the size/the amount of the data that will be transferred from/to buffers must be known by the operating system. Because this ensures that the appropriate amount of data is transferred and prevents buffer overflows or underflows.
 
-Okay but how does this communication happen between the registers and buffers ? There are two ways: 
+Okay but how does this **communication** happen **between** the **control registers and buffers** ? There are two ways: 
 
-1) IO Port Space
-2) Memory-Mapped IO
+**1) IO Port Space**
+**2) Memory-Mapped IO**
 
-# IO Port Space
+### IO Port Space
 
 IO port is a physical or logical interface and the data is transferred from the CPU to the IO device or from the IO device to the CPU through this interface. A physical interface in here refers to the actual and physical hardware connection and the data is transferred through this connection. USB ports, ethernal ports, HDMI ports can be given examples of physical interfaces. 
 
@@ -256,7 +256,7 @@ Here portnum parameter represents the IO port number of the control register tha
 
 User-level applications and programs cannot access to the IO port space directly. They must do a system call. This protection is necessary because we want to prevent unauthorizied access to the IO devices and see that IO operations are done in a controlled manner. 
 
-# Memory-Mapped IO
+### Memory-Mapped IO
 
 This is another method of handling communication between the IO devices and CPU. The communication is done by mapping the IO device's control registers and status registers into the same address space with the system's address space. 
 
