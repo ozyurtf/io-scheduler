@@ -1010,7 +1010,11 @@ If there are always IO requests that have short seek time, the IO requests for t
 
 ## Elevator (Scan) 
 
+The behavior of the Scan algorithm and the way it works is similar to the way an elevator works. The algorithm works by starting to move the disk head in one direction (either towards the inner edge or outer edge of the disk), processsing the IO requests in these directions until no IO request is left in that direction, reversing the direction and processing the IO requests in the reverse direction. So the disk head does not go to all the way to the end of the disk and this saves time. When processing the IO requests in a direction, the IO request that is closest to the current position of the head is chosen 
+
 ### Pros
+
+Since the disk head moves in a specific direction and processes the IO requests in that direction, each IO request is processed in a certain timeframe. Therefore when we use eleavtor/scan algorithm, we don't observe starvation 
 
 ### Cons
 
