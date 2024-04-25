@@ -1,11 +1,9 @@
-# IO Scheduler
-
-## IO Operation
+# IO Operation
 Before starting, let's first explain the concept of IO operation. 
 
 **IO operation** is basically the process of **moving data** from **some external devices** to the **processor (CPU)** and from the **processor (CPU)** to the **external devices** using **modules (codes)** and **buffers (temporary storage location in the CPU).** That's why we can call these external devices as IO devices as well because they do an IO operation. 
 
-## IO Devices
+# IO Devices
 
 **IO devices** are the components that **allow** the computer to **communicate/interact with the outside environment**. The CPU interacts with the outside world through this way. 
 
@@ -27,15 +25,15 @@ Some of the examples of IO devices are mouse, display, keyboard, disks, network,
 
 And based on the **type of operations they make**, we can **group** these devices in **three categories**: 
 
-### 1) Human Readable Devices ###
+## 1) Human Readable Devices ###
 **Printers, keyboards, mouses, terminals, video displays** are some of the IO devices that can be managed/read by humans directly. That's why these devices can be grouped under this category. As we might guess, these IO devices are **suitable for communicating with the user**. 
 
-### 2) Machine Readable Devices ### 
+## 2) Machine Readable Devices ### 
 Some of the examples of machine readable external devices are **USB keys, sensors, IO device controllers, and disk drives.** 
 
 Disk drive can be seen as an IO device because they **read data from the disk platters** and **transfer this data to the CPU** or **main memory** whenever this transfer is requested. And disk drives can be seen as a **machine readable** device because **they store and retrieve data in a format that can be processed by a computer (machine) without human intervention**.
 
-### 3) Communication Devices ###
+## 3) Communication Devices ###
 The IO devices that are used for the **communication between the computers and remote devices** can be grouped under this category. An example of these devices might be **modems** or **digital line servers** 
 
 Aside from these 3 categories, we can group the IO devices under two categories depending on how they process the information: **block devices** and **character devices**.
@@ -64,7 +62,7 @@ So in summary, we can think the **accelerators** more like a **functional unit**
 
 Okay but who is managing the IO operations and all of these devices ? 
 
-## Operating System and IO 
+# Operating System and IO 
 
 **Operating system** plays the role of an **interface/layer** _(set of rules, and protocols that govern the exchange of data and commands between the applications and hardware devices)_ **between the devices and the rest of the system**. 
 
@@ -115,7 +113,7 @@ And the **operating system**, as we mentioned earlier, acts like an **intermedia
 
 Now let's talk about the challenges behind managing IO devices.
 
-## IO Devices: Challenges
+# IO Devices: Challenges
 
 Different IO devices perform a wide range of different tasks. 
 
@@ -210,7 +208,7 @@ So if we consider the IO controller to be part of an IO device, we can say that 
 
 **Electronic component** consists of the **electronic circuitry** and **IO controllers** that manage the functionality of the device and handle the communication between the device and the rest of the system. 
 
-## Controller and Device
+# Controller and Device
 
 So we talked about IO device controllers. Each of these **IO device controllers has few registers**. By **writing data to registers** and **reading data from them**, the **operating system can control the IO device**. 
 
@@ -227,7 +225,7 @@ Okay but how does this **communication** happen **between** the **control regist
 1) **IO Port Space**
 2) **Memory-Mapped IO**
 
-### IO Port Space
+## IO Port Space
 
 **IO port** is a **physical or logical interface** and the **data** is **transferred from the CPU to the IO device** or **from the IO device to the CPU through this interface**. A physical interface in here refers to the actual and physical hardware connection and the data is transferred through this connection. **USB ports, ethernal ports, HDMI ports** can be given examples of physical interfaces. 
 
@@ -283,7 +281,7 @@ Here portnum parameter represents the IO port number of the control register tha
 
 User-level applications and programs cannot access to the IO port space directly. They must do a system call. This protection is necessary because we want to prevent unauthorizied access to the IO devices and see that IO operations are done in a controlled manner. 
 
-### Memory-Mapped IO
+## Memory-Mapped IO
 
 This is another method of handling **communication** between the **IO devices** and **CPU**. The communication is done by **mapping** the **IO device's control registers** and **status registers** into the **main memory address space** **of** the **CPU**.
 
@@ -303,13 +301,13 @@ To solve this problem, we can use a mechanism that **disable caching operation**
 
 The modern computers today use memory-mapped IO method in general.
 
-#### Advantages of Memory-Mapped IO 
+### Advantages of Memory-Mapped IO 
 
 1) Because **IO devices can be accessed using a regular load and store instructions**, **device drivers** (in other words software/programs that control and communicate with hardware devices) **can be written entirely in a high-level language like C** and there is **no need to use specialized assembly instructions/code to interact with devices**.
 2) **As long as we keep the memory addresses assigned to the control registers of the IO device controllers out of the memory addresses** that assigned to the user-level applications, **no special protection is needed**.
 3) Because we map the control registers of the IO device controllers to the memory address space, **any CPU instruction that reference to these address spaces** (e.g., read, write, load, store etc.) can be used to access/manipulate the control registers of the IO device controllers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
 
-## Interrupts
+# Interrupts
 
 ```
 +-----+   3) CPU responds to the interrupt    +--------------+   1) IO operation is finished 
@@ -327,11 +325,11 @@ The modern computers today use memory-mapped IO method in general.
 
 **Anytime an IO device wants attention**, it **causes an interrupt**. And one of the times when the IO device wants attention is **when the IO device finishes its operation**.
 
-### Interrupt Controller
+## Interrupt Controller
 
 When an interrupt is generated, it is sent to interrupt controller/handler which is basically a hardware component that manages the interrupts coming from different devices and sources. And the interrupt controller/handler issues the interrupt and sends it tothe CPU. **CPU detects the interrupt**, **saves the current state of the execution**, and **responds appropriately** for that interrupt. 
 
-#### Advanced Programmable Interrupt Controller (APIC)
+### Advanced Programmable Interrupt Controller (APIC)
 
 PIC is a type of **interrupt controller** that is basically **responsible from receiving interrupt requests** from various device controllers and **forwarding them to the CPU**. 
 
@@ -395,7 +393,7 @@ But the **issue** with the PIC is that the **hardware lines, physical electrical
 
 That's why we can take a look at **another mechanism/method that can handle the interrupts.**
 
-#### Message Signaled Interrupts
+### Message Signaled Interrupts
 
 In traditional interrupt systems, IO devices send a physical interrupt line to the CPU when to notify it about the interrupt. With message signaled interrupts, however, a special message is sent to the CPU by the IO device.
 
@@ -405,9 +403,9 @@ The **PCI (bus)** **detects** this **write operation** and then **delivers the i
 
 **Message signalled interrupts provide high degree of programmability in interrupt handling.** In other words the **IO devices can be configured to create specific interrupts based on their requirements when we use message signalled interrupts**. 
 
-#### Complete Interrupt System 
+### Complete Interrupt System 
 
-### Issues with Interrupt Processing 
+## Issues with Interrupt Processing 
 
 In old systems, **whether or not there was a pending interrupt** was being **checked** **after** **each instruction was finished** its execution. So **after executing some instructions**, **if an interrupt occurred**, this means that **all the instructions up to that instruction after which interrupt was generated had been executed completely** and **no instructions were executed yet after that instruction.**
 
@@ -468,11 +466,11 @@ Program Counter --> +----------------------+  Program Counter -->  +------------
 
 ```
 
-## IO Software
+# IO Software
 
 After reviewing the IO hardware, now let's take a look at the IO software. We can start with the goals of the IO software. 
 
-### Goals of the IO Software
+## Goals of the IO Software
 - **Device independence**: We should be able to **write programs** that can **access to any of the IO device** **without having to specify the device in advance**. For instance, a program should be able to **read** a file **from** **DVD**, **hard disk**, **USB stick** etc. **without being modified for each of them separately**. Or when someone type ```sort <input> output``` this **should work with all kinds of disks or keyboard** and the **output should go to any kind of disk or screen**. **If problems occur** due to the **underlying differences** in these IO devices, it is the **operating system's responsibility to take care of these problems.**
 - **Uniform naming**: The **name** of a file/device should be **string/integer** and it should **not depend on the IO device**. Through this way, users can access files using the **same naming convention** **without having to know which specific device corresponds to that file**. For example, if a USB stick is mounted on top of _/usr/documents/_, copying a file to the _/usr/documents/_ basically copies that file to the USB stick. Through this way, **all files are addressed with a path name which makes everything convenient.**
 - **Error handling**: The goal is to **handle** the **errors** as **close to the hardware as possible**. If **IO device controller detects an error**, it should **first try to fix the error**. If it is something that it **cannot solve**, then the **IO device driver should try to handle the problem**. One way to handle it might be **reading the block again** if the error is a read error since sometimes some problems may go away if the operation is repeated. Most of the times, **errors can be recovered at a low level without users being aware of them.** And handling the errors close to the hardware allows for quick detection and resolution of issues.
@@ -482,9 +480,9 @@ Also, if the **IO software initiates an IO operation** and then **waits for this
 
 And another note is that most of the times, the **data coming from the IO device cannot be stored in wherever its final destination is directly**. So in those cases, we should **store** these data in **temporary** **locations** which are called **buffers**. Buffers are also useful since they help the IO software to perform IO operations in large chunks instead of doing small data fransfers frequently.
 
-## Three Ways of Performing IO 
+# Three Ways of Performing IO 
 
-### Programmed IO 
+## Programmed IO 
 The simplest form of handling IO operations is to **make the CPU to do all of these IO operations**. This method is called **programmed IO**.
 
 Let's give an example. Assume that you want to **print** the string **"ABCDEFGH"** with printer. 
@@ -588,7 +586,7 @@ return_to_user();
 
 Therefore, even though the programmed IO is a simple method to handle IO operations, it is **inefficient** in **systems** where **CPU has other works to do due to busy waiting**. But **if the time** that is **needed to print a character is short**, or **in other systems where CPU does not have other things to do**, **busy waiting and programmed IO is okay to use**.
 
-### Interrupt Driven IO
+## Interrupt Driven IO
 
 When the IO device is ready for data transfer or when it completes the IO operation, CPU can be notified about these with interrupts. We call this method interrupt driven IO. And with this method, the CPU won't have to do busy waiting and it can handle other tasks while waiting for the IO device and this increases the efficiency. 
 
@@ -598,7 +596,7 @@ Using interrupts in this scenario prevents CPU from busy waiting which would was
 
 After the data transfer is completed by the CPU from the memory to IO device or IO device to memory, the process is unblocked and scheduler is invoked. And scheduler then determines which process should be executed by the CPU next based on scheduling algorithm.
 
-### Direct Memory Access (DMA) 
+## Direct Memory Access (DMA) 
 
 But the thing is it is not efficient for the CPU to request data from the IO device one byte or one character at a time since this is time-consuming and inefficient. 
 
