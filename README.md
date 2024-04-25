@@ -229,17 +229,19 @@ Okay but how does this **communication** happen **between** the **control regist
 
 ### IO Port Space
 
-IO port is a physical or logical interface and the data is transferred from the CPU to the IO device or from the IO device to the CPU through this interface. A physical interface in here refers to the actual and physical hardware connection and the data is transferred through this connection. USB ports, ethernal ports, HDMI ports can be given examples of physical interfaces. 
+**IO port** is a **physical or logical interface** and the **data** is **transferred from the CPU to the IO device** or **from the IO device to the CPU through this interface**. A physical interface in here refers to the actual and physical hardware connection and the data is transferred through this connection. **USB ports, ethernal ports, HDMI ports** can be given examples of physical interfaces. 
 
 Logical interface, on the other hand, refers to a representation of the connection between the CPU and IO devices. It defines the rules, protocols, and formats used for data exchange between the IO devices and CPU. 
 
-Each IO port is associated with a specific IO device. For example, we observe separate IO ports for keyboard, mouse, display output etc. These IO ports are associated with registers, and the CPU communicates with the IO devices using these registers. 
+**Each IO port** is **associated with** a **specific IO device**. For example, we observe separate IO ports for keyboard, mouse, display output etc. **These IO ports are associated with registers**, and the **CPU communicates with the IO devices using these registers**. 
 
-And the set of all possible IO port numbers assigned to the control registers of the IO devices in the system form the IO port space. The IO port space is an address space separate from the memory address space that is used by the CPU. Each IO device has its own range of IO port numbers allocated within the IO port space.
+And the **set of all possible IO port numbers** **assigned to the control registers of the IO devices in the system form the IO port space**. The **IO port space is an address space** **separate from the memory address space** that is used by the CPU. Each IO device has its own range of IO port numbers allocated within the IO port space.
 
-IO ports are accessed with specialized IO instructions or commands that are provided by the CPU. These instructions or commands specify the address of the port to be accessed and direction of data transfer. An IO port number is a **numerical identifier** that is assigned to the a specific IO port. CPU uses these IO port numbers to identify and access a specific IO port.
+**IO ports** are **accessed** with **specialized IO instructions** or **commands** that are **provided by the CPU**. These **instructions** or commands **specify** the **address of the port** to be **accessed** and **direction of data transfer**. 
 
-Control registers are special registers that are located within the IO device's internal circuitry. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
+An **IO port number** is a **numerical identifier** that is **assigned to the a specific IO port**. **CPU uses these IO port numbers to identify and access a specific IO port.**
+
+**Control registers** are **special registers** that are **located within the IO device's internal circuitry**. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
 
 Control registers may store information such as 
 - current state/status of the device
@@ -273,7 +275,6 @@ The modern computers today use memory-mapped IO method in general.
 1) Because IO devices can be accessed using a regular load and store instructions, device drivers (in other words software/programs that control and communicate with hardware devices) can be written entirely in a high-level language like C and there is no need to use specialized assembly instructions/code to interact with devices.
 2) As long as we keep the memory addresses assigned to the IO devices' registers out of the memory addresses assigned to the user-level applications, no special protection is needed.
 3) Because we map the IO devices' registers to the memory address space, any CPU instruction that reference to these address spaces (e.g., read, write, load, store etc.) can be used to access/manipulate the IO devices' control registers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
-
 
 # The Potential Issue of Caching Device Control Registers
 
@@ -981,15 +982,52 @@ On the other hand, the rate of disk transfer bandwith that is utilized increases
 
 ## FIFO (FCFS) 
 
+This is one of the simplest algorithms that is used to determine the order of the IO operation to be processed. Basically, when a new IO request arrives, it is added to the end of a queue which is basically a data structure that stores IO requests in the order these requests are received. Each of these IO requests typically includes information like the block address in the disk that includes the required information, the type of operation (e.g., whether it is a read or write operation), etc.
+
+And the disk controller processes the requests in this queue in order (e.g., the IO request that was added to the queue first is processed first). When an IO request is processed, the disk head moves to the location to the block address specified in the request and performs the operation (e.g., read, write). Upon the completion of this request, the disk controller moves to the next IO request in the queue
+
+### Pros 
+
+In FIFO, all IO requests are given equal priority and they are treated fairly. Even if a very urgent IO request arrives, it is not given a higher priority. 
+
+Also, applications that submit IO requests in some specific order can expect these IO requests to be processed in the same order. In other words, the execution of IO requests is highly predictable and consistent.
+
+### Cons 
+
+Because IO requests are processed strictly based on their arrival time in FIFO, the physical location of the incoming IO request are not taken into account when determining which IO request should be processed next. That's why the disk head continuously moves between the innermost and outermost tracks. This continous moving back and forth across the disk surface is called **wild swing**. And because of this, the time it takes for the disk head to move from its current location to the requested disk block (this is also called seek time) tends to be high. Data that is accessed together or that is close to each other is likely to be accessed together in the future again but this is ignored in FIFO algorithm. The IO requests that are physically close to the current position of the disk head are not prioritized.
+
 ## Shortest Seek Time First (SSTF) 
+
+In Shortest Seek Time First algorithm, the IO request that is closest to the current position of the head is chosen to be prcoessed in the next step. The way it works is that the IO requests are placed in a queue and each IO request contains information such as block address or the track number that needs to be accessed. And for each request in the queue, SSTF algorithm computes the seek time required to move the disk head from the current position to the requested track and the IO request that has the shortest seek time is chosen from the current head position. 
+
+### Pros
+
+### Cons
+
 
 ## Elevator (Scan) 
 
+### Pros
+
+### Cons
+
 ## Look 
+
+### Pros
+
+### Cons
 
 ## Circular Scan (C-Scan) 
 
+### Pros
+
+### Cons
+
 ## Circular Look (C-Look)
+
+### Pros
+
+### Cons
 
 
 
