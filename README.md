@@ -331,7 +331,7 @@ The modern computers today use memory-mapped IO method in general.
 
 When an interrupt is generated, it is sent to interrupt controller/handler which is basically a hardware component that manages the interrupts coming from different devices and sources. And the interrupt controller/handler issues the interrupt and sends it tothe CPU. **CPU detects the interrupt**, **saves the current state of the execution**, and **responds appropriately** for that interrupt. 
 
-#### Programmable Interrupt Controller (PIC)
+#### Advanced Programmable Interrupt Controller (APIC)
 
 PIC is a type of **interrupt controller** that is basically **responsible from receiving interrupt requests** from various device controllers and **forwarding them to the CPU**. 
 
@@ -397,51 +397,54 @@ That's why we can take a look at **another mechanism/method that can handle the 
 
 #### Message Signaled Interrupts
 
+In traditional interrupt systems, IO devices send a physical interrupt line to the CPU when to notify it about the interrupt. With message signaled interrupts, however, a special message is sent to the CPU by the IO device.
+
 In message signaled interrupts, the **IO device writes the data that describes the interrupt to the designated memory-mapped IO address**. And the **act of writing the data to this specific memory address triggers the interrupt**. This mechanism is called **message signaled interrupts**. 
 
 The **PCI (bus)** **detects** this **write operation** and then **delivers the interrupt to the appropriate CPU** based on the information written to the memory address. 
 
 **Message signalled interrupts provide high degree of programmability in interrupt handling.** In other words the **IO devices can be configured to create specific interrupts based on their requirements when we use message signalled interrupts**. 
 
+#### Complete Interrupt System 
+
 ### Issues with Interrupt Processing 
 
-In old systems, whether or not there was a pending interrupt was being checked after each instruction was finished its execution. So after executing some instructions, if an interrupt occurred, this means that all the instructions up to that instruction after which interrupt was generated had been executed completely and no instructions were executed yet after that instruction.
+In old systems, **whether or not there was a pending interrupt** was being **checked** **after** **each instruction was finished** its execution. So **after executing some instructions**, **if an interrupt occurred**, this means that **all the instructions up to that instruction after which interrupt was generated had been executed completely** and **no instructions were executed yet after that instruction.**
 
 This may not be the case in modern computers. 
 
-Today, modern CPUs use a method that is called pipelining. Basically, the execution of an instruction is broken into multiple stages (e.g., fetching, decoding, executing, etc.) These stages are overlapped and this allows the execution of multiple instructions simultaneously. 
+Today, modern CPUs use a method that is called **pipelining**. Basically, **the execution of an instruction is broken into multiple stages** (e.g., fetching, decoding, executing, etc.) **These stages** are **overlapped** and **this allows the execution of multiple instructions simultaneously.** 
 
 ```
 Fetch unit -> Decode unit -> Execute unit
-
 ```
 
-And when an interrupt occurs, we might see some instructions that have completed their executions, some instructions waiting to enter the pipeline of fetching + decoding + executing, and some others that are in the middle of their executions etc.
+And **when** an **interrupt occurs**, we might **see some instructions that have completed their executions**, **some instructions waiting to enter the pipeline of fetching + decoding + executing**, and **some others that are in the middle of their executions** etc.
 
-In these cases, when an interrupt occurs, the value of the program counter will be pointing to the address of the next instruction that will be fetched instead of pointing to the address of the instruction that has just completed its execution.
+In these cases, **when an interrupt occurs**, **the value of the program counter will be pointing to the address of the next instruction** **that will be fetched** **instead of pointing to the address of the instruction that has just completed its execution**.
 
-In the situation like below
+In the situation like below,
 
 ```
-Fetch unit -> Decode unit                          Execute Unit
-                          \                     /
-                            --- Holding Buffer  -  Execute Unit                     
-                          /                     \  
-Fetch unit -> Decode unit                          Execute Unit
+Fetch unit -> Decode unit                        Execute Unit
+                          \                    /
+                           -- Holding Buffer --  Execute Unit                     
+                          /                    \  
+Fetch unit -> Decode unit                        Execute Unit
 ```
 
-some instructions that started a long time ago may still be in the holding buffer or waiting to enter the execute unit and that's why they may not have started. Other instructions that started recently may be almost done and when the interrupt occurs, many instructions may be at various states of completeness and the relationship between them and the program counter might be weak because the program counter may not directly correspond to the instruction that caused the interrupt.
+**some instructions that started a long time ago** may **still be in the holding buffer** or **waiting to enter the execute unit** and that's why **they may not have started**. **Other instructions** that **started recently** may be **almost done** and **when the interrupt occurs**, **many instructions may be at various states of completeness** and **the relationship between them and the program counter might be weak because the program counter may not directly correspond to the instruction that caused the interrupt.**
 
-An interrupt after which we can observe a well-defined state is called a precise interrupt. These kinds of interrupts have the following 4 features: 
+**An interrupt after which we can observe a well-defined state is called a precise interrupt**. These kinds of interrupts have the following 4 features: 
 
-1) The program counter is saved in a known place (e.g., a special register that is only accessible through kernel mode. _(Saving program counter allows the CPU to know where to continue execution after interrupt is handled)_
-2) All instructions before the instruction that is pointed by the program counter have finished their executions. _(This means that any changes these instructions made to the CPU's registers or memory are completed. And no incomplete modifications exist at that moment)_
-3) There is no instruction beyond the instruction that is pointed by the program counter that started its execution. _(This ensures that the interrupt does not affect the execution of the next instructions)_
-4) The execution state of the instruction that is pointed by the program counter is known. _(In other words CPU knows whether the instruction completed its execution, just started its execution, etc. Knowing these is helpful for handling the execution after the interrupt is handled)_
+1) **The program counter is saved in a known place** (e.g., a special register that is only accessible through kernel mode. _(Saving program counter allows the CPU to know where to continue execution after interrupt is handled)_
+2) **All instructions before the instruction that is pointed by the program counter have finished their executions.** _(This means that any changes these instructions made to the CPU's registers or memory are completed. And no incomplete modifications exist at that moment)_
+3) **There is no instruction beyond the instruction that is pointed by the program counter that started its execution**. _(This ensures that the interrupt does not affect the execution of the next instructions)_
+4) **The execution state of the instruction that is pointed by the program counter is known**. _(In other words CPU knows whether the instruction completed its execution, just started its execution, etc. Knowing these is helpful for handling the execution after the interrupt is handled)_
 
-If the CPU handles parallel and out-of-order execution, if it can execute multiple instructions simultaneously, ensuring that interrupts are precise is crucial. Because precise interrupts can help us to maintain a consistent and predictable state even when the instructions are executed out-of-order or in parallel.
+**If** the **CPU** **handles** **parallel** and **out-of-order execution**, if it can **execute multiple instructions simultaneously**, ensuring that **interrupts** are **precise** is **crucial**. Because **precise interrupts can help us to maintain a consistent and predictable state even when the instructions are executed out-of-order or in parallel**.
 
-If an interrupt does not meet these requirements, it is called imprecise interrupt. And we can see how they look like in below:
+If an interrupt does **not meet these requirements**, it is called **imprecise interrupt**. And we can see how they look like in below:
 
 ```
                     +----------------------+                       +----------------------+
@@ -465,24 +468,23 @@ Program Counter --> +----------------------+  Program Counter -->  +------------
 
 ```
 
-# IO Software
+## IO Software
 
 After reviewing the IO hardware, now let's take a look at the IO software. We can start with the goals of the IO software. 
 
 ### Goals of the IO Software
-- **Device independence**: We should be able to write programs that can access to any of the IO device without having to specify the device in advance. For instance, a program should be able to read a file from DVD, hard disk, USB stick etc. without being modified for each of them separately. Or when someone type ```sort <input> output``` this should work with all kinds of disks or keyboard and the output should go to any kind of disk or screen. If problems occur due to the underlying differences in these IO devices, it is the operating system's responsibility to take care of these problems.
-- **Uniform naming**: The name of a file/device should be string/integer and it should not depend on the IO device. Through this way, users can access files using the same naming convention without having to know which specific device corresponds to that file. For example, if a USB stick is mounted on top of _/usr/documents/_, copying a file to the _/usr/documents/_ basically copies that file to the USB stick. Through this way, all files are addressed with a path name which makes everything convenient.
-- **Error handling**: The goal is to handle the errors as close to the hardware as possible. If IO device controller detects an error, it should first try to fix the error. If it is something that it cannot solve, then the IO device driver should try to handle the problem. One way to handle it might be reading the block again if the error is a read error since sometimes some problems may go away if the operation is repeated. Most of the times, errors can be recovered at a low level without users being aware of them.
-- **Handling shared and dedicated devices**: Some IO devices (e.g., disks) can be used by many users at the same time. These are called sharable devices. But this is not valid for some other IO devices (e.g., printers) which are called dedicated devices. The operating system must be able to manage both shared devices and dedicated devices properly.
+- **Device independence**: We should be able to **write programs** that can **access to any of the IO device** **without having to specify the device in advance**. For instance, a program should be able to **read** a file **from** **DVD**, **hard disk**, **USB stick** etc. **without being modified for each of them separately**. Or when someone type ```sort <input> output``` this **should work with all kinds of disks or keyboard** and the **output should go to any kind of disk or screen**. **If problems occur** due to the **underlying differences** in these IO devices, it is the **operating system's responsibility to take care of these problems.**
+- **Uniform naming**: The **name** of a file/device should be **string/integer** and it should **not depend on the IO device**. Through this way, users can access files using the **same naming convention** **without having to know which specific device corresponds to that file**. For example, if a USB stick is mounted on top of _/usr/documents/_, copying a file to the _/usr/documents/_ basically copies that file to the USB stick. Through this way, **all files are addressed with a path name which makes everything convenient.**
+- **Error handling**: The goal is to **handle** the **errors** as **close to the hardware as possible**. If **IO device controller detects an error**, it should **first try to fix the error**. If it is something that it **cannot solve**, then the **IO device driver should try to handle the problem**. One way to handle it might be **reading the block again** if the error is a read error since sometimes some problems may go away if the operation is repeated. Most of the times, **errors can be recovered at a low level without users being aware of them.** And handling the errors close to the hardware allows for quick detection and resolution of issues.
+- **Handling shared and dedicated devices**: **Some IO devices** (e.g., disks) can be **used by many users at the same time**. These are called **sharable devices**. But this is **not valid for some other IO devices** (e.g., printers) which are called **dedicated devices**. An IO software must ensure **proper synchronization** and **coordination** among **competing processes/threads** for **shared devices**. And for dedicated devices, IO software should provide exclusive access and prevent conflicts from other processes.
 
-One of the issues of IO software is synchronous (blocking) and asynchronous transfers that are driven by interrupts. Most of the times, the CPU starts the transfer and starts doing another task until an interrupt notification comes to it. This is asynchronous transfer because it is driven by interrupts.
+Also, if the **IO software initiates an IO operation** and then **waits for this IO operation to complete before proceeding further**, this is called **synchronous** IO. If the IO software **initiates an IO operation**, and then **continue executing other tasks instead of waiting** for that IO operation to be finished, this is called **asynchronous** IO. 
 
-And another issue of IO software is buffering. Most of the times, the data coming from the IO device cannot be stored in wherever its final destination is directly. So in those cases, we should store these data in temporary locations which are called buffers.
+And another note is that most of the times, the **data coming from the IO device cannot be stored in wherever its final destination is directly**. So in those cases, we should **store** these data in **temporary** **locations** which are called **buffers**. Buffers are also useful since they help the IO software to perform IO operations in large chunks instead of doing small data fransfers frequently.
 
+## Three Ways of Performing IO 
 
-# Three Ways of Performing IO 
-
-## Programmed IO 
+### Programmed IO 
 The simplest form of IO is to make the CPU all the IO operations. This method is called **programmed IO**.
 
 Let's give an example. Assume that you want to print the string "ABCDEFGH" with printer. 
@@ -586,7 +588,7 @@ return_to_user();
 
 Even though the programmed IO is a simple method to handle IO operations, it is inefficient in systems where CPU has other works to do due to busy waiting. But if the time that is needed to print a character is short, or in other systems where CPU does not have other things to do, busy waiting and programmed IO is okay to use.
 
-## Interrupt Driven IO
+### Interrupt Driven IO
 
 When the IO device is ready for data transfer or when it completes the IO operation, CPU can be notified about these with interrupts. We call this method interrupt driven IO. And with this method, the CPU won't have to do busy waiting and it can handle other tasks while waiting for the IO device and this increases the efficiency. 
 
@@ -596,7 +598,7 @@ Using interrupts in this scenario prevents CPU from busy waiting which would was
 
 After the data transfer is completed by the CPU from the memory to IO device or IO device to memory, the process is unblocked and scheduler is invoked. And scheduler then determines which process should be executed by the CPU next based on scheduling algorithm.
 
-## Direct Memory Access (DMA) 
+### Direct Memory Access (DMA) 
 
 But the thing is it is not efficient for the CPU to request data from the IO device one byte or one character at a time since this is time-consuming and inefficient. 
 
