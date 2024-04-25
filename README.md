@@ -239,7 +239,20 @@ And the **set of all possible IO port numbers** **assigned to the control regist
 
 **IO ports** are **accessed** with **specialized IO instructions** or **commands** that are **provided by the CPU**. These **instructions** or commands **specify** the **address of the port** to be **accessed** and **direction of data transfer**. 
 
-An **IO port number** is a **numerical identifier** that is **assigned to the a specific IO port**. **CPU uses these IO port numbers to identify and access a specific IO port.**
+We can see some examples of these instructions in below: 
+
+```
+MOV DX, 0x3F8 :  Set the IO port number.
+IN AL, DX     :  Read a byte from the IO port into AL
+```
+
+```
+MOV DX, 0x3F8  ; Set the IO port number 
+MOV AL, 0x42   ; Set the data to be written
+OUT DX, AL     ; Write the byte from AL to the IO port
+```
+
+Note that an **IO port number** in here refers to a **numerical identifier** that is **assigned to the a specific IO port**. **CPU uses these IO port numbers to identify and access a specific IO port.**
 
 **Control registers** are **special registers** that are **located within the IO device controller**. They are used for configuring, controlling, and monitoring the behavior of the IO device. They cannot ba accessed by the CPU directly. For the communication to happen, the CPU uses specific IO port numbers within the IO port space that are assigned to each control register. 
 
@@ -272,29 +285,31 @@ User-level applications and programs cannot access to the IO port space directly
 
 ### Memory-Mapped IO
 
-This is another method of handling communication between the IO devices and CPU. The communication is done by mapping the IO device's control registers and status registers into the same address space with the system's address space. 
+This is another method of handling **communication** between the **IO devices** and **CPU**. The communication is done by **mapping** the **IO device's control registers** and **status registers** into the **main memory address space** **of** the **CPU**.
 
-So in this method, a portion of the address space is reserved for the registers of the IO devices. The operating system basically assigns some specific memory addresses to these registers and then CPU can be able to read and write to these addresses in the address space using regular memory load and store instructions. 
+So in this method, **a portion of the main memory address space** is **reserved for the control registers** of the **IO devices**. The operating system basically assigns some specific memory addresses to these control registers and then **CPU can be able to read and write to these addresses in the main memory address space using regular memory load and store instructions**. 
 
-When we were using IO port space method, we were using separate instructions that are designed for the IO operations specifically. These instructions were distinct from the instructions of accessing to the regular memory address space and they were being used to communicate with the IO devices. However, these separate instructions are not needed anymore when we reserve a portion of the address space for the IO operations in memory-mapped IO method. Also in the IO port space, an address space that is separate from the memory address space was reserved for the IO devices and each IO device was being assigned an IO port numbers within this IO port space. And when CPU wanted to access the device registers, it was using special IO instructions (e.g. in and out instructions) specifying the IO port address. In memory-mapped IO, each IO device's registers are mapped to a specific address in the memory address space through pagetable and with this way, no special IO instructions are required in this method. 
+When we were using **IO port space method**, we were using **separate instructions** that are **designed for the IO operations specifically**. These **instructions** were **distinct** **from** the **instructions of accessing to the main memory address space** and they were being **used to communicate with the IO devices**. 
+
+However, **these separate instructions are not needed anymore** when we **reserve a portion of the address space for the IO operations** in **memory-mapped IO method**. Also **in the IO port space**, an **address space that is separate from the memory address space was reserved for the IO devices** and **each IO device** was **being assigned an IO port numbers within this IO port space**. So **when CPU** **wanted to access the control registers** **of the IO devices**, it was **using special IO instructions** (e.g. in and out instructions) to **specify the IO port addresses**. 
+
+In **memory-mapped IO**, each IO device's registers are mapped to a specific address in the main memory address space through pagetable and with this way, **no special IO instructions are required in this method**. 
 
 When the CPU wants to perform a load operation or store operation on IO device's corresponding control registers in the memory address space, the IO device itselfs monitors these memory accesses. And the range of memory addresses IO device should monitor is predetermined. When a load or store operation is requested within this range, the IO device acts accordingly. 
+
+One note is that: as we explained, **memory mapped IO** **treats control registers** of the IO devices **as memory addresses**. Therefore, **CPU caches can try to cache the values of these control registers from the main memory address space**. And **these cached values** **may not reflect the actual state of the IO device**. In that kind of case, we **observe data corruption** and **incorrect behavior**. 
+
+To solve this problem, we can use a mechanism that **disable caching operation** **for certain memory regions**. We can use a **"cache disabled bit"** in the **PTE** and **make the memory addresses that correspond to IO device registers non-cachable**. Through this way, we can ensure that **CPU does not cache the values read from these addresses.**
 
 The modern computers today use memory-mapped IO method in general.
 
 #### Advantages of Memory-Mapped IO 
 
-1) Because IO devices can be accessed using a regular load and store instructions, device drivers (in other words software/programs that control and communicate with hardware devices) can be written entirely in a high-level language like C and there is no need to use specialized assembly instructions/code to interact with devices.
-2) As long as we keep the memory addresses assigned to the IO devices' registers out of the memory addresses assigned to the user-level applications, no special protection is needed.
-3) Because we map the IO devices' registers to the memory address space, any CPU instruction that reference to these address spaces (e.g., read, write, load, store etc.) can be used to access/manipulate the IO devices' control registers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
+1) Because **IO devices can be accessed using a regular load and store instructions**, **device drivers** (in other words software/programs that control and communicate with hardware devices) **can be written entirely in a high-level language like C** and there is **no need to use specialized assembly instructions/code to interact with devices**.
+2) **As long as we keep the memory addresses assigned to the control registers of the IO device controllers out of the memory addresses** that assigned to the user-level applications, **no special protection is needed**.
+3) Because we map the control registers of the IO device controllers to the memory address space, **any CPU instruction that reference to these address spaces** (e.g., read, write, load, store etc.) can be used to access/manipulate the control registers of the IO device controllers as well. This basically simplifies the programming model because developers can now use the same instructions for both memory operations and IO device communication.
 
-# The Potential Issue of Caching Device Control Registers
-
-As we explained previously, memory mapped IO treats IO devices' control registers as memory addresses. Therefore, CPU caches can try to cache the values of these registers from the memory address space. And these cached values may not reflect the actual state of the IO device. In that kind of case, we observe data corruption and incorrect behavior. 
-
-To solve this problem, we can use a mechanism that disable caching operation for certain memory regions. We can use a "cache disabled bit" in the PTE and make the memory addresses that correspond to IO device registers non-cachable. Through this way, we can ensure that CPU does not cache the values read from these addresses.
-
-# Interrupts
+## Interrupts
 
 ```
 +------+     CPU responds to the interrupt     +-------------+    
