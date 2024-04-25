@@ -588,30 +588,41 @@ Therefore, even though the programmed IO is a simple method to handle IO operati
 
 ## Interrupt Driven IO
 
-When the IO device is ready for data transfer or when it completes the IO operation, CPU can be notified about these with interrupts. We call this method interrupt driven IO. And with this method, the CPU won't have to do busy waiting and it can handle other tasks while waiting for the IO device and this increases the efficiency. 
+**When the IO device is ready for data transfer** or **when it completes the IO operation**, **CPU can be notified about these with interrupts**. We call this method **interrupt driven IO**. And with this method, the **CPU won't have to do busy waiting** and it can **handle other tasks while waiting for the IO device** and **this increases the efficiency**. 
 
-Basically when an IO operation is initiated by a process, system call is made to the operating system. And if the IO device is not ready to do the required IO operation, the system call is blocked and marked as waiting by the operating system. In the mean time, the operating system continues executing and scheduling other processes while the IO operation is waiting.  Once the IO device becomes ready to run the IO operation,  it raises an interrupt and this interrupt is sent to the CPU which indicates that the IO device requires attention. After CPU is notified about the fact that IO device is ready to run the IO operation, CPU first saves its current execution context. Then the interrupt handler determines which IO device raised the interrupt and then takes appropriate actions. If the interrupt handler decides that the IO device is ready for data transfer, the CPU initiates the transfer between the IO device and memory and it copies the data from memory to IO device or IO device to memory. 
+Basically **when an IO operation is initiated by a process**, **system call is made to the operating system**. And **if the IO device is not ready to do the required IO operation**, the **system call is blocked** and **marked as waiting** by the operating system. In the mean time, the **operating system continues executing and scheduling other processes** **while the IO operation is waiting**.  
 
-Using interrupts in this scenario prevents CPU from busy waiting which would waste CPU cycles.
+Once the **IO device becomes ready** to run the IO operation,  **it raises an interrupt** and **this interrupt is sent to the CPU** which indicates that the IO device requires attention. **After CPU** is **notified** about the fact that **IO device is ready to run** the IO operation, **CPU first saves its current execution context**. Then the **interrupt handler determines which IO device raised the interrupt** and then **takes appropriate actions**. If the **interrupt handler decides** that the **IO device is ready for data transfer**, the **CPU initiates the transfer between the IO device and memory** and it **copies the data from memory to IO device or IO device to memory**. 
 
-After the data transfer is completed by the CPU from the memory to IO device or IO device to memory, the process is unblocked and scheduler is invoked. And scheduler then determines which process should be executed by the CPU next based on scheduling algorithm.
+**Using interrupts** in this scenario **prevents CPU from busy waiting** which would waste CPU cycles.
+
+**After the data transfer is completed** **by** the **CPU** from the memory to IO device or IO device to memory, **the process is unblocked** and **scheduler is invoked**. And then the scheduler **decides which process should run next** based on the scheduling algorithm and other factors, such as process priorities and resource availability. 
 
 ## Direct Memory Access (DMA) 
 
-But the thing is it is not efficient for the CPU to request data from the IO device one byte or one character at a time since this is time-consuming and inefficient. 
+In **programmed IO** and **interrupt-driven IO**, the **IO device controller was relying on the CPU** to **initiate** and **control** the **data transfer** between the **IO device** and **memory**. But the thing is **it is not efficient for the CPU to request data from the IO device one byte or one character at a time** and handle the data transfer this way since this is quite **time-consuming** and **inefficient**. 
 
-DMA is a technique that is used to allow the IO devices to transfer data to/from the main memory directly. In this scenario, CPU is not used during the data transfer. And this process is handled by the DMA controller. 
+And **DMA** is a method that is used to **allow the IO devices to transfer data** **to/from the main memory directly**. In this scenario, **CPU** is **not used during the data transfer**. And this process is **handled by the DMA controller**. 
 
-DMA controller is a hardware component. It is typically integrated into the motherbaord. In some cases, we can see them as integrated to the IO devices such as disk controllers. 
+**DMA controller is a hardware component**. It is typically **integrated** into the **motherbaord**. In some cases, we can see them **integrated to the IO devices such as disk controllers**. 
 
-DMA controller is connected to the system bus and therefore it can access to the main memory directly. And through this way, it can initiate and manage data transfers between IO devices and main memory directly. 
+**DMA controller is connected to the system bus** and therefore **it can access to the main memory directly**. And through this way, it can **initiate and manage data transfers between IO devices and main memory directly.** 
 
-DMA controller contains several key components: 
-- Address registers: Holds the address the data will come from and destination address.
-- Data registers: It stores the transferred data temporarily. 
-- Data count : Keeps track of the number of characters or bytes remaining to be transferred.
-- Control unit: This is used to control the overall operation of the DMA controller. The control unit receives DMA request and sends DMA acknowledge. It generates interrupts when the data transfer is completed
-- Bus interface: The bus in here allows the DMA controller to communicate with the CPU, memory, and IO devices.
+When an IO request is made, the process typically involves the following steps:
+
+1) The **CPU initiates an IO request** by **writing instructions and parameters to the control registers of the IO device controller**. These instructions specify the operation to be performed, such as reading from or writing to the device.
+2) The **IO device controller interprets the instructions stored in its control registers** and **starts executing the requested operation**.
+3) If the **IO operation involves transferring data between the IO device and main memory**, the **IO device controller interacts directly with the main memory**. And it does this through **direct memory access (DMA).**
+4) With **DMA**, the **IO device controller can access the main memory independently**, **without the constant intervention of the CPU**. The **CPU sets up the DMA operation by providing the necessary information**, such as the **memory address** and the **amount of data to be transferred**.
+5) The **DMA controller** performs the **data transfer between the IO device and main memory**. It reads data from the IO device and writes it to the designated memory location, or reads data from memory and sends it to the device, depending on the IO operation.
+6) **Once** the **data transfer** is **complete**, the **IO device controller updates its status registers** to **indicate** the **completion of the operation** and may **generate an interrupt to notify the CPU**.
+
+**DMA controller** contains **several key components**: 
+- **Address registers**: Holds the address the data will come from and destination address.
+- **Data registers**: It stores the transferred data temporarily. 
+- **Data count** : Keeps track of the number of characters or bytes remaining to be transferred.
+- **Control logic**: This is used to control the overall operation of the DMA controller. The control unit receives DMA request and sends DMA acknowledge. It generates interrupts when the data transfer is completed.
+- **Bus interface**: The bus in here allows the DMA controller to communicate with the CPU, main memory, and IO devices.
 
 When transfer is initiated, CPU programs the DMA controller by writing the necessary information into the control registers of the DMA controller. 
 
@@ -628,12 +639,12 @@ We can see the visualization of this process in below:
 +----------+                    +-------------+                    +--------------------+          +-------------+
 |   CPU    |                    |     DMA     |                    |        Disk        |          |     Main    |
 |          |                    |  Controller |                    |     Controller     |          |    Memory   |
-|          |                    |             |                    |                    |          |             |                                         
+|          |                    |             |                    |                    |          |             |            
 |          |   1) CPU programs  |             |                    |    +----------+    |          |             |      
 |          |   DMA controller   |             |                    |    |  Buffer  |    |          |             |
 |          |                    |  +-------+  |                    |    |          |    |          |             |
 |          |---------------------->|Address|  |                    |    +----------+    |          |             |
-|          |                    |  |Regist |  |                    |             |      |          |             |                                        
+|          |                    |  |Regist |  |                    |             |      |          |             |
 |          |                    |  +-------+  |                    |             |      |          |             |
 |          |                    |  |Data   |  |                    |             |      |          |             |
 |          |                    |  |Regist |  |                    |             |      |          |             |           
@@ -643,7 +654,7 @@ We can see the visualization of this process in below:
 |    |     |                    |  +-------+  |                    |      |      |      |          |    |        |                
 |    |     |                    |  |Control|  |                    |      |      |      |          |    |        |
 |    |     |                    |  |Logic  |  |    Acknowledge     |      |      |      |          |    |        |
-|    |     |                    |  ||     ||<-------------------------    |      |      |          |    |        |                                   
+|    |     |                    |  ||     ||<-------------------------    |      |      |          |    |        |
 |    |     |                    |  +|-----|+  |                    |      |      |      |          |    |        |   
 +----|-----+                    +---|--+--|---+                    +------|--+---|------+          +----|--+-----+
    | |                              |  |  |                               |  |   |                      |  | 
