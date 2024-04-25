@@ -998,12 +998,15 @@ Because IO requests are processed strictly based on their arrival time in FIFO, 
 
 ## Shortest Seek Time First (SSTF) 
 
-In Shortest Seek Time First algorithm, the IO request that is closest to the current position of the head is chosen to be prcoessed in the next step. The way it works is that the IO requests are placed in a queue and each IO request contains information such as block address or the track number that needs to be accessed. And for each request in the queue, SSTF algorithm computes the seek time required to move the disk head from the current position to the requested track and the IO request that has the shortest seek time is chosen from the current head position. 
+In Shortest Seek Time First algorithm, the IO request that is closest to the current position of the head and that requires smallest time for the disk to rotate and position the requested sector under the disk head is chosen to be prcoessed in the next step. The way it works is that the IO requests are placed in a queue and each IO request contains information such as block address or the track number that needs to be accessed. And for each request in the queue, SSTF algorithm computes the seek time required to move the disk head from the current position to the requested track and computes how long it takes to rotate and position the requested track under the disk head. These two times are summed and then the IO request that has the shortest time is chosen from the current head position. 
 
 ### Pros
 
+Because the IO requests that have the shortest seek time are always prioritized and processed first, the time that is spent for moving head from one location to another location is minimized. And this leads to improved disk performance and reduced time to access and retrieve requested data, in other words, faster access compared to FIFO. 
+
 ### Cons
 
+If there are always IO requests that have short seek time, the IO requests for tracks that are far away from the current track may never get a chance to be processed. This causes unfairness and starvation and can be seen as a con. In addition, unlike FIFO, the order in which the IO requests will be processed is not predictable since this order depends on the arrival time of these requests, the current location of the head and the seek time of these IO requests.
 
 ## Elevator (Scan) 
 
@@ -1028,6 +1031,17 @@ In Shortest Seek Time First algorithm, the IO request that is closest to the cur
 ### Pros
 
 ### Cons
+
+## FSCAN
+
+## FLOOK 
+
+## Deadline Scheduler
+
+## Completely Fair Queueing (CFQ)
+
+
+
 
 
 
