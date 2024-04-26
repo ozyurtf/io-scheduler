@@ -1173,9 +1173,21 @@ Aside from this, the LOOK algorithm has the advantages of the SCAN algorithm as 
 
 ## C-LOOK 
 
+It is similar to the LOOK algorithm in which the disk head moves in one direction and reverses after reaching the last IO request in that direction. But in C-LOOK, instead of reversing, the head returns back to the IO request at the beginning after reaching the last IO request and then services the IO requests in the original direction again. 
+
+### Pros 
+
 ## FSCAN
 
+### Pros 
+
+### Cons
+
 ## FLOOK 
+
+### Pros
+
+### Cons
 
 ## Deadline Scheduler
 
