@@ -709,15 +709,15 @@ We can see the **visualization of this process** in below:
 
 # DMA and Memory Protection
 
-As we learned previously, DMA allows the IO devices to access to main memory directly. Therefore, we may observe unauthorized access to memory regions, and data corruption if the process is not properly managed. 
+As we learned previously, **DMA allows the IO devices** to **access to main memory directly**. Therefore, **we may observe unauthorized access to memory regions**, and **data corruption** **if** the **process is not properly managed**. 
 
-To address these issues, we use a method called IOMMU. IOMMU is a hardware component. It acts as a memory protection and translation layer for the DMA operations. But how ? 
+**To address these issues**, we **use** a method called **IOMMU**. IOMMU is a component that **acts as a memory protection** and **translation layer** for the **DMA operations**. But how ? 
 
-The operating system creates a translation table in the IOMMU. This translation table maps the virtual addresses that are used by the IO devices to the physical memory addresses.
+The operating system creates a **translation table** in the IOMMU. This **translation table maps the virtual addresses** that are **used** by the **IO devices** **to** the **physical memory addresses**.
 
-If IO device DMA to an address and there is no translation, an interrupt/exception is raised.
+If IO device tries to map the DMA to an address and there is no translation in the translation table, an interrupt/exception is raised.
 
-The idea in here is similar how applications are restricted to what memory they can access using pagetable (MMU). 
+The idea in here is similar the way **applications** are **restricted** **to specific addresses** in main memory address space **using pagetable** and **main memory unit** (MMU). 
 
 ```
        +---------------------------+
@@ -737,7 +737,7 @@ The idea in here is similar how applications are restricted to what memory they 
       IO Device                 CPU       
 ```
 
-# Software Layers for IO
+# Operating System Software Layers for IO
 
 ```
          
@@ -746,7 +746,7 @@ The idea in here is similar how applications are restricted to what memory they 
     +--------------------------------+
     | Device-independent OS software |       
     +--------------------------------+
-    |         Device Drivers         |
+    |         Device drivers         |
     |         +----------------------+        
     |         |  Interrupt handlers  |
 +---+---------+----------------------+---+
@@ -754,65 +754,80 @@ The idea in here is similar how applications are restricted to what memory they 
 +----------------------------------------+
 ```
 
-## Device Drivers 
-
-Device drivers are software modules and they are prepared specifically for each IO device. They basically provide an interface so that the operating system can interact with the devices through this interface. The codes in the device drivers are tailored to control and communicate with a particular IO device. They encapsulate the low-level details of the device and abstract them from the operating system.
-
-They are responsible from reading data from the IO devices' registers and writing data to them. They include interrupt handlers which are the procedures (e.g., processing the interrupt, communicating with the IO device, performing any other necessary actions etc.) that are followed after an interrupt is generated.
-
-Device drivers are provided by the manufacturer of the IO devices and integrated to the operating system's kernel. They are integrated either as built-in components or as loadable modules which basically allow the device drivers to be loaded into the kernel. If they are integrated as built-in, however, they are compiled to the kernel directly and they are always available.
-
-In addition, the device drivers must follow standard interfaces that are defined by the operating systems. These interfaces are different in block devices and character devices because how these devices process the data is different. 
-
-The drivers of the block devices (e.g., hard drives, USB storage devices) must follow a specific interface that includes operations like reading and writing blocks of data. 
-
-The drivers of the character devices (e.g., keyboards, serial ports) must follow another type of interface that deals with individual characters of bytes of data.
+If we want to look from more detailed perspective: 
 
 ```
                User process       
                     |
-+-------------------|--------------------+----------------
-|           +----------------+           | 
-|           |  User program  |           |  User space
-|           +----------------+           |
-+-------------------|--------------------+----------------
-|                   |                    |
-|   +--------------------------------+   |
-|   |  Rest of the operating system  |   |
-|   +--------------------------------+   |
-|       |           |            |       |
-|   +-------+   +---------+   +------+   |  Kernel space
-|   |Printer|   |Camcorder|   |CDRom |   |
-|   |driver |   |driver   |   |driver|   |  
-|   +-------+   +---------+   +------+   |
-|       |           |            |       |
-+-------|-----------|------------|-------+----------------
-|       |           |            |       |    
-|       V           V            V       |
-|   Printer     Camcorder    CD-Rom      |  Hardware
-|   controller  controller   controller  | 
-|       |           |            |       |
-+-------|-----------|------------|-------+----------------
-|       |           |            |       | 
-|       V           V            V       |  Devices  
-|   Printer     Camcorder    CD-Rom      |    
-+----------------------------------------+----------------
++-------------------|--------------------------+----------------
+|           +----------------+                 | 
+|           |  User program  |                 |  User space
+|           +----------------+                 |
++-------------------|--------------------------+----------------
+|                   |                          |
+|   +----------------------------------+       |
+|   |   Rest of the operating system   |       |
+|   +----------------------------------+       |
+|       |           |               |          |
+|   +-------+   +---------+     +------+       |  Kernel space
+|   |Printer|   |Camcorder|     |CDRom |       |
+|   |driver |   |driver   |     |driver|       |  
+|   +-------+   +---------+     +------+       |
+|       |           |               |          |
++-------|-----------|---------------|----------+----------------
+|       |           |               |          |    
+|       V           V               V          |
+|  +----------+ +----------+  +-----------+    |
+|  |Printer   | |Camcorder |  | CD-Rom    |    |  Hardware
+|  |controller| |controller|  | controller|    |
+|  +----------+ +----------+  +-----------+    |
+|       |           |               |          |
++-------|-----------|---------------|----------+----------------
+|       |           |               |          | 
+|       V           V               V          |  Devices  
+|    Printer    Camcorder         CD-Rom       |    
++----------------------------------------------+----------------
 
 ```
 
-When an IO device is detected/connected, the IO device is initialized by the IO device driver. The initialization may include setting up the necessary data structures, preparing the device for operations, etc. Device drivers also receive read and write requests from higher-level software layers such as the operating system or applications. These requests come in abstract and standardized in general and they are independent from the specific details of the IO device. 
+And here is the how the workflow looks like between the IO software and the hardware of the IO device: 
 
-The IO device drivers translates these requests into a form that is suitable for IO device, executes them, and facilitates the data transfer between the device and the system.
+1) The IO software initiates an IO request by making a system call.
+2) The operating system receives the IO request and determines which device driver is responsible for handling the request based on the device type and the nature of the operation.
+3) The operating system forwards the IO request to the appropriate device driver.
+4) The device driver translates the IO request into device-specific commands and communicates with the device controller.
+5) The device controller xreceives the commands from the device driver and interacts directly with the IO device to perform the requested operation.
+6) The device controller transfers data between the IO device and main memory, either through direct memory access (DMA), or programmed IO.
+7) If the IO operation generates an interrupt, the device controller notifies the device driver through the interrupt mechanism.
+8) The device driver handles the interrupt, performs any necessary processing, and communicates the result or status back to the operating system.
+9) The operating system receives the result or status from the device driver and returns it to the IO software.
+10) The IO software receives the result or status and continues its execution.
 
-When the IO devices generate interrupt, these interrupts are handled in the interrupt handler in the device driver.
+## Device Drivers 
 
-The device drivers may include logging mechanisms for the purpose of recording important events or status information that is related to the IO device. 
+**Device drivers** are **software modules** and they are **prepared specifically for each IO device**. They basically **provide an interface** so that the **operating system can interact with the devices through this interface**. 
 
-They are also responsible from managing the power requirements of the devices they control. (e.g., putting the device into low-power state when necessary)
+The **codes in the device drivers are tailored to control and communicate with a particular IO device**. **They encapsulate the low-level details of the IO device (hardware)** and **abstract them from the operating system**.
 
-One note is that device drivers must be able to deal with multiple devices of the same type simultaneously. This means that device driver code must be able to allow multiple threads/processes to execute the same driver concurrently.
+They are **responsible** from **reading data** from the **registers in the IO device controllers** and **writing data** to them. They **include** **interrupt handlers** which are the **procedures** (e.g., processing the interrupt, communicating with the IO device, performing any other necessary actions etc.) that are **followed after an interrupt** is **generated**.
 
-Lastly, device drivers should also be prepared for the events like device removal or device plugging. When a device is removed, for instance, its device driver should release the resources associated with that device for instance. 
+**Device drivers** are provided by the manufacturer of the IO devices and **integrated** to the **operating system's kernel**. They are integrated either **as built-in components** or as **loadable modules** which basically **allow the device drivers to be loaded into the kernel**. **If** they are **integrated as built-in**, however, they are **compiled** **to the kernel** directly and they are **always available**.
+
+In addition, the **device drivers** must **follow** **standard interfaces** that are **defined by the operating systems**. 
+
+These **interfaces** are **different in block devices** and **character devices** because the way these devices **process the data** is **different**. 
+
+The **drivers** of the **block devices** (e.g., hard drives, USB storage devices) must **follow a specific interface** that **includes operations like reading and writing blocks of data**. 
+
+The **drivers** of the **character devices** (e.g., keyboards, serial ports) must **follow another type of interface that deals with individual characters of bytes of data**.
+
+Main functions of IO device drivers:
+- IO device drivers are responsible from initializing the IO device they control. Initialization in here basically means setting up the necessary configurations, registers, and parameters that are required for the IO device to function properly. Initialization in here ensures that the IO device is in ready condition before it can be used by the operationg system & applications. 
+- IO device drivers provide an abstraction layer between the operating system and the IO device. And the operating system commnuicates with the device driver using abstract read/write operations. And device driver receives these operations from the layer above (e.g., operating system) and translates these operations into commands that are specific to IO device. The device driver then executes these commands by communicating with the IO device controller
+- Device drivers are responsible from handling interrupts that are generated by the IO devices as well.
+- The interrupt is received by the IO device driver. And the IO device driver executes the interrupt handler routine. The interrupt handler performs tasks such as acknowledging the interrupt, retrieving data from the device, updating device status, or notifying the operating system about the interrupt event.
+- IO device drivers also log events (e.g., status changes, errors, performance metrics, etc.) that are related to the IO device they control.
+- IO device drivers is responsible from implementing & controlling power management features such as low-power modes or sleep states to conserve energy when the device is not used actively.
 
 ```
    Abstract
@@ -838,20 +853,20 @@ Lastly, device drivers should also be prepared for the events like device remova
       |
       |
       V
- +--------+
- | Device |
- +--------+
+  +--------+
+  | Device |
+  +--------+
 ```
 
-## Device Independent IO Software
+# Device Independent IO Software
 
-There are several capabilites that should be provided by the device independent IO software: 
+There are **several capabilites** that **should be provided by** the **device independent IO software**: 
 
-1) The software should provide an interface through which different device drivers can interact _(uniform interfacing for device drvers)_. The main goal in here is to make all the devices appear the same to the operating system regardless of their specific hardware characteristics. And we can do this by functions for each group of devices that share similar properties (e.g., display devices, storage devices, network devices, etc.) By providing this uniform interface, the operating system can interact with different IO devices using the same functions and this simplifies the device management. Also, the device independent IO software layer maps the symbolic device names (e.g., "printer", "disk", et.c) to the appropriate device drivers. When the operating system wants to communicate with a device, it uses its symbolic name and this symbolic name is translated to the corresponding driver. Through this way, the operating system can refer to  devices using logical names instead of hardware specific details. 
-2) It should handle buffering of data transfer between the IO device and operating system _(buffering)_
-3) It should report any errors when they occur with the use of IO devices _(error reporting)_
-4) It should be able to allocate and also release the dedicated devices when needed.
-5) The size of the blocks provided by the IO software for data transfer should be standardized and independent from the IO devices.
+1) The **software should provide an interface** through which **different device drivers can interact** _(uniform interfacing for device drvers)_. The main goal in here is to **make all the devices appear the same to the operating system** **regardless of their specific hardware characteristics**. And we can do this by **functions for each group of devices that share similar properties** (e.g., **display devices, storage devices, network devices**, etc.) By **providing this uniform interface**, the **operating system** can **interact** with **different IO devices** **using the same functions** and this **simplifies** the **device management**. Also, the **device independent IO software layer maps the symbolic device names** (e.g., "printer", "disk", et.c) **to the appropriate device drivers**. When the **operating system** wants to **communicate** with a **device**, it uses its **symbolic name** and this **symbolic name** is **translated** to the **corresponding driver**. Through this way, the operating system can **refer** to  **devices** using **logical names** **instead of hardware specific details.**
+2) It should **handle** **buffering of data transfer** between the IO device and operating system _(buffering)_
+3) It should **report any errors** when they occur with the use of IO devices _(error reporting)_
+4) It should be able to **allocate and also release the dedicated devices** when needed.
+5) The **size of the blocks** provided by the IO software **for data transfer** should be **standardized** and **independent from the IO devices**.
 
 # Examples of IO Devices
 
