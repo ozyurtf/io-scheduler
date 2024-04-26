@@ -921,23 +921,33 @@ Mouse only indicates **changes in position** (delta x, delta y).
 
 # IO Software Layer
 
-We want the operating system to operate without being concerned/bothered about the low-level details of the interrupt handling process. In other words, the goal is to minimize the impact of interrupts on the overall system and keep the interrupt handling process confined to a specific part of the operating system. That's why interrupts are hidden from most of the operating system so that as little of the operating system as possible knows about them. But how to hide interrupts ? 
+We want the **operating system** to **operate** **without being concerned/bothered** about the **low-level details of the interrupt handling process**. 
 
-Well the execution of the thread in the IO device driver that initiates an IO operation can be suspended until the IO operating finishes and the interrupt is handled. In other words, after initializing the necessary data structures and registers for the IO operation, the a thread in the IO device driver can start an IO operation by sending commands to the IO device controller and block until the IO operation is completed. 
+In other words, the goal is to **minimize the impact of interrupts** on the **overall system** and **keep the interrupt handling process confined to a specific part of the operating system**. 
 
-And in the meantime, the IO operation is handled by the IO device controller (not CPU). Once the IO operation is completed, it generates an interrupt. 
+That's why **interrupts are hidden** from most of the operating system so that **as little of the operating system as possible knows about them.** But **how to hide interrupts** ? 
 
-After this interrupt is generated, the interrupt handler is invoked to handle the interrupt and perform post IO processing. Then the interrupt handler unblocks the thread in the IO device driver that initiated the IO operation so that it can continue its execution from where it lefts off.
+Well the **execution of the thread** in the IO device driver **that initiates an IO operation can be suspended until the IO operation finishes** and **the interrupt is handled**. In other words, **after initializing the necessary data structures and registers for the IO operation**, **a thread in the IO device driver can start an IO operation** by sending commands to the IO device controller and **is blocked until the IO operation is completed**  and an interrupt is sent.
 
-This method allows the device driver to wait for the IO operation to complete without constantly checking for its completion. 
+And **in the meantime**, the **IO operation is handled by the IO device controller** (not CPU). **Once** the IO operation is **completed**, it **generates an interrupt**. 
 
-And for this method to work, IO device drivers should be structured as kernel threads or processes. Each driver should have its own state, stack, program counter, etc. so that they can operate independently and handle IO operations concurrently.
+**After** this **interrupt is generated**, the **interrupt handler is invoked** to **handle the interrupt** and **perform post IO processing**. 
+
+Then the **interrupt handler unblocks the thread in the IO device driver** that initiated the IO operation so that it can continue its execution from where it lefts off.
+
+So in summary, thread in the IO device driver starts an IO operation, is suspended until IO operation is completed, and unblocked with an interrupt after IO operation is completed.
+
+This method allows the **device driver** to **wait for the IO operation** **to complete without constantly checking for its completion**. 
+
+And **for this method** to work, **IO device drivers should be structured as kernel threads or processes**. **Each driver should have** its **own state**, **stack**, **program counter**, etc. so that they can **operate independently** and **handle IO operations concurrently**.
 
 # Main Functionalities and Responsibilities of Device Drivers 
 
 ## Character Drivers
 - **Discovery**: Character drivers are responsible from discovering/identifying character-based devices that are connected to the system.
-- **Read/write data**: Character drivers provide functions to read characters from  and write characters to the device.
+- **Read data**: Character drivers provide functions to read characters from the device.
+- **Write data**: Character drivers provide functions to write characters to the device.
+- **Interrupt management**: Interrupt management in character drivers is often much simpler compared to the interrupt management in disk storage and network cards. They are more like interrupt handling.
 
 ## Disk Storage
 - **Discovery**: Disk storage drivers are responsible from discovering/identifying disk storage-based devices (e.g, hard disk drives, solid state drives, USB storage devices, etc.) that are connected to the system
@@ -950,14 +960,16 @@ And for this method to work, IO device drivers should be structured as kernel th
 - **Send packet**
 - **Receive packet**
 - **Interrupt management**
-- **Throttling**
+- **Throttling**: To control the consumption of resources, and managing traffic low, the speed, rate, or frequency of data transfer is limited/regulated intentionally.
 
 # Summary 
-- Operating system provides an interface between the devices and the rest of the system.
-- The IO part of the operating system is divided into several layers.
-  - Hardware: CPU, programmable interrupt controller, DMA, device controller, and the device itself.
-  - Software: Interrupt handlers, device drivers, device-independent IO software, user-level IO software.
-- Operating system must expand as new IO devices are added. 
+- **Operating system** provides an **interface between the IO devices** and the **rest of the system**.
+- The **IO** part of the operating system is **divided into several layers**.
+  - **Hardware**: CPU, programmable interrupt controller, DMA, device controller, and the device itself.
+  - **Software**: Interrupt handlers, device drivers (low-level software components that directly interact with and control specific IO devices), device-independent IO software, user-level IO software.
+- Operating system **must expand as new IO devices are added**.
+
+Device drivers vs IO software: 
 
 # Hard Disk (Magnetic) Architecture 
 
