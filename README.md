@@ -142,7 +142,7 @@ The **performance** of the **IO operation** is **affected by** many different fa
 
 ```
 +-----------+                  Interrupts
-| Processor |<---------+-----------------+----------------+          
+|    CPU    |<---------+-----------------+----------------+          
 +-----------+          |                 |                |       
       |                |                 |                |        
 +-----------+          |                 |                |
@@ -164,7 +164,7 @@ The **performance** of the **IO operation** is **affected by** many different fa
 
 ```
 
-Bus in here is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
+Bus in here there is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
 
 **IO controller**, also known as peripheral controller, is another **hardware component**. It **manages the communication and data transfer between the CPU and IO devices such as disk, network**. It acts like an **intermediate layer between the IO devices and CPU** and thanks to these IO devices, the CPU doesn't have to control & communicate with the IO devices directly. 
 
@@ -200,13 +200,13 @@ Here is more detailed data flow between different components:
 5) If the CPU wants to communicate with an IO device, it sends commands and data to the IO controller of that device. And the IO controller handles the data transfer between the CPU and IO device.
 6) Data is sent to the CPU with IO controller. And then the CPU processes this data and store it in registers, cache or main memory.
 
-One note is that **IO controllers** can **generate interrupts** to **notify the CPU** about **important events**. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the **IO controllers send these interrupt signals to the CPU using the bus**. **Once the CPU receives these interrupt signals**, it **invokes the appropriate interrupt handler** routine to **process the interrupt** and then **communicate with the IO controller**.
+One note is that **IO device controllers** can **generate interrupts** to **notify the CPU** about **important events**. For example, while a code is running in the program, if the user clicks the interrupt button with his mouse and interrupts the running of the program, or if an IO operation is completed naturally, the interrupts are generated and the **IO device controllers send these interrupt signals to the CPU using the bus**. **Once the CPU receives these interrupt signals**, it **invokes the appropriate interrupt handler** routine to **process the interrupt** and then **communicate with the IO device controller**.
 
 So if we consider the IO controller to be part of an IO device, we can say that an IO device has two main components: **mechanical component** and **electronic component** 
 
 **Mechanical components** are the **physical components** that are **used in the IO devices** to **perform some functions**. Mouse ball, scroll wheel can be given as examples of mechanical components. But as we might guess, many modern IO devices don't have these kinds of mechanical components anymore since they are replaced with electronic equivalents 
 
-**Electronic component** consists of the **electronic circuitry** and **IO controllers** that manage the functionality of the device and handle the communication between the device and the rest of the system. 
+**Electronic component** consists of the **electronic circuitry** and **IO device controllers** that manage the functionality of the device and handle the communication between the device and the rest of the system. 
 
 # Controller and Device
 
@@ -313,7 +313,7 @@ The modern computers today use memory-mapped IO method in general.
 +-----+   3) CPU responds to the interrupt    +--------------+   1) IO operation is finished 
 |     |-------------------------------------->|  Interrupt   |<-------------------------------- Disk
 | CPU |                                       |  Controller  |<-------------------------------- Clock  
-|     |   2) Controller issues interrupt      |  (Handler)   |<-------------------------------- Keyboard 
+|     |   2) Controller issues interrupt      |              |<-------------------------------- Keyboard 
 |     |<------------------------------------- |              |<-------------------------------- Printer
 +-----+                                       +--------------+
    |                                                 |
@@ -327,7 +327,9 @@ The modern computers today use memory-mapped IO method in general.
 
 ## Interrupt Controller
 
-When an interrupt is generated, it is sent to interrupt controller/handler which is basically a hardware component that manages the interrupts coming from different devices and sources. And the interrupt controller/handler issues the interrupt and sends it tothe CPU. **CPU detects the interrupt**, **saves the current state of the execution**, and **responds appropriately** for that interrupt. 
+When an interrupt is generated, it is sent to interrupt controller which is basically a hardware component that manages the interrupts coming from different devices and sources. And the interrupt controller issues the interrupt and sends it to the CPU. And **CPU detects the interrupt**, **saves the current state of the execution**, and **responds appropriately** for that interrupt. 
+
+Note that **interrupt controller** and **interrupt handler** are **not the same thing**. The **interrupt controller is a hardware component** that **manages and prioritizes interrupts coming from various devices and other sources**. **Interrupt handler**, on the other hand, is a **software routine** that is **executed** by the **CPU** when it **receives an interrupt**.
 
 ### Advanced Programmable Interrupt Controller (APIC)
 
@@ -614,7 +616,7 @@ When an IO request is made, the process typically involves the following steps:
 2) The **IO device controller interprets the instructions stored in its control registers** and **starts executing the requested operation**.
 3) If the **IO operation involves transferring data between the IO device and main memory**, the **IO device controller interacts directly with the main memory**. And it does this through **direct memory access (DMA).**
 4) With **DMA**, the **IO device controller can access the main memory independently**, **without the constant intervention of the CPU**. The **CPU sets up the DMA operation by providing the necessary information**, such as the **memory address** and the **amount of data to be transferred**.
-5) The **DMA controller** performs the **data transfer between the IO device and main memory**. It reads data from the IO device and writes it to the designated memory location, or reads data from memory and sends it to the device, depending on the IO operation.
+5) The **IO device controller** performs the **data transfer between the IO device and main memory**. It reads data from the IO device and writes it to the designated memory location through DMA, or reads data from memory and sends it to the device, depending on the IO operation.
 6) **Once** the **data transfer** is **complete**, the **IO device controller updates its status registers** to **indicate** the **completion of the operation** and may **generate an interrupt to notify the CPU**.
 
 **DMA controller** contains **several key components**: 
@@ -624,9 +626,7 @@ When an IO request is made, the process typically involves the following steps:
 - **Control logic**: This is used to control the overall operation of the DMA controller. The control unit receives DMA request and sends DMA acknowledge. It generates interrupts when the data transfer is completed.
 - **Bus interface**: The bus in here allows the DMA controller to communicate with the CPU, main memory, and IO devices.
 
-When transfer is initiated, CPU programs the DMA controller by writing the necessary information into the control registers of the DMA controller. 
-
-Then the DMA controller sends a request to the disk controller to transfer data from disk to the main memory. Next, the disk controller acknowledges this request and prepares the data to transfer it to main memory. The data is stored in the temporary storage in the mean time. Then the data is transferred from the buffer in the disk to the main memory. As the data is being transferred, CPU can continue executing other tasks because it is not involved in this transfer process. And lastly, when the data transfer is completed, an interrupt is generated by the DMA controller and CPU takes any necessary actions after learning that the data transfer is completed.
+**When transfer** is **initiated**, **CPU programs the DMA controller** by **writing the necessary information into the control registers of the DMA controller.** Then the **DMA controller sends** a **request** to the **disk controller** to **transfer** **data** **from disk** **to the main memory**. Next, the **disk controller acknowledges this request** and **prepares the data to transfer it to main memory**. The **data** is **stored** in the **temporary storage in the mean time**. Then the **data** is **transferred** **from the buffer in the disk to the main memory**. As the data is being transferred, **CPU can continue executing other tasks because it is not involved in this transfer process**. And **lastly**, **when the data transfer is completed**, an **interrupt is generated by the DMA controller** and **CPU takes any necessary actions** **after learning that the data transfer is completed**.
 
 We can see the visualization of this process in below:
 
