@@ -1118,11 +1118,17 @@ Because the IO requests that have the shortest seek time are always prioritized 
 
 ### Cons
 
-If there are always IO requests that have short seek time, the IO requests for tracks that are far away from the current track may never get a chance to be processed. This causes unfairness and starvation and can be seen as a con. In addition, unlike FIFO, the order in which the IO requests will be processed is not predictable since this order depends on the arrival time of these requests, the current location of the head and the seek time of these IO requests.
+If there are always IO requests that have short seek time, the IO requests for tracks that are far away from the current track may never get a chance to be processed. This causes unfairness and starvation and can be seen as a con.
 
-## Elevator (SCAN) 
+In addition, unlike FIFO, the order in which the IO requests will be processed is not predictable since this order depends on the arrival time of these requests, the current location of the head and the seek time of these IO requests.
 
-The behavior of the SCAN algorithm and the way it works is similar to the way an elevator works. The algorithm works by starting to move the disk head in one direction (either towards the inner edge or outer edge of the disk), processsing the IO requests in these directions until no IO request is left in that direction, reversing the direction and processing the IO requests in the reverse direction. After reversing the direction, it services the requests in the order they are encountered while moving towards the opposite end of the disk. When processing the IO requests in a direction, the IO request that is closest to the current position of the head is chosen. And once the last request is serviced in the reversed direction, the disk head reverses its direction again. 
+Also, we observe frequent switching and that may slow down the algorithm a little bit.
+
+## SCAN
+
+The behavior of the SCAN algorithm and the way it works is similar to the way an elevator works. The algorithm works by starting to move the disk head in one direction (either towards the inner edge or outer edge of the disk), processsing the IO requests in these directions until no IO request is left in that direction, reversing the direction and processing the IO requests in the reverse direction. 
+
+After reversing the direction, it services the requests in in the reverse direction. When processing the IO requests in a direction, the IO request that is closest to the current position of the head is chosen. And once the last request is serviced in the reversed direction, the disk head reverses its direction again. 
 
 One note is that the disk head always go to the end of the disk before reversing direction, regardless of whether there are pending requests at the end or not.
 
@@ -1132,15 +1138,15 @@ Since the disk head moves in a specific direction and processes the IO requests 
 
 Moving the head in one direction, handling the IO requests in that direction, and then reversing the head again and handling the IO request in this opposite direction, and following this cycle provides a more predictable performance compared to FIFO and SSTF. 
 
+The variance in the waiting time is reduced compared to FIFO and SSTF algorithms.
+
 ### Cons
 
 If there IO requests keep coming to the one of the end of the disk, the IO requests that are located at the other end may experience starvation. 
-
-Therefore, if majority of the IO requests are located in one specific region, this algorithm may not be the best option for the other IO requests. 
  
 ## Circular Scan (C-SCAN)
 
-In C-SCAN the head moves only in one direction. After the head starts in a direction, it services the IO requests in that direction based on the shortest seek time. After reaching the last IO request in that direction, it basically returns back to the first IO request and continue servicing the IO requests in the original direction again. 
+In C-SCAN the head moves only in one direction. After the head starts in a direction, it services the IO requests in that direction based on the shortest seek time. After reaching the last IO request in that direction, it basically returns back to the IO request at the beginning and continue servicing the IO requests in the original direction again. 
 
 ### Pros
 
@@ -1149,6 +1155,12 @@ The main advantage of C-SCAN algorithm over the SCAN is that C-SCAN provides mor
 By returning to the beginning of the disk after each sweep, the C-SCAN algorithm ensures that requests located at the beginning or middle of the disk have a chance to be serviced sooner.
 
 The C-SCAN algorithm maintains the advantages of the SCAN algorithm as well such as reduced average seek time and fair servicing to the IO requests
+
+### Cons 
+
+We see that the disk head makes more movements compared to SCAN algorithm because it doesn't reverse the its direction after reaching the last IO request and it just turns back all the way up to the first point.
+
+Just like SCAN algorithm, even if there are no requests that are left to be serviced at the end of the direction, the disk head moves to the end of the disk turnin back to the first IO request in the original direction.
 
 ## LOOK 
 
@@ -1171,19 +1183,42 @@ The main advantage of LOOK algorithm over SCAN is that unnecessary disk head mov
 
 Aside from this, the LOOK algorithm has the advantages of the SCAN algorithm as well and these are reduced average seek time, and more fair servicing to the IO requests.
 
+### Cons
+
+Finding the last IO request.
+
 ## C-LOOK 
 
-It is similar to the LOOK algorithm in which the disk head moves in one direction and reverses after reaching the last IO request in that direction. But in C-LOOK, instead of reversing, the head returns back to the IO request at the beginning after reaching the last IO request and then services the IO requests in the original direction again. 
+It is similar to the LOOK algorithm in which the disk head moves in one direction and reverses after reaching the last IO request in that direction. But in C-LOOK, instead of reversing, the head returns back to the IO request at the beginning of the disk after reaching the last IO request and then services the IO requests in the original direction again. 
 
 ### Pros 
 
+The disk head does not have to move until the end of the disk. This is beneficial when there is no IO requests at the end of the disk. 
+
+We observe less waiting time for the cylinders that are just visited by the disk head. 
+
+In addition to these, the C-LOOK algorithm has the advantages of the LOOK algorithm as well which are reduced average seek time, more fair servicing, low variance in waiting time.
+
+### Cons
+
+Finding the last IO request.
+
+#### 
+
 ## FSCAN
+
+The idea behind FSCAN is quite similar to the SCAN. The only difference is that the algorithm operates with two queues: active queue and add queue. We can see add queue as waiting queue. 
+
+Any new IO request is basically added to this add queue. And IO is scheduled only from the active queue. If the active queue is empty, this means that there is no active IO operation and the IO requests that are waiting in the add queue is transferred to the active queue. Next, an IO is scheduled from the active queue depending on the current direction of the disk head and shortest seek time. 
+
+Once the disk head reaches the end of the disk, the direction is reversed and IO requests keep being scheduled based on shortest seek time but this time in reverse order.
 
 ### Pros 
 
 ### Cons
 
 ## FLOOK 
+This is similar to the FSCAN. Here we have maintain two queues as well. The only difference is that the disk only goes to the last IO request in th disk and only then reverses its direction.
 
 ### Pros
 
@@ -1191,4 +1226,26 @@ It is similar to the LOOK algorithm in which the disk head moves in one directio
 
 ## Deadline Scheduler
 
+The algorithm assigns a deadline to an IO request whenever it receives that IO request. This deadline basically means the maximum time until which the IO request should be serviced. Through this way, the algorithm guarantees that each IO request will be processed within a specific time limit. 
+
+For example, for read operations, the deadline scheduler typically gives the expiration time of 500ms since the read operations are generally more urgent. Write operationsm, on the other hand, are typically given 5 seconds of expiration time. 
+
+The deadline scheduler algorithm maintains 3 different queues: read queue, write queue, and sorted queue. The IO requests in the sorted queue are sorted based on the sector numbers of the IO requests on the disk. The sorted queue allows the scheduler to optimize the seek time by servicing the IO requests that are physically closer to each other. 
+
+If an IO requet is expired, the deadlien scheduler services that IO request immediately. If there is no IO request that is expired, the scheduler selectes a batch of IO requests from the sorted queue. 
+
 ## Completely Fair Queueing (CFQ)
+
+The algorithm maintains a queue for each process separately. And when an IO request comes, it puts the IO request into its corresponding process queue. That way, the algorithm ensures that the IO requests coming from different processes are treated independently and fairly.
+
+An example of a process might be web server process, database server process, video encoding process, etc. 
+
+After that, the algorithm assigns a timeslice to each of these process queues. This timeslice determines the amount of time that a queue can access the disk. By allocating these timeslices, the algorithm ensrues that all processes get a fair share of disk access time and this prevents one process from using the disk excessively. 
+
+And to determine the length of timeslice to assign these queues, the algorithm takes the IO priority of each process into account. As we might expect, if a process has higher priority, its queue gets larger timeslice. 
+
+Also note that, the algorithm introduces a small delay after serving an IO request from a process queue. Through this delay, the algorithm can issue the next IO requests and merge some of those IO requests with each other if possible to improve efficiency and reduce the overall number of disk operations. 
+
+By providing this implicit idle time/delay, the algorithm encourages processes to submit their IO requests in a timely manner, and this enables better request bundling and improves disk efficiency.
+
+
