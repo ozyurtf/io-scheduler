@@ -1349,7 +1349,32 @@ Dish cache is also known as buffer cache. It can be seen as a portion of the mai
 
 # Solid State Disks and Flash Memory 
 
+Solid State Disk (SSD) is a storage device. It doesn't contain any mechanical parts unlike hard disk drives and it is entirely electronic. It is made out of FLASH memory which is basically non-volatile memory that retains data even when power is turned off.
 
+FLASH memory is evolved from 
+- RAM (Random Access Memory): The power needs to be turned on to maintain the contents and whenever the power is turned off, the data in the RAM is lost. 
+- EPROM (Erasable Programmable Read-Only Memory): It does not require the power to be turned on to maintain its conents. Therefore, it can keep the data even after the power is turned off. But it can be programmed only once. When an EPROM is produced, all the memory cells are initialized to '1' and this is the default state. And the "programmed" means selectively changing the state of memory cells from '1' to '0' to represent the desired data or instructions. The EPROM can store data for 10-20 years and the data can be erased with ultraviolet (UV) light. 
+- EEPROM (Electrically Erasable Programmable Read-Only Memory): It is the improved version of EPROM. Unlike EPROM, it can be erased and the reprogrammed multiple times without the power. And it can maintain the programmed value without power beign turned on.
+
+**Note**: ROM in here refers to Read-Only Memory. As we might understand from its name, the data can only be read from ROM and it is not easy to write data to it. Also, ROM retains data after the power is turned off. Since the data in the ROM is permanent and not easily modifiable, the data that is essential for proper functioning of the system and that does not require frequent updates is generally stored in the ROM. 
+
+It stores the firmware (low-level software that is closely tied to the hardware), bootloaders (small program that is responsible for initializing system and loading operating system when computer/device is turned on, etc). 
+
+The data that is in the ROM is typically programmed during the manufacturing process of the computer/device and it remains permanent after this. 
+
+In addition, although individual memory locations can be read arbitrarily, an entire block of memory needs to be erased at once before it can be reprogrammed. The erasure voltage is applied to the entire block because the memory cells are physically connected and share common electrical lines. So it is not feasible to selectively apply the erasure voltage to individual pages or memory cells within a block. The physical architecture of flash memory is designed to optimize for high storage density and manufacturing efficiency, which leads to the block-level erasure constraint. 
+
+## Usage of EEPROMs
+EEPROMs might be suitable to use in a systems that need to be programmed occasionally. One example of this systems is embedded processors. And because the embedded systems did not require frequent updates, programming an EEPROM was not time-critical event in the past. The number of times EEPROMs could be programs were limited but this was not a big problem for embedded systems since they were programmed only small amount of times during their lifetime.
+
+## Evolution of Technology 
+EEPROMs have some limitations such as slow programming, byte-by-byte erasure process, limited number of write/erase cycles, higher cost per bit compared to other non-volatile memory technologies like ROM, or FLASH, and lower storage density (the architecture of EEPROMs required more space per memory cell due to the additional circuitry needed for byte-level erasure and programming). 
+
+To overcome these limitations and enable faster and more frequent programming and erasing, FLASH memory is developed. FLASH memory consists of thousands of EEPROM circuits. These circuits are called blocks and t hey are arranged in an array. This array structure allows for random programming and erasing of individual blocks and this provdes more flexible and better performance compared to traditional EEPROMs.
+
+In summary, SSDs are electronic storage devices that use FLASH memory, which evolved from earlier memory technologies like RAM, EPROM, and EEPROM. FLASH memory addressed the limitations of EEPROMs by allowing random programming and erasing of blocks, making it suitable for faster and more frequent data updates. The term 'ROM' is used because entire blocks need to be erased before they can be reprogrammed, even though individual memory locations can be read arbitrarily. The evolution of technology has led to the widespread adoption of SSDs as a high-performance and reliable storage solution.
+
+# Flash Chip 
 
 # Difference Between SSDs and Hard Drives
 
