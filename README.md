@@ -1256,10 +1256,9 @@ By providing this implicit idle time/delay, the algorithm encourages processes t
 
 # RAID (Redundant Array of Independent Disks)
 
-RAID is a method that combines multiple disk drives into a single logical unit. That's why RAID system presents itself to the operating system as a single, large, and expensive disk (SLED). From the perspective of operating system, a RAID system appears as a single, large, and expensive disk (SLED). 
+RAID is a method that combines multiple disk drives into a single logical unit. That's why RAID system presents itself to the operating system as a single, large, and expensive disk (SLED). From the perspective of operating system, a RAID system appears as a single, large, and expensive disk (SLED). _(Note: A group of hard drives that are combined and that are configured to work together as a single logical unit is called **array**)_
 
 Therefore, the operating system interacts with the RAID system as if it were a single disk, abstracting the underlying complexity of multiple disks and their coordination.
-
 
 Because the data is distributed across multiple disks, this allows for concurrent read and write operations and significantly improves overall system performance because the system can handle multiple IO requests simultaneously and this reduces the bottleneck of a single disk. By distributing data across multiple disks, RAID can achieve higher read and write speeds in comparison with a single disk. 
 
@@ -1275,7 +1274,29 @@ There are different RAID levels (e.g., RAID 0, RAID 1, RAID 2, ..., RAID 6) tha
 
 ## RAID - Level 0 
 
+In this configuration, the main focus is solely to improve performance by dividing data into strips (small and fixed-size unit of data) and distributing it across multiple disks. For example, after the data is split into strips, the 1st strip is written to the 1st disk, the 2nd strip is written to the 2nd disk, the 3rd strip is written to the 3rd disk, the 4th strip is written to the 4th disk, and the 5th strip is written to the 1st disk, etc. Because data is distributed across multiple disks, we observe improved read/write performance. 
+
+And it is not seen as a true RAID because it does not include redundancy (duplicating the data across multiple disks) to improve performance or provide data protection. And because the data is duplicated in multiple disks, if one disk fails, the data in that disk is lost and as a result the entire data becomes inaccessible. As we increase the number of disks, the probability of data loss increases. 
+
+It is generally considered that RAID 0 offers the best performance because: 
+
+1) RAID 0 divides the data into small strips and distributes them across all the disks
+2) Unlike other RAID levels that include redundacy, RAID 0 does not introduce any additional overhead like this and it focueses solely on performance optimization
+3) Because of lack of redundancy, we have higher storage capacity
+
+This configuration is generally used in situations where performance is important and the lost data can easily recreated with other ways. Because the data is not duplicated across multiple disks, RAID 0 configuration utilizes the full capacity of all the disks in the array and this provides a larger total storage space. 
+
 ## RAID - Level 1
+
+In this configuration, the exact copy of the data is created on two or more disks. That's why this configuration is also known as mirroring. Each disk in the array basically contains a complete data and identical the copy of it. And the duplication of data provides fault tolerance because if one disk fails, the data can still be accessed from the remaining disks in the array because the RAID controller automatically detects the failed disk and continues to serve data from the surviving disk(s) without interruption.
+
+When the data is written to the array, it is written to the disks simultaneously and this can be done in parallel. And because this is done in parallel, there is no penalty for writing. 
+
+The main drawback of RAID 1 is the cost of duplicating the data. RAID 1 requires twice or more the number of disks compared to a single disk setup to achieve the same usable storage capacity. 
+
+The additional disks and the cost of duplicating the data make RAID 1 more expensive compared to other RAID levels or a single disk configuration.
+
+Also note that this configuration offers no striping or parity (error checking mechanism). Therefore, when we take the characteristics of this configuration into account we can say that this layout is useful when read performance is more important than write performance 
 
 ## RAID - Level 2
 
@@ -1289,9 +1310,46 @@ There are different RAID levels (e.g., RAID 0, RAID 1, RAID 2, ..., RAID 6) tha
 
 # Logical Volume Manager (LVM) 
 
-# Disk Cache 
+LVM is a storage management system. It basically creates a logical view of the storage devices and provides abstracted way to manage disk storage.
+
+LVM operates on top of physical storage devices and allows you to create virtual storage entities. These virtual storage entities are called logical volumes and these volumes can span across multiple devices. And this provides a unified storage space that can be easily managed and resized. 
+
+Key components of LVM: 
+1) Physical Volumes: Physical storage devices that LVM uses as the building blocks to create logical volumes. The physical volumes can be entire disks or partitions on a disk. Physical volume can be seen as the lowest level of abstraction in LVM and it represents the actual physical storage devices that LVM will engage/manage.
+2) Volume Groups: A collection of one or more physical volumes. And the logical volumes can be created from this collection. Volume groups allow you to combine multiple physical volumes into a single logical unit and this provide flexibility and scalability. The volume group acts as a pool of storage that can be divided into logical volumes. 
+3) Logical Volumes: Virtual partitions that are created from a volume group. They are the entities that are used to store data, create file systems, and mount them. Logical volumes can be created, resized, and managed independently of the underlying storage layout.
+
+When operating system performs IO operations on a logical volume, LVM maps these IO requests to the appropriate physical volumes. And when an IO request is made to the logical volume, LVM uses this metadata and etermines which physical volume(s) contain the requested data. After finding the physical volume(s) that contain the requested data it directs the IO operation accordingly. Through this abstraction, the operating system and applications can interact with logical volumes as if they are regular disks while LVM handles the underlying physical storage management.
+
+The main advantages of using LVM include:
+- Flexibility: LVM allows you to create, resize, and manage logical volumes dynamically without disrupting the system or data.
+- Scalability: You can easily add more physical volumes to a volume group to expand the storage capacity.
+- Abstraction: LVM provides a layer of abstraction that separates the logical view of storage from the physical devices, making storage management easier.
+- Snapshots: LVM supports creating snapshots of logical volumes, which are point-in-time copies useful for backup, testing, or reverting changes.
+
+# Disk Cache (Buffer Cache)
+
+Cache memory is a type of high-speed memory. It is placed between the CPU and main memory (RAM). It's size is smaller than the main memory but it is much faster to access data in cache. The main purpose of cache is to store frequently accessed data/instructions so that CPU can retrieve them quickly without having to access the main memory which is slower. Placing cache memory between the CPU and main memory makes it intermediary to speed up memory access.
+
+Cache memory takes advantage of the principle of locality. And locality in here refers to the tendency of programs to access the same/nearby memory locations repeatedly. By storing frequently accessed data or instructions in cache memory, the average memory access time is reduced because the processor can retrieve the data from the faster cache instead of accessing the slower main memory.
+
+Dish cache is also known as buffer cache. It can be seen as a portion of the main memory that is reserved for caching disk sectors. In other words, when data is read from the disk or written to the disk, that data is stored in the disk cache first. And the disk cache acts as a buffer between the disk and the processor because it stores the disk sectors in main memory temporarily. By caching disk sectors in the main memory, the next access to the same sectors can be served from the cache instead of retrieving them from the slower disk and this improves performance. When the CPU requests data from a specific sector on the disk, the operating system checks if the sector is already present in the disk cache. If the data is found in the cache, it is retrieved from the cache. If not, it is retrieved from the disk, and saved into the cache.
+
+```
++--------------------+
+| When IO request is |    +------> If Yes ----> The IO request is satisfied via cache
+| made for a         |    |
+| particular sector, |    |      
+| whether or not     |----+     
+| the sector         |    | 
+| is in the cache    |    |
+| is checked         |    +------> If No -----> The requested sector is read into the disk
++--------------------+
+```
 
 # Solid State Disks and Flash Memory 
+
+
 
 # Difference Between SSDs and Hard Drives
 
