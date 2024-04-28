@@ -1388,8 +1388,49 @@ The Flash chip supports three basic functions:
 - erase: clears data in a block and sets all bits in that block to 1 (default).
 - program: writes data to a specific page in the Flash memory.
 
-
 # Difference Between SSDs and Hard Drives
+
+**Construction/Data Organization**: Hard disk drives use mechanical components such as disk heads, cylinders, spindles, etc. And data is organized as tracks and sectors. 
+
+SSDs, however, use Flash memory chips. Data is organized as blocks and there is no spinning component. Reading and writing are handled electronically. 
+
+**Read Performance**: Accessing data from non-contiguous or non-sequential locations on the storage device is called random read. And accessing data from contiguous or sequential locations on the storage device is called sequential read. 
+
+Because hard disk drives use spinning disks and moving read/write heads, the heads have to move and seek to different locations on the disk platters. In addition, the head may still need to wait for the desired sector to rotate under the head once the head is over the right track. That's why hard disk drives have slow random reads. 
+
+SSDs are based on Flash memory which don't have any moving mechanical components. Because data can be read electronically from any location with similar latencies, and because there is no mechanical seek time involved since data locations are addressed electronically bt the SSD controller, and lastly because SSDs don't have rotating disks and rotational latency delays, SSDs have fast random and sequential reads.
+
+**Write Performance**: 
+
+
+####
+
+
+
+####
+Read Performance:
+- HDDs have slow random reads.
+- SSDs have fast random and sequential reads.
+- HDDs employ pre-fetching (initiated by the OS or disk itself) to improve sequential reads, which is not needed for SSDs.
+
+Write Performance:
+- HDDs have slow random writes.
+- SSDs also have slow random writes, slower than current HDDs (around 14-15ms for 128KB writes).
+- HDDs can use disk caching and OS coalescing to buffer a few writes, while SSDs employ remapping of blocks to convert random writes to sequential writes.
+
+Failures:
+- HDDs can experience complete disk failure.
+- SSDs experience block failures.
+
+Recovery/Failure Prevention:
+- For HDDs, recovery is typically implemented at the array level using RAID to reconstruct failed disks.
+- For SSDs, recovery can be done at the disk level or array level, with current methods at the disk level. SSDs also use wear-leveling algorithms to reduce potential block failures.
+
+Striping for Arrays:
+- HDDs typically prefer larger stripe sizes.
+- SSDs prefer smaller stripe sizes.
+
+In summary, the slide highlights the key architectural differences between HDDs and SSDs, their performance characteristics for reads and writes, failure modes, recovery methods, and striping preferences when used in storage arrays.
 
 # IO Scheduler Changes
 
