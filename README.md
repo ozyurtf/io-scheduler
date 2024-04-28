@@ -1376,7 +1376,22 @@ In summary, SSDs are electronic storage devices that use FLASH memory, which evo
 
 # Flash Chip 
 
+In Flash memory, a fixed size block of memory cells that are programmed and read together is called page. Data can be read from the Flash memory at the page level or in smaller units such as bytes is written to the Flash memory at the page level but it is not possible to write to individual bits or bytes within the pages. And the controller or software specifies the page address where the data should be written. 
+
+- The collection of the pages is called block. Block is the unit of erasure in Flash memory. While data is programmed at the page level, the erase operation is performed at the block level. A block is a collection of multiple pages, and all the pages within a block must be erased together before they can be reprogrammed with new data.
+- The collection of the blocks is called plane.
+- The collection of the planes id called die.
+- The collection of the die is called Flash chip.
+
+The Flash chip supports three basic functions: 
+- read: retrieves data from a spceific page in the Flash memory.
+- erase: clears data in a block and sets all bits in that block to 1 (default).
+- program: writes data to a specific page in the Flash memory.
+
+
 # Difference Between SSDs and Hard Drives
 
 # IO Scheduler Changes
+
+# File Systems 
 
