@@ -18,8 +18,8 @@ Keyboard - Operating System - Mouse
                /       \
               /         \
           Printer   Disk Drive
-
 ```
+
 
 Some of the examples of IO devices are mouse, display, keyboard, disks, network, SCANners, speakers, accelerators, GPUs, etc. 
 
@@ -1248,4 +1248,35 @@ Also note that, the algorithm introduces a small delay after serving an IO reque
 
 By providing this implicit idle time/delay, the algorithm encourages processes to submit their IO requests in a timely manner, and this enables better request bundling and improves disk efficiency.
 
+# Common Hard Drive Errors
+- When the operating system or an application attempts to access a sector that doesn't exist in the hard drive, **programming error** occurs. 
+- If the expected checksum value does not match with the data read from a sector in the hard drive, **checksum error** occurs. If this error happens temporarily as a result of some dust on the head, for instance, this is called **transient checksum error** and these errors can be recovered by retrying the read operation. If there is a physcial damage in the disk block and as a result of this we observe checksum error, this is called **permanent checksum error**.
+- When the drive head fails to position itself over the requested cylinder/track on the disk platters, we call this **seek error**. If the drive arm is isntructed to move to cylinder 7 but it is positioned over cylinder 6, for example, we observe seek error.
+- When the device controller, which is responsible from from receiving commands from the operating system and translating these commands into low-level instructions, encounters an error or malfunction, it may refuse to accept commands from the operating system. In that case the device controller fails to accept or process commands and we call this **controller error**. These problems may occur because of firmware issues, hardware failures, or compatibility problems between the controller and other system components.
+
+# RAID 
+
+## RAID - Level 0 
+
+## RAID - Level 1
+
+## RAID - Level 2
+
+## RAID - Level 3
+
+## RAID - Level 4
+
+## RAID - Level 5
+
+## RAID - Level 6
+
+# Logical Volume Manager (LVM) 
+
+# Disk Cache 
+
+# Solid State Disks and Flash Memory 
+
+# Difference Between SSDs and Hard Drives
+
+# IO Scheduler Changes
 
