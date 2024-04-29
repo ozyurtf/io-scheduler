@@ -1203,8 +1203,6 @@ In addition to these, the C-LOOK algorithm has the advantages of the LOOK algori
 
 Finding the last IO request.
 
-#### 
-
 ## FSCAN
 
 The idea behind FSCAN is quite similar to the SCAN. The only difference is that the algorithm operates with two queues: active queue and add queue. We can see add queue as waiting queue. 
