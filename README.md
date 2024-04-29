@@ -1410,23 +1410,34 @@ Also hard disk drives can use disk caching and
 
 Since SSDs do not have moving mechanical components, they are built with electronic Flash memory, and data is stored in individual blocks, SSDs experience block failures which means a failure affects individual blocks rather than entire SSD.
 
-**Recovery/Failure Prevention**: For HDDs, recovery is implemented at the 
+**Recovery/Failure Prevention**: For HDDs, recovery is implemented at the array (a group of multiple HDDs that are combined to work together as a single logical unit) level. This is commonly known as a RAID configuration. So when a drive in the RAID array fails, the array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives. This is what is meant by "recovery is implemented at the array level).
 
-####
+For SSDs, the recovery can be done at disk level or array level (?).
 
-####
+**Striping for Arrays**: Because HDDs have mechanical components and these mechanical components require some time to move from location A to location B, HDDs typically prefer large stripe size because if it chooses small stripe size, the disk head has to move quite frequently for small amount of data and this would not be convenient and efficient. 
 
-Recovery/Failure Prevention:
-- For HDDs, recovery is typically implemented at the array level using RAID to reconstruct failed disks.
-- For SSDs, recovery can be done at the disk level or array level, with current methods at the disk level. SSDs also use wear-leveling algorithms to reduce potential block failures.
-
-Striping for Arrays:
-- HDDs typically prefer larger stripe sizes.
-- SSDs prefer smaller stripe sizes.
-
-In summary, the slide highlights the key architectural differences between HDDs and SSDs, their performance characteristics for reads and writes, failure modes, recovery methods, and striping preferences when used in storage arrays.
+SSDs, on the other hand, prefer smaller stripe sizes (?)
 
 # IO Scheduler Changes
+
+In SSDs, there is no read/write head, that's why there is no seek time. Also, regardless of the location of the block, accessing to any block takes nearly same time. That's why IO schedulers focus on reducing the amount of time that is spent for write operation rather than optimizing for seek time as well. 
+
+Imagine writing a multiple 4KB blocks. 
+- Writing to 1st 4KB block: SSD needs to read the entire 128KB block that contains the target page, erase the block, and then write the updated 128KB block back to the SSD
+- Writing to 2nd 4KB block: SSD repeats the same process: reading the entire 128KB block that contains the target page, erase the block, and then write the updated 128KB block back to the SSD.
+
+And this process is repeated for each write request. This leads to inefficient usage of the SSDs resources and potential write amplification. To solve this inefficiency, IO schedulers should store incoming write requests in a buffer temporarily and delay the writing process slightly. Through this way, the scheduler can wait for subsequent write requests and this allows the scedhuler to group multiple small write requests into fewer, larger write operations. 
+
+Also by buffering and combining multiple write requests, IO scheduler can reduce the number of read/erase/program cycles that are required to write the data to the SSD. Instead of performing a read/erase/program cycle for each 4KB write request, the scheduler can coalesce the requests into a single, larger write operation that aligns with the SSD's erase block size (e.g., 128KB).
+
+Here's an example of how write coalescing can improve efficiency:
+
+- Without coalescing: Writing two consecutive 4KB blocks would require 2 read/erase/program cycles, each processing 128KB of data (2 * (128KB read + 128KB erase + 128KB program)).
+
+- With coalescing: The I/O scheduler buffers the two 4KB write requests and combines them into a single 8KB write operation. This requires only 1 read/erase/program cycle, processing 128KB of data (1 * (128KB read + 128KB erase + 128KB program)).
+
+# Current Industry Trends 
+
 
 # File Systems 
 
