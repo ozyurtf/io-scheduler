@@ -1400,27 +1400,21 @@ Because hard disk drives use spinning disks and moving read/write heads, the hea
 
 SSDs are based on Flash memory which don't have any moving mechanical components. Because data can be read electronically from any location with similar latencies, and because there is no mechanical seek time involved since data locations are addressed electronically bt the SSD controller, and lastly because SSDs don't have rotating disks and rotational latency delays, SSDs have fast random and sequential reads.
 
-**Write Performance**: 
+**Write Performance**: Just like random reads, writing to random non-contiguous locations requires the disk heads to move and seek to different locations on the disk platters. And similarly, the head may need to wait for the desired sector to rotate under the head once the head is over the right track. That's why hard disk drives have slow random writes. 
 
+Although SSDs have fast random and sequential reads, it has slow random writes as well. Because of Flash memory, if we want to write data to SSD, an entire block must be erased before this. This erase operation takes time. And because of this erase operation, the writing process is slower in SSDs compared to HDDs. 
+
+Also hard disk drives can use disk caching and 
+
+**Failures**: HDDs can experience complete disk failure. If a mechanical component of HDDs such as spindle motors, arms, read/write heads, etc. fail (if the read/write heads make physical contact with the disk platters it can cause a big damage and complete disk failure) the entire disk can become unusable.
+
+Since SSDs do not have moving mechanical components, they are built with electronic Flash memory, and data is stored in individual blocks, SSDs experience block failures which means a failure affects individual blocks rather than entire SSD.
+
+**Recovery/Failure Prevention**: For HDDs, recovery is implemented at the 
 
 ####
 
-
-
 ####
-Read Performance:
-- HDDs have slow random reads.
-- SSDs have fast random and sequential reads.
-- HDDs employ pre-fetching (initiated by the OS or disk itself) to improve sequential reads, which is not needed for SSDs.
-
-Write Performance:
-- HDDs have slow random writes.
-- SSDs also have slow random writes, slower than current HDDs (around 14-15ms for 128KB writes).
-- HDDs can use disk caching and OS coalescing to buffer a few writes, while SSDs employ remapping of blocks to convert random writes to sequential writes.
-
-Failures:
-- HDDs can experience complete disk failure.
-- SSDs experience block failures.
 
 Recovery/Failure Prevention:
 - For HDDs, recovery is typically implemented at the array level using RAID to reconstruct failed disks.
