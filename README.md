@@ -1387,8 +1387,6 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 
 ## Comparison of RAID Levels 
 
-```
-Here is the table drawn using keyboard characters within triple backticks:
 
 ```
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
@@ -1429,7 +1427,6 @@ Here is the table drawn using keyboard characters within triple backticks:
 |               |       |                             |               |                      |      lower than      |   lower than RAID 5 for   |
 |               |       |                             |               |                      |   RAID 5 for write   |           write           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-```
 ```
 
 # Logical Volume Manager (LVM) 
