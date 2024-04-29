@@ -1390,27 +1390,27 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 
 ```
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|   Category    | Level |        Description          |     Disks     |   Data availability  |  Large I/O data      |  Small I/O request rate   |
+|   Category    | Level |        Description          |     Disks     |   Data availability  |    Large IO data     |   Small IO request rate   |
 |               |       |                             |    required   |                      |  transfer capacity   |                           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|    Striping   |   0   |       Nonredundant          |       N       |   Lower than single  |      Very high       |   Very high for both read |
+|    Striping   |   0   |       Nonredundant          |       N       |   Lower than single  |      Very high       |  Very high for both read  |
 |               |       |                             |               |         disk         |                      |        and write          |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|   Mirroring   |   1   |         Mirrored            |      2N       |   Higher than RAID   |   Higher than single |   Up to twice that of a   |
-|               |       |                             |               |    2, 3, 4, or 5;    |    disk for read;    | similar to single disk for|
+|   Mirroring   |   1   |         Mirrored            |      2N       |     Higher than      |  Higher than single  |   Up to twice that of a   |
+|               |       |                             |               |  RAID 2, 3, 4, or 5; |    disk for read;    | similar to single disk for|
 |               |       |                             |               |   lower than RAID 6  |  similar to single   |  read; similar to single  |
 |               |       |                             |               |                      |    disk for write    |     disk for write        |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|   Parallel    |   2   |   Redundant via Hamming     |     N + m     |   Much higher than   |    Highest of all    |   Approximately twice that|
+|   Parallel    |   2   |    Redundant via Hamming    |     N + m     |   Much higher than   |    Highest of all    |   Approximately twice that|
 |    access     |       |           code              |               |     single disk;     |  listed alternatives |      of a single disk     |
-|               |       |                             |               |    comparable to     |                      |                           |
+|               |       |                             |               |     comparable to    |                      |                           |
 |               |       |                             |               |    RAID 3, 4, or 5   |                      |                           |
-+---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |               |   3   |   Bit-interleaved parity    |     N + 1     |   Much higher than   |    Highest of all    |   Approximately twice that|
 |               |       |                             |               |     single disk;     |  listed alternatives |      of a single disk     |
 |               |       |                             |               |    comparable to     |                      |                           |
 |               |       |                             |               |    RAID 2, 4, or 5   |                      |                           |
-+---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |               |   4   |   Block-interleaved parity  |     N + 1     |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
 |               |       |                             |               |     single disk;     |      for read;       |   read; significantly     |
 |               |       |                             |               |    comparable to     | significantly lower  |   lower than single dis   |
@@ -1421,13 +1421,17 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 |    access     |       |     distributed parity      |               |     single disk;     |      for read;       |   read; generally lower   |
 |               |       |                             |               |    comparable to     |      lower than      |  than single disk for     |
 |               |       |                             |               |    RAID 2, 3, or 4   | single disk for write|           write           |
-+---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |               |   6   | Block-interleaved dual      |     N + 2     |    Highest of all    |   Similar to RAID 0  |    Similar to RAID 0 for  |
 |               |       |    distributed parity       |               |  listed alternatives |      for read;       |   read; significantly     |
 |               |       |                             |               |                      |      lower than      |   lower than RAID 5 for   |
 |               |       |                             |               |                      |   RAID 5 for write   |           write           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 ```
+
+If a single disk fails, only the data in that disk is lost. But in RAID 0, if a disk fails, all the data in all the disks is lost because there is no redundancy. That's why data availability is lower in RAID 0 compared to single disk. 
+
+And because data is divided into smaller chunks and distributed across multiple disks in the array, when a large IO request is made each disk can read/write its designated portion of the data simultaneously and the data chunks are combined to fulfill IO request. That's why large IO data transfer capacity is very high in RAID 0.
 
 # Logical Volume Manager (LVM) 
 
