@@ -1318,9 +1318,11 @@ RAID Level 3 was primarily designed for applications that require high data tran
 
 ## RAID - Level 4
 
-In RAID 4, data is divided into larger chunks (blocks) and distributed across the disks. So in RAID 4, tue data is accessed independently and not in parallel unlike RAID 2 or RAID 3 in which data is striped across all disks in small units and therefore all disks need ot be accessed in to reconstruct the data. 
+In RAID 4, data is divided into larger chunks (blocks) and distributed across the disks. Because each disk operates independent from each other, the data is accessed independently and not in parallel unlike RAID 2 or RAID 3 in which data is striped across all disks in small units and therefore all disks need ot be accessed in to reconstruct the data. 
 
-In RAID 4, after data is divided into large chunks (blocks) the parity bit is calculated for each corresponding bit in blocks. 
+Since each disk operates and can be accessed independently, accessing to different blocks of data simultaneously is feasible.
+
+In RAID 4, after data is divided into large chunks (blocks) the parity bit is calculated for each corresponding bit in blocks. The resulting parity strip is stored on a dedicated parity disk.
 
 For instance, let's say that there are 3 disks in an array: D1, D2, D3 and one parity disk P. Assume that the blocks are represented in binary forms 
 
@@ -1344,27 +1346,18 @@ Calculating parity bit-by-bit across corresponding bit positions ensures that th
 
 The "bit-by-bit" calculation is a characteristic of RAID Level 4 and distinguishes it from other RAID levels that may use different parity calculation methods or distribute parity information differently across the disks.
 
+Also when the size of the IO write request is small, RAID 4 experiences small write penalty. Because when a small IO write request occurs, RAID 4 needs to 
+- read the old data block and corresponding parity block from the disks
+- calculate the new parity
+- write the new data block and updated parity block back to the disks
 
-##### 
-Bit-by-Bit Parity Calculation and Storage: In RAID Level 4, parity information is calculated bit-by-bit across corresponding data strips on each data disk. This parity information is then stored in a dedicated parity disk. For example, if you have three data disks and one parity disk, the parity information for the first data strip on each data disk will be stored in the first strip of the parity disk.
-
-#####
-
-#####
-RAID Level 4 is another type of RAID configuration that focuses on providing fault tolerance and data redundancy. Here's an explanation of the key points mentioned:
-
-1. **Independent Access Technique and Large Strips**: Unlike RAID Levels 2 and 3, which use a parallel access technique with small data strips, RAID Level 4 employs an independent access technique with large data strips. This means that data is divided into larger chunks or strips and distributed across the data disks.
-
-2. **Bit-by-Bit Parity Calculation and Storage**: In RAID Level 4, parity information is calculated bit-by-bit across corresponding data strips on each data disk. This parity information is then stored in a dedicated parity disk. For example, if you have three data disks and one parity disk, the parity information for the first data strip on each data disk will be stored in the first strip of the parity disk.
-
-3. **Write Penalty**: RAID Level 4 suffers from a write penalty when performing small I/O write requests. This penalty occurs because when writing a small amount of data, the RAID controller needs to read the old data and parity information from the data disks and the parity disk, respectively, calculate the new parity information based on the updated data, and then write the new data and parity information back to the disks. This process can be time-consuming and inefficient for small write operations.
+Repeating reading + calculating + writing for every small data reduces write performance. That's why small IO write requests are penalized. 
 
 The independent access technique in RAID Level 4 allows for better performance for large sequential read operations compared to RAID Levels 2 and 3, as data can be read independently from each disk without the need for parallel access. However, the write penalty for small I/O operations can significantly impact performance in workloads with many random write operations.
 
 RAID Level 4 provides fault tolerance by allowing data recovery in case of a single disk failure, as the missing data can be reconstructed from the remaining data disks and the parity disk. However, if the parity disk fails, data cannot be recovered, which is a limitation of this RAID level.
 
 While RAID Level 4 was an improvement over earlier RAID levels in some aspects, it has largely been superseded by RAID Level 5, which distributes the parity information across all disks, eliminating the write penalty and providing better performance for various workloads.
-#####
 
 ## RAID - Level 5
 
