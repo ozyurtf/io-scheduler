@@ -1373,38 +1373,64 @@ RAID 5 is commonly used in enterprise storage systems and servers that require a
 
 ## RAID - Level 6 (Dual Redundancy)
 
+In RAID 6, for each stripe of data, two parity calculations are made independently. Each of these parity calculations are based on different mathematical algorithms. And the two parity blocks that are obtained per stripe at the end of calculation are stored on different disks so that the failure of any two disks does not result in data loss. 
 
+RAID 6 offers a higher level of data protection and availability in comparison with RAID 5. It can tolerate the simultaneous failure of any two disks in the array without losing data with two parity blocks per stripe. Even if two disks fail, the missing data can be reconstructed using the remaining disks and the two parity blocks. That's why RAID 6 is suitable for environments where data available is very important.
 
-###
-RAID Level 6, also known as double-parity RAID, is an enhanced version of RAID 5 that provides even higher data protection and availability. Let's explain the key points you mentioned:
-
-1. Two different parity calculations:
-   - RAID 6 performs two independent parity calculations for each stripe of data.
-   - The two parity calculations are typically based on different mathematical algorithms, such as Reed-Solomon coding or double XOR parity.
-   - Each parity calculation generates a separate parity block, resulting in two parity blocks per stripe.
-   - The two parity blocks are stored on different disks to ensure that the failure of any two disks does not result in data loss.
-
-2. Extremely high data availability:
-   - RAID 6 offers a higher level of data protection and availability compared to RAID 5.
-   - With two parity blocks per stripe, RAID 6 can tolerate the simultaneous failure of any two disks in the array without losing data.
-   - Even if two disks fail, the missing data can be reconstructed using the remaining disks and the two parity blocks.
-   - This enhanced fault tolerance makes RAID 6 suitable for mission-critical environments where data availability is of utmost importance.
-
-3. Substantial write penalty:
-   - RAID 6 incurs a significant write penalty compared to RAID 5 due to the additional parity calculations and writes.
-   - For each write operation, RAID 6 needs to update not only the data block but also the two corresponding parity blocks.
-   - This means that every write operation requires three separate write operations: one for the data block and two for the parity blocks.
-   - The extra parity calculations and writes introduce overhead and can impact write performance, especially for write-intensive workloads.
-   - The write penalty in RAID 6 is higher compared to RAID 5, which has only one parity block per stripe.
+But note that RAID 6 causes a significant write penalty compared to RAID 5 because of the additional parity calculations and writes. So whenever write operation occurs, RAID 7 needs to update not only the data block but also the two corresponding parity blocks.  In other words, every write operation requires 3 separate write operations: one for the data block and two for the parity blocks. 
 
 Despite the write penalty, RAID 6 is often used in scenarios where data integrity and availability are critical, such as in large-scale storage systems, enterprise databases, and high-availability applications. The added protection against double-disk failures justifies the trade-off in write performance for these use cases.
 
 It's important to note that the write penalty in RAID 6 can be mitigated to some extent by using high-performance storage devices, such as solid-state drives (SSDs), or by employing write caching techniques. Additionally, RAID 6 implementations may optimize the parity calculations and writes to minimize the performance impact.
 
 Overall, RAID 6 provides a higher level of data protection and availability compared to RAID 5, making it suitable for environments that require resilience against multiple disk failures. However, it comes with the trade-off of increased write overhead due to the additional parity calculations and writes.
-###
 
 ## Comparison of RAID Levels 
+
+```
+Here is the table drawn using keyboard characters within triple backticks:
+
+```
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|   Category    | Level |        Description          |     Disks     |   Data availability  |  Large I/O data      |  Small I/O request rate   |
+|               |       |                             |    required   |                      |  transfer capacity   |                           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|    Striping   |   0   |       Nonredundant          |       N       |   Lower than single  |      Very high       |   Very high for both read |
+|               |       |                             |               |         disk         |                      |        and write          |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|   Mirroring   |   1   |         Mirrored            |      2N       |   Higher than RAID   |   Higher than single |   Up to twice that of a   |
+|               |       |                             |               |    2, 3, 4, or 5;    |    disk for read;    | similar to single disk for|
+|               |       |                             |               |   lower than RAID 6  |  similar to single   |  read; similar to single  |
+|               |       |                             |               |                      |    disk for write    |     disk for write        |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|   Parallel    |   2   |   Redundant via Hamming     |     N + m     |   Much higher than   |    Highest of all    |   Approximately twice that|
+|    access     |       |           code              |               |     single disk;     |  listed alternatives |      of a single disk     |
+|               |       |                             |               |    comparable to     |                      |                           |
+|               |       |                             |               |    RAID 3, 4, or 5   |                      |                           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               |   3   |   Bit-interleaved parity    |     N + 1     |   Much higher than   |    Highest of all    |   Approximately twice that|
+|               |       |                             |               |     single disk;     |  listed alternatives |      of a single disk     |
+|               |       |                             |               |    comparable to     |                      |                           |
+|               |       |                             |               |    RAID 2, 4, or 5   |                      |                           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               |   4   |   Block-interleaved parity  |     N + 1     |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
+|               |       |                             |               |     single disk;     |      for read;       |   read; significantly     |
+|               |       |                             |               |    comparable to     | significantly lower  |   lower than single dis   |
+|               |       |                             |               |    RAID 2, 3, or 5   | than single disk for |         for write         |
+|               |       |                             |               |                      |        write         |                           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|  Independent  |   5   |     Block-interleaved       |   N + 1       |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
+|    access     |       |     distributed parity      |               |     single disk;     |      for read;       |   read; generally lower   |
+|               |       |                             |               |    comparable to     |      lower than      |  than single disk for     |
+|               |       |                             |               |    RAID 2, 3, or 4   | single disk for write|           write           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+|               |   6   | Block-interleaved dual      |     N + 2     |    Highest of all    |   Similar to RAID 0  |    Similar to RAID 0 for  |
+|               |       |    distributed parity       |               |  listed alternatives |      for read;       |   read; significantly     |
+|               |       |                             |               |                      |      lower than      |   lower than RAID 5 for   |
+|               |       |                             |               |                      |   RAID 5 for write   |           write           |
++---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
+```
+```
 
 # Logical Volume Manager (LVM) 
 
