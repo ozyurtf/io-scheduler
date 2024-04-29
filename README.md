@@ -1286,25 +1286,43 @@ This configuration is generally used in situations where performance is importan
 
 ## RAID - Level 1
 
-In this configuration, the exact copy of the data is created on two or more disks. That's why this configuration is also known as mirroring. Each disk in the array basically contains a complete data and identical the copy of it. And the duplication of data provides fault tolerance because if one disk fails, the data can still be accessed from the remaining disks in the array because the RAID controller automatically detects the failed disk and continues to serve data from the surviving disk(s) without interruption.
-
-When the data is written to the array, it is written to the disks simultaneously and this can be done in parallel. And because this is done in parallel, there is no penalty for writing. 
+In this configuration, the exact copy of the data is created on two or more disks. That's why this configuration is also known as mirroring. Each disk in the array basically contains a complete data and identical the copy of it. And the duplication of data provides fault tolerance because if one disk fails, the data can still be accessed from another disk in the array because the RAID controller automatically detects the failed disk and continues to serve data from the surviving disk(s) without interruption.
 
 The main drawback of RAID 1 is the cost of duplicating the data. RAID 1 requires twice or more the number of disks compared to a single disk setup to achieve the same usable storage capacity. 
 
 The additional disks and the cost of duplicating the data make RAID 1 more expensive compared to other RAID levels or a single disk configuration.
 
-Also note that this configuration offers no striping or parity (error checking mechanism). Therefore, when we take the characteristics of this configuration into account we can say that this layout is useful when read performance is more important than write performance 
+Also note that during the process of writing data, if additional operations such as calculating parity information (for error checking mechanism) are involved, these operations can slow down the write performance. This is called 'write penalty'.
+
+In RAID 1, because data is just copied to another drive, there is no need for these kinds of extra calculations. Therefore, there is no significant write penalty.
 
 ## RAID - Level 2
 
+In RAID 2 configuration, data is divided into very small units (e.g., bytes or words) and striped across all the disks. Therefore all disks participate to read and write operations. Each disk can be accessed in parallel. That's why we observe faster data transfer rates.
+
+RAID 2 generates redundant parity information as an error-checking mechanism. And this parity information is striped across all the disks as well. And Hamming code is used for error detection/correction. By utilizing the Hamming code, RAID 2 can correct single-bit errors and detect double-bit errors in the data stored across the disks (without correcting). During read operations, data is read from all disks in the array and error detection and correction is done with Hamming code during these read operations. 
+
+If there are many disk errors in environment, RAID 2 might be a good choice. 
+
 ## RAID - Level 3
+
+It is similar to RAID 2. But the difference is that it requires only a single disk that is dedicated for parity (error checking mechanism) regardless of the size of the disk array. In RAID 2, the parity information was being distrubted across all disks. And the parity disk in RAID 3 stores the redundant information that is needed for data recovery in case of disk failure. 
+
+Similar to RAID 2, RAID 3 stripes data across multiple disks in small units (e.g., bytes, words). This means that all disks participate in reading and writing operations simultaneously. And this allows higher data transfer rates especially for large sequential data transfers. The parallel access to multiple disks allows for faster reading and writing.  
+
+Note that even though there is a parallel access capability, RAID 3 can only handle one read or one write operation at a time because of single parity disk which is involved in every read and write operation. If multiple I/O operations were allowed simultaneously, the parity information could become inconsistent, leading to data integrity issues.
+
+The key advantage of RAID Level 3 over RAID Level 2 is that it requires only a single parity disk, which reduces the overhead and complexity associated with distributed parity information. However, the limitation of handling only one IO at a time can be a bottleneck, especially for workloads with many random access operations.
+
+RAID Level 3 was primarily designed for applications that require high data transfer rates for large sequential data operations, such as multimedia or video editing systems. However, it has largely been superseded by other RAID levels, such as RAID Level 5 and RAID Level 6, which offer better performance and fault tolerance for a wider range of workloads.
 
 ## RAID - Level 4
 
 ## RAID - Level 5
 
 ## RAID - Level 6
+
+## Comparison of RAID Levels 
 
 # Logical Volume Manager (LVM) 
 
