@@ -1272,9 +1272,9 @@ There are different RAID levels (e.g., RAID 0, RAID 1, RAID 2, ..., RAID 6) tha
 
 ## RAID - Level 0 
 
-In this configuration, the main focus is solely to improve performance by dividing data into strips (small and fixed-size unit of data) and distributing it across multiple disks. For example, after the data is split into strips, the 1st strip is written to the 1st disk, the 2nd strip is written to the 2nd disk, the 3rd strip is written to the 3rd disk, the 4th strip is written to the 4th disk, and the 5th strip is written to the 1st disk, etc. Because data is distributed across multiple disks, we observe improved read/write performance. 
+In this configuration, the **data** is **divided into blocks** and **distributed across multiple disks**. For example, if there are 4 disks, after the data is divided into blocks, the 1st block is written to the 1st disk, the 2nd block is written to the 2nd disk, the 3rd block is written to the 3rd disk, the 4th block is written to the 4th disk, and the 5th block is written to the 1st disk, etc. Because data is distributed across multiple disks, it **can be read from multiple disks synchronously** and **we observe faster read/write operations compared to single disk**. 
 
-And it is not seen as a true RAID because it does not include redundancy (duplicating the data across multiple disks) to improve performance or provide data protection. And because the data is duplicated in multiple disks, if one disk fails, the data in that disk is lost and as a result the entire data becomes inaccessible. As we increase the number of disks, the probability of data loss increases. 
+In RAID 0, the **data is not duplicated across multiple disks**. And because there is no redundancy, RAID 0 is **not seen as a true RAID**. **If one disk fails**, the **data in that disk is lost** and as a result the **entire data becomes inaccessible**. As we increase the number of disks, the probability of data loss increases. 
 
 It is generally considered that RAID 0 offers the best performance because: 
 
@@ -1282,49 +1282,53 @@ It is generally considered that RAID 0 offers the best performance because:
 2) Unlike other RAID levels that include redundacy, RAID 0 does not introduce any additional overhead like this and it focueses solely on performance optimization
 3) Because of lack of redundancy, we have higher storage capacity
 
-This configuration is generally used in situations where performance is important and the lost data can easily recreated with other ways. Because the data is not duplicated across multiple disks, RAID 0 configuration utilizes the full capacity of all the disks in the array and this provides a larger total storage space. 
+This **configuration is generally used in situations** that **require high performance and fast data access** and the **lost data can easily recreated with other ways**. Because the data is not duplicated across multiple disks, RAID 0 configuration utilizes the **full capacity of all the disks in the array** and this provides a **larger total storage space.**
 
 ## RAID - Level 1 (Mirrored)
 
-In this configuration, the exact copy of the data is created on two or more disks. That's why this configuration is also known as mirroring. Each disk in the array basically contains a complete data and identical the copy of it. And the duplication of data provides fault tolerance because if one disk fails, the data can still be accessed from another disk in the array because the RAID controller automatically detects the failed disk and continues to serve data from the surviving disk(s) without interruption.
+In this configuration, **there are at least two disks** and the **exact copy of the data is created on two or more disks.** That's why this configuration is also known as **mirroring**. 
 
-The main drawback of RAID 1 is the cost of duplicating the data. RAID 1 requires twice or more the number of disks compared to a single disk setup to achieve the same usable storage capacity. 
+The **duplication of data provides fault tolerance** because **if one disk fails**, the **data can still be accessed from another disk** in the array because the RAID controller automatically detects the failed disk and continues to serve data from the surviving disk(s) without interruption.
 
-The additional disks and the cost of duplicating the data make RAID 1 more expensive compared to other RAID levels or a single disk configuration.
+The main drawback of RAID 1 is the **cost of duplicating the data**. RAID 1 **requires twice or more the number of disks compared to a single disk setup** **to achieve the same usable storage capacity.**
 
-Also note that during the process of writing data, if additional operations such as calculating parity information (for error checking mechanism) are involved, these operations can slow down the write performance. This is called 'write penalty'.
+RAID 1 can offer improved read performance compared to a single disk. **When a read request is made**, the **RAID 1 controller can retrieve the data from either disk in the array**. This **allows for parallel read operations,** potentially **increasing the read speed**.
 
-In RAID 1, because data is just copied to another drive, there is no need for these kinds of extra calculations. Therefore, there is no significant write penalty.
+The **additional disks and the cost of duplicating the data in multiple disks makes RAID 1 more expensive** compared to other RAID levels or a single disk configuration. That's why **writing operation is slower in RAID 1 comapred to single disk**.
+
+Also note that during the process of writing data, if additional operations such as **calculating parity information** (for error checking mechanism) are involved, these operations can slow down the write performance. This is called **'write penalty'.**
+
+In RAID 1, because data is just copied to another drive, and **parity information is not calculated**, there is **no need for these kinds of extra calculations**. Therefore, there is **no significant write penalty**.
 
 ## RAID - Level 2 (Redundancy Through Hamming Code)
 
-In RAID 2 configuration, data is divided into very small units (e.g., bytes or words) and striped across all the disks. Therefore all disks participate to read and write operations. Each disk can be accessed in parallel. That's why we observe faster data transfer rates.
+In RAID 2 configuration, **data is divided into bits** and **distributed across all the disks**. Therefore **all disks participate to read and write operations** and **each disk can be accessed in parallel**. That's why we observe **faster data transfer rates**.
 
-RAID 2 generates redundant parity information as an error-checking mechanism. And this parity information is striped across all the disks as well. And Hamming code is used for error detection/correction. By utilizing the Hamming code, RAID 2 can correct single-bit errors and detect double-bit errors in the data stored across the disks (without correcting). During read operations, data is read from all disks in the array and error detection and correction is done with Hamming code during these read operations. 
+RAID 2 generates **parity information** as an error-checking mechanism. And **this parity information is distributed across all the disks as well**. And **Hamming code is used for error detection/correction**. 
+
+By utilizing the Hamming code, **RAID 2 can correct single-bit errors and detect double-bit errors** in the data stored across the disks (without correcting). During read operations, **data is read from all disks in the array** and **error detection and correction is done with Hamming code during these read operations**. 
 
 If there are many disk errors in environment, RAID 2 might be a good choice. 
 
 ## RAID - Level 3 (Bit-Interleaved Parity)
 
-It is similar to RAID 2. But the difference is that it requires only a single disk that is dedicated for parity (error checking mechanism) regardless of the size of the disk array. In RAID 2, the parity information was being distrubted across all disks. And the parity disk in RAID 3 stores the redundant information that is needed for data recovery in case of disk failure. 
+The **data** is **divided into bits** and **distributed dacross all the disks** like RAID 2. But the **difference is that** it **requires only a single disk that is dedicated for parity** (error checking mechanism) regardless of the size of the disk array. 
 
-Similar to RAID 2, RAID 3 stripes data across multiple disks in small units (e.g., bytes, words). This means that all disks participate in reading and writing operations simultaneously. And this allows higher data transfer rates especially for large sequential data transfers. The parallel access to multiple disks allows for faster reading and writing.  
+In RAID 2, **the parity information was being distrubted across all disks**. In RAID 3, it is **stored in one dedicated disk in case of a disk failure**. 
 
-Note that even though there is a parallel access capability, RAID 3 can only handle one read or one write operation at a time because of single parity disk which is involved in every read and write operation. If multiple I/O operations were allowed simultaneously, the parity information could become inconsistent, leading to data integrity issues.
+Since the **data** is **distributed across all the disks**, **all disks participate in reading and writing operations simultaneously** like in RAID 2. And this **allows high data transfer rates** **especially for large sequential data transfers** because **the parallel access to multiple disks allows for faster reading and writing**.  
 
-The key advantage of RAID Level 3 over RAID Level 2 is that it requires only a single parity disk, which reduces the overhead and complexity associated with distributed parity information. However, the limitation of handling only one IO at a time can be a bottleneck, especially for workloads with many random access operations.
+Note that **even though there is a parallel access capability**, **RAID 3 can only handle one read or one write operation at a time** because of single parity disk which is involved in every read and write operation. **If multiple IO operations were allowed simultaneously**, **the parity information could become inconsistent, leading to data integrity issues**.
+
+The **key advantage of RAID Level 3 over RAID Level 2 is that it requires only a single parity disk, which reduces the overhead and complexity associated with distributed parity information**. However, the **limitation of handling only one IO at a time can be a bottleneck, especially for workloads with many random access operations**.
 
 RAID Level 3 was primarily designed for applications that require high data transfer rates for large sequential data operations, such as multimedia or video editing systems. However, it has largely been superseded by other RAID levels, such as RAID Level 5 and RAID Level 6, which offer better performance and fault tolerance for a wider range of workloads.
 
 ## RAID - Level 4 (Block-Level Parity)
 
-In RAID 4, data is divided into larger chunks (blocks) and distributed across the disks. Because each disk operates independent from each other, the data is accessed independently and not in parallel unlike RAID 2 or RAID 3 in which data is striped across all disks in small units and therefore all disks need ot be accessed in to reconstruct the data. 
+In RAID 4, data is **divided into blocks** and **distributed across the disks** like in RAID 0. But **unlike RAID 0**, now the **parity information of all disks is computed. And the parity information is stored in a separate disk** that is **dedicated for parity information**. 
 
-Since each disk operates and can be accessed independently, accessing to different blocks of data simultaneously is feasible.
-
-In RAID 4, after data is divided into large chunks (blocks) the parity bit is calculated for each corresponding bit in blocks. The resulting parity strip is stored on a dedicated parity disk.
-
-For instance, let's say that there are 3 disks in an array: D1, D2, D3 and one parity disk P. Assume that the blocks are represented in binary forms 
+For instance, **let's say that there are 3 disks in an array**: D1, D2, D3 and **one parity disk** P. **Assume** that the **blocks are represented in binary forms** 
 
 ```
 D1: 10101010
@@ -1332,7 +1336,7 @@ D2: 01010101
 D3: 11001100
 ```
 
-To calculate the parity block for the parity disk (P), the RAID controller performs the following bit-by-bit XOR operation:
+**To calculate the parity block for the parity disk** (P), the **RAID controller performs the following bit-by-bit XOR operation for all disks**:
 
 ```
 P = D1 ⨁ D2 ⨁ D3
@@ -1340,60 +1344,52 @@ P = D1 ⨁ D2 ⨁ D3
   = 00110011
 ```
 
-During a read operation, if one of the disks fails, the missing data can be reconstructed by performing the XOR operation on the remaining data blocks and the parity block.
+During a read operation, **if one of the disks fails**, **the missing data can be reconstructed by performing the XOR operation on the remaining data blocks and the parity block**. However, **if the parity disk fails**, **data cannot be recovered**, which is a limitation of RAID 4.
 
-Calculating parity bit-by-bit across corresponding bit positions ensures that the parity information accurately represents the redundant information needed to recover data in case of a single disk failure.
+**Calculating parity bit-by-bit across corresponding bit positions ensures that the parity information accurately represents the redundant information needed to recover data in case of a single disk failure**.
 
-The "bit-by-bit" calculation is a characteristic of RAID Level 4 and distinguishes it from other RAID levels that may use different parity calculation methods or distribute parity information differently across the disks.
+Also **when the size of the IO write request is small**, **a small write penalty** is observed. **Because when a small IO write request occurs**, **RAID 4 needs** to 
+- **read the old data block** from the disk
+- **read the corresponding parity block** from the disk
+- **calculate the new parity**
+- **write the new data block and updated parity block back to the disks**
 
-Also when the size of the IO write request is small, RAID 4 experiences small write penalty. Because when a small IO write request occurs, RAID 4 needs to 
-- read the old data block and corresponding parity block from the disks
-- calculate the new parity
-- write the new data block and updated parity block back to the disks
-
-Repeating reading + calculating + writing for every small data reduces write performance. That's why small IO write requests are penalized. 
-
-The independent access technique in RAID Level 4 allows for better performance for large sequential read operations compared to RAID Levels 2 and 3, as data can be read independently from each disk without the need for parallel access. However, the write penalty for small I/O operations can significantly impact performance in workloads with many random write operations.
-
-RAID Level 4 provides fault tolerance by allowing data recovery in case of a single disk failure, as the missing data can be reconstructed from the remaining data disks and the parity disk. However, if the parity disk fails, data cannot be recovered, which is a limitation of this RAID level.
+**Repeating reading + calculating + writing for every small data reduces write performance**. That's why **small IO write requests are penalized.** 
 
 While RAID Level 4 was an improvement over earlier RAID levels in some aspects, it has largely been superseded by RAID Level 5, which distributes the parity information across all disks, eliminating the write penalty and providing better performance for various workloads.
 
 ## RAID - Level 5 (Block-Level Distributed Parity)
 
-In RAID 5 configuration, the parity information is distributed across all the disks in the array instead of putting it into one dedicated disk like in RAID 4. Through this way, the potential bottleneck of a dedicated disk is prevented and this improves overall performance
+In RAID 5, data is **divided into blocks** and **distributed across the disks** like in RAID 0 and 4. **Unlike RAID 0**, the **parity information of all disks is computed** And Unlike RAID 4, the parity information is distributed across all the disks in the array instead of storing it in one dedicated disk.
 
 Also RAID 5 typically uses a round-robin algorithm for allocating data and parity across disks so that parity is distributed evenly and no single disk becomes a bottleneck.
 
 Because the array continue functioning even if one of the disks fails, there is a fault tolerance in RAID 5. So if one disk fails, the missing data can be reconstructed using the parity information that is stored on the remaining disks. 
 
-Compared to RAID 4, RAID 5 offers improved performance and load balancing due to the distributed parity. It eliminates the write penalty associated with a dedicated parity disk and provides better overall throughput. However, RAID 5 still requires the calculation of parity for each write operation, which can impact write performance compared to RAID 0 (striping without parity).
+**Compared to RAID 4**, **RAID 5 offers** **improved performance** and **load balancing** **due to the distributed parity**. It **eliminates the write penalty associated with a dedicated parity disk** and **provides better overall throughput**. However, **RAID 5 still requires the calculation of parity for each write operation, which can impact write performance compared to RAID 0** (striping without parity).
 
 RAID 5 is commonly used in enterprise storage systems and servers that require a balance of good performance, fault tolerance, and efficient storage utilization. It is well-suited for read-intensive workloads and provides protection against single disk failures.
 
 ## RAID - Level 6 (Dual Redundancy)
 
-In RAID 6, for each stripe of data, two parity calculations are made independently. Each of these parity calculations are based on different mathematical algorithms. And the two parity blocks that are obtained per stripe at the end of calculation are stored on different disks so that the failure of any two disks does not result in data loss. 
+In RAID 5, data is **divided into blocks** and **distributed across the disks** like in RAID 0, 4, and 5. **Unlike RAID 0**, the **parity information of all disks is computed**.  Unlike RAID 4, and 5 two seaparte parity information are calculated. And unlike RAID 4, and 5, the two parity information are distributed across all the disks.
 
-RAID 6 offers a higher level of data protection and availability in comparison with RAID 5. It can tolerate the simultaneous failure of any two disks in the array without losing data with two parity blocks per stripe. Even if two disks fail, the missing data can be reconstructed using the remaining disks and the two parity blocks. That's why RAID 6 is suitable for environments where data available is very important.
+**RAID 6 offers a higher level of data protection and availability in comparison with RAID 5**. It can **tolerate the simultaneous failure of any two disks in the array without losing data** with two parity blocks per stripe. Even if two disks fail, the missing data can be reconstructed using the remaining disks and the two parity blocks. That's why RAID 6 is suitable for environments where data availability is very important.
 
-But note that RAID 6 causes a significant write penalty compared to RAID 5 because of the additional parity calculations and writes. So whenever write operation occurs, RAID 7 needs to update not only the data block but also the two corresponding parity blocks.  In other words, every write operation requires 3 separate write operations: one for the data block and two for the parity blocks. 
+But note that **RAID 6 causes a significant write penalty compared to RAID 5 because of the additional parity calculations and writes.** So whenever write operation occurs, **RAID 6 needs to update not only the data block but also the two corresponding parity blocks**.  In other words, **every write operation requires 3 separate write operations: one for the data block and two for the parity blocks.** 
 
-Despite the write penalty, RAID 6 is often used in scenarios where data integrity and availability are critical, such as in large-scale storage systems, enterprise databases, and high-availability applications. The added protection against double-disk failures justifies the trade-off in write performance for these use cases.
-
-It's important to note that the write penalty in RAID 6 can be mitigated to some extent by using high-performance storage devices, such as solid-state drives (SSDs), or by employing write caching techniques. Additionally, RAID 6 implementations may optimize the parity calculations and writes to minimize the performance impact.
+Despite the write penalty, RAID 6 is often **used in scenarios where data integrity and availability are critical**, such as in large-scale storage systems, enterprise databases, and high-availability applications. The added protection against double-disk failures justifies the trade-off in write performance for these use cases.
 
 Overall, RAID 6 provides a higher level of data protection and availability compared to RAID 5, making it suitable for environments that require resilience against multiple disk failures. However, it comes with the trade-off of increased write overhead due to the additional parity calculations and writes.
 
 ## Comparison of RAID Levels 
-
 
 ```
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |   Category    | Level |        Description          |     Disks     |   Data availability  |    Large IO data     |   Small IO request rate   |
 |               |       |                             |    required   |                      |  transfer capacity   |                           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|    Striping   |   0   |       Nonredundant          |       N       |   Lower than single  |      Very high       |  Very high for both read  |
+|   Striping    |   0   |       Nonredundant          |       N       |   Lower than single  |      Very high       |  Very high for both read  |
 |               |       |                             |               |         disk         |                      |        and write          |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |   Mirroring   |   1   |         Mirrored            |      2N       |     Higher than      |  Higher than single  |   Up to twice that of a   |
@@ -1402,11 +1398,11 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 |               |       |                             |               |                      |    disk for write    |     disk for write        |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 |   Parallel    |   2   |    Redundant via Hamming    |     N + m     |   Much higher than   |    Highest of all    |   Approximately twice that|
-|    access     |       |           code              |               |     single disk;     |  listed alternatives |      of a single disk     |
+|    access     |       |            code             |               |     single disk;     |  listed alternatives |      of a single disk     |
 |               |       |                             |               |     comparable to    |                      |                           |
 |               |       |                             |               |    RAID 3, 4, or 5   |                      |                           |
 |               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|               |   3   |   Bit-interleaved parity    |     N + 1     |   Much higher than   |    Highest of all    |   Approximately twice that|
+|               |   3   |   Bit-interleaved parity    |     N + 1     |   Much higher than   |    Highest of all    |  Approximately twice that |
 |               |       |                             |               |     single disk;     |  listed alternatives |      of a single disk     |
 |               |       |                             |               |    comparable to     |                      |                           |
 |               |       |                             |               |    RAID 2, 4, or 5   |                      |                           |
@@ -1417,21 +1413,51 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 |               |       |                             |               |    RAID 2, 3, or 5   | than single disk for |         for write         |
 |               |       |                             |               |                      |        write         |                           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|  Independent  |   5   |     Block-interleaved       |   N + 1       |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
+|  Independent  |   5   |     Block-interleaved       |     N + 1     |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
 |    access     |       |     distributed parity      |               |     single disk;     |      for read;       |   read; generally lower   |
 |               |       |                             |               |    comparable to     |      lower than      |  than single disk for     |
-|               |       |                             |               |    RAID 2, 3, or 4   | single disk for write|           write           |
+|               |       |                             |               |   RAID 2, 3, or 4    | single disk for write|           write           |
 |               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|               |   6   | Block-interleaved dual      |     N + 2     |    Highest of all    |   Similar to RAID 0  |    Similar to RAID 0 for  |
+|               |   6   |   Block-interleaved dual    |     N + 2     |    Highest of all    |   Similar to RAID 0  |    Similar to RAID 0 for  |
 |               |       |    distributed parity       |               |  listed alternatives |      for read;       |   read; significantly     |
 |               |       |                             |               |                      |      lower than      |   lower than RAID 5 for   |
 |               |       |                             |               |                      |   RAID 5 for write   |           write           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
 ```
 
-If a single disk fails, only the data in that disk is lost. But in RAID 0, if a disk fails, all the data in all the disks is lost because there is no redundancy. That's why data availability is lower in RAID 0 compared to single disk. 
+As mentioned previously: 
 
-And because data is divided into smaller chunks and distributed across multiple disks in the array, when a large IO request is made each disk can read/write its designated portion of the data simultaneously and the data chunks are combined to fulfill IO request. That's why large IO data transfer capacity is very high in RAID 0.
+In RAID 0, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks and calculating parity information. 
+In RAID 1, data is not divided. Instead, it is copied to at least one disk so that the data is replicated across two or more disks. Parity information is not calculated.
+In RAID 2, data is divided into bits and distributed across all disks. Parity information is calculated and distributed across all disks as well.
+In RAID 3, data is divided into bits and distributed across all disks. Parity information is calculated and put into one disk that is dedicated for storing parity information.
+In RAID 4, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is stored in a separate disk. 
+In RAID 5, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is distributed to all disks.
+In RAID 6, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Two separate parity information of all disks are distributed to all disks.
+
+### Disks Required 
+
+
+### Data Availability
+
+In single disk, if the disk fails, only the data in that disk is lost.  
+
+In RAID 0, **if a disk fails**, **all the data across all the disks is lost** because there is no redundancy. That's why **data availability is lower in RAID 0 compared to single disk**. 
+
+In RAID 1, data availability is higher than RAID 2, 3, 4, and 5 because the whole data is copied to each disk separately. If one disk fails, the other still has a complete copy of the data. In RAID 2, 3, 4, and 5, however, the data is divided into smaller units and parity information is either stored in a separate disk or distributed across all disks. If the parity information is stored in a separate disk, the whole data is lost if something happens to that disk. If the parity information is distributed across all disks and if one of the disk fails the array operates in a degraded state until the failed disk is replaced. During that time, another disk failure could cause data loss. However, RAID 6 provides even higher availability than RAID 1. RAID 6 is similar to RAID 5 but adds a second distributed parity block. It can tolerate up to two disk failures without data loss, whereas RAID 1 can only tolerate one disk failure per mirrored pair.
+
+In RAID 2, 3, 4, and 5, data availability is much higher than single level disk because in these RAID configurations, the data is divided into smaller units, distributed to all disks along with the parity information. But the data availability in these disks is comparable with each other.
+
+In RAID 6, data availability is the highest because parity information is computed twice separately and distributed to all disks. In previous RAID levels, the parity information was either not calculated or calculated once. 
+
+### Large IO  Data Transfer Capacity
+
+IO Data Transfer is simply transfering the data from IO device to disk or other components of the computer or from the disk or other components of the computer to IO device. 
+
+Because **data is divided into smaller chunks** and **distributed across multiple disks in the array**, when a large IO request is made **each disk can read/write its designated portion of the data simultaneously** and the **data chunks are combined to fulfill IO request**. That's why **large IO data transfer capacity is very high in RAID 0**. Small IO request rate is very high for both read and write operations because the data is divided into strips and distributed to multiple disks. 
+
+
+### Small IO Request Rate
 
 # Logical Volume Manager (LVM) 
 
