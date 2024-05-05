@@ -1407,9 +1407,9 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 |               |       |                             |               |    comparable to     |                      |                           |
 |               |       |                             |               |    RAID 2, 4, or 5   |                      |                           |
 |               +-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
-|               |   4   |   Block-interleaved parity  |     N + 1     |   Much higher than   |   Similar to RAID 0  |    Similar to RAID 0 for  |
-|               |       |                             |               |     single disk;     |      for read;       |   read; significantly     |
-|               |       |                             |               |    comparable to     | significantly lower  |   lower than single dis   |
+|               |   4   |   Block-interleaved parity  |     N + 1     |   Much higher than   |   Similar to RAID 0  |   Similar to RAID 0 for   |
+|               |       |                             |               |     single disk;     |      for read;       |    read; significantly    |
+|               |       |                             |               |    comparable to     | significantly lower  |   lower than single disk  |
 |               |       |                             |               |    RAID 2, 3, or 5   | than single disk for |         for write         |
 |               |       |                             |               |                      |        write         |                           |
 +---------------+-------+-----------------------------+---------------+----------------------+----------------------+---------------------------+
@@ -1435,9 +1435,6 @@ In RAID 4, data is divided into blocks and distributed across disks without dupl
 In RAID 5, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is distributed to all disks.
 In RAID 6, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Two separate parity information of all disks are distributed to all disks.
 
-### Disks Required 
-
-
 ### Data Availability
 
 In single disk, if the disk fails, only the data in that disk is lost.  
@@ -1452,31 +1449,40 @@ In RAID 6, data availability is the highest because parity information is comput
 
 ### Large IO  Data Transfer Capacity
 
-IO Data Transfer is simply transfering the data from IO device to disk or other components of the computer or from the disk or other components of the computer to IO device. 
+**IO data transfer** is simply **transfering the data from IO device to disk or other components of the computer** or **from the disk or other components of the computer to IO device.** 
 
-Because **data is divided into smaller chunks** and **distributed across multiple disks in the array**, when a large IO request is made **each disk can read/write its designated portion of the data simultaneously** and the **data chunks are combined to fulfill IO request**. That's why **large IO data transfer capacity is very high in RAID 0**. Small IO request rate is very high for both read and write operations because the data is divided into strips and distributed to multiple disks. 
+**In RAID 0**, because **data is divided into smaller chunks** and **distributed across multiple disks in the array**, when a large IO request is made **each disk can read/write its designated portion of the data simultaneously** and the **data chunks are combined to fulfill IO request**. That's why **very large amount of IO data can be transferred in both read and write operations**.
 
+**In RAID 1**, data is simply copied to each disk so larger amount of IO data can be transferred from the disk to other computer components (via read operation) compared to single disk. However, because the incoming data has to be written to each disk, lower amount of IO data can be transferred to the disk from the other computer components (via write operation) compared to single disk. 
+
+**In RAID 2 and 3** in which data is divided into bits and distributed acorss all disks, the amount of data that can be transferred from the disk to other computer components (via read operation) and that can be transferred from the other components to the disk (via write operation) is at the highest level.
+
+**In  RAID 4 5 and 6** in which data is divided into blocks and distributed across all disks, the amount of data that can be transferred from the disk to other compnents (via read operation) is similar to RAID 0. For write operation, however, significantly lower amount of data can be written to the disks via write operation for RAID 4 and lower amount of data can be written to the disks via write operation for RAID 5 and RAID 6 in comparison with the single disk. However, the amount of data that can be written to the disks via write operation is even lower in RAID 6 compared to RAID 5. 
+
+The conclusion we can arrive in here is that distributing data across the disks increases the data transfer amount for read operations. Similarly as we divide data into smaller and smaller units before distributing them, we obtain higher data transfer amount for read operations. In addition, putting the parity blocks across multiple disks is something that decreases the data transfer amount in write operations. In RAID 2 and 3, we distribute the parity blocks across disks as well but the unit of data is bit in those cases. That's why thye data transfer amount is still highest in these configurations.
 
 ### Small IO Request Rate
 
 # Logical Volume Manager (LVM) 
 
-LVM is a storage management system. It basically creates a logical view of the storage devices and provides abstracted way to manage disk storage.
+LVM is a **storage management system**. It basically **creates a logical view of the storage devices** and **provides abstracted way to manage disk storage**.
 
-LVM operates on top of physical storage devices and allows you to create virtual storage entities. These virtual storage entities are called logical volumes and these volumes can span across multiple devices. And this provides a unified storage space that can be easily managed and resized. 
+**LVM operates on top of physical storage devices** and **allows you to create virtual storage entities** that are independent from the **underlying physical storage layout**. **These virtual storage entities are called logical volumes** and **these volumes can span across multiple devices**. And **this provides a unified storage space that can be easily managed and resized**. 
 
-Key components of LVM: 
-1) Physical Volumes: Physical storage devices that LVM uses as the building blocks to create logical volumes. The physical volumes can be entire disks or partitions on a disk. Physical volume can be seen as the lowest level of abstraction in LVM and it represents the actual physical storage devices that LVM will engage/manage.
-2) Volume Groups: A collection of one or more physical volumes. And the logical volumes can be created from this collection. Volume groups allow you to combine multiple physical volumes into a single logical unit and this provide flexibility and scalability. The volume group acts as a pool of storage that can be divided into logical volumes. 
-3) Logical Volumes: Virtual partitions that are created from a volume group. They are the entities that are used to store data, create file systems, and mount them. Logical volumes can be created, resized, and managed independently of the underlying storage layout.
+**Key components** of LVM: 
+1) **Physical Volumes:** **Physical storage devices** that LVM uses as the **building blocks** to **create logical volumes**. The physical volumes can be **entire disks** or **partitions on a disk**. Physical volume can be seen as the **lowest level of abstraction in LVM** and it **represents the actual physical storage devices that LVM will engage/manage**.
+2) **Volume Groups**: A **collection of one or more physical volumes**. And the **logical volumes can be created from this collection**. **Volume groups allow you to combine multiple physical volumes into a single logical unit** and **this provide flexibility and scalability**. The **volume group acts as a pool of storage that can be divided into logical volumes.** 
+3) **Logical Volumes**: **Virtual partitions that are created from a volume group**. They are the **entities that are used to store data, create file systems, and mount them**. Logical volumes can be **created, resized, and managed independently of the underlying storage layout**.
 
-When operating system performs IO operations on a logical volume, LVM maps these IO requests to the appropriate physical volumes. And when an IO request is made to the logical volume, LVM uses this metadata and etermines which physical volume(s) contain the requested data. After finding the physical volume(s) that contain the requested data it directs the IO operation accordingly. Through this abstraction, the operating system and applications can interact with logical volumes as if they are regular disks while LVM handles the underlying physical storage management.
+When **operating system performs IO operations on a logical volume**, **LVM maps these IO requests to the appropriate physical volumes**. And **when an IO request is made to the logical volume**, **LVM uses this metadata** and **determines which physical volume(s) contain the requested data**. 
+
+**After finding the physical volume(s) that contain the requested data**, **it directs the IO operation accordingly**. Through this abstraction, **the operating system and applications can interact with logical volumes as if they are regular disks** while **LVM handles the underlying physical storage management**.
 
 The main advantages of using LVM include:
-- Flexibility: LVM allows you to create, resize, and manage logical volumes dynamically without disrupting the system or data.
-- Scalability: You can easily add more physical volumes to a volume group to expand the storage capacity.
-- Abstraction: LVM provides a layer of abstraction that separates the logical view of storage from the physical devices, making storage management easier.
-- Snapshots: LVM supports creating snapshots of logical volumes, which are point-in-time copies useful for backup, testing, or reverting changes.
+- **Flexibility**: LVM allows you to **create**, **resize**, and **manage** **logical volumes** dynamically without disrupting the system or data and **without worrying about the underlying physical storage layout.**
+- **Scalability**: You can easily **add more physical volumes to a volume group to expand the storage capacity.**
+- **Abstraction**: LVM provides a **layer of abstraction that separates the logical view of storage from the physical devices**, making storage management easier.
+- **Snapshots**: LVM supports creating snapshots of logical volumes, which are point-in-time copies useful for backup, testing, or reverting changes.
 
 # Disk Cache (Buffer Cache)
 
