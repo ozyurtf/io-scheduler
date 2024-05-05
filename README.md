@@ -1486,11 +1486,13 @@ The main advantages of using LVM include:
 
 # Disk Cache (Buffer Cache)
 
-Cache memory is a type of high-speed memory. It is placed between the CPU and main memory (RAM). It's size is smaller than the main memory but it is much faster to access data in cache. The main purpose of cache is to store frequently accessed data/instructions so that CPU can retrieve them quickly without having to access the main memory which is slower. Placing cache memory between the CPU and main memory makes it intermediary to speed up memory access.
+**Cache memory** is a type of **high-speed memory**. It is **placed between the CPU and main memory (RAM).** It's size is **smaller than the main memory** but it is **much faster to access data in cache**. The **main purpose** of the cache is **to store frequently accessed data/instructions so that CPU can retrieve them quickly without having to access the main memory which is slower**. **Placing cache memory between the CPU and main memory** makes it **intermediary** to **speed up memory access**.
 
-Cache memory takes advantage of the principle of locality. And locality in here refers to the tendency of programs to access the same/nearby memory locations repeatedly. By storing frequently accessed data or instructions in cache memory, the average memory access time is reduced because the processor can retrieve the data from the faster cache instead of accessing the slower main memory.
+Cache memory takes advantage of the **principle of locality**. And **locality** in here **refers to the tendency of programs to access the same/nearby memory locations repeatedly.** By storing **frequently accessed data** or **instructions** in **cache memory**, the **average memory access time is reduced because the processor can **retrieve** the data from the faster cache instead of accessing the slower main memory**.
 
-Dish cache is also known as buffer cache. It can be seen as a portion of the main memory that is reserved for caching disk sectors. In other words, when data is read from the disk or written to the disk, that data is stored in the disk cache first. And the disk cache acts as a buffer between the disk and the processor because it stores the disk sectors in main memory temporarily. By caching disk sectors in the main memory, the next access to the same sectors can be served from the cache instead of retrieving them from the slower disk and this improves performance. When the CPU requests data from a specific sector on the disk, the operating system checks if the sector is already present in the disk cache. If the data is found in the cache, it is retrieved from the cache. If not, it is retrieved from the disk, and saved into the cache.
+**Disk cache** is also known as **buffer cache**. It can be seen as **a portion of the main memory that is reserved for caching disk sectors**. In other words, **when data is read from the disk or written to the disk**, that **data is stored in the disk cache first**. And the **disk cache acts as a buffer between the disk and the CPY** because **it stores the disk sectors in main memory temporarily**. 
+
+**By caching disk sectors in the main memory**, the **next access to the same sectors can be served from the cache instead of retrieving them from the slower disk and this improves performance.** When the **CPU requests data from a specific sector on the disk**, the **operating system checks** if the **sector is already present in the disk cache**. **If the data is found** in the cache, it is **retrieved from the cache**. If **not**, it is **retrieved from the disk, and saved into the cache**.
 
 ```
 +--------------------+
@@ -1498,8 +1500,8 @@ Dish cache is also known as buffer cache. It can be seen as a portion of the mai
 | made for a         |    |
 | particular sector, |    |      
 | whether or not     |----+     
-| the sector         |    | 
-| is in the cache    |    |
+| the sector is in   |    | 
+| the disk cache     |    |
 | is checked         |    +------> If No -----> The requested sector is read into the disk
 +--------------------+
 ```
