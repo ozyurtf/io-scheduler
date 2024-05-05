@@ -1542,63 +1542,98 @@ To overcome these limitations and enable faster and more frequent programming an
 In summary, SSDs are electronic storage devices that use FLASH memory, which evolved from earlier memory technologies like RAM, EPROM, and EEPROM. FLASH memory addressed the limitations of EEPROMs by allowing random programming and erasing of blocks, making it suitable for faster and more frequent data updates. The term 'ROM' is used because entire blocks need to be erased before they can be reprogrammed, even though individual memory locations can be read arbitrarily. The evolution of technology has led to the widespread adoption of SSDs as a high-performance and reliable storage solution.
 
 # Flash Chip 
+In flash memory, the **smallest programmable unit of data is called page**. It is a **contiguous block of memory cells that can be written to in a single programming operation**. In other words, all the memory cells in a page are written to at the same time. The size of page might be around 2KB, 4KB, 8KB, or 16KB. 
 
-In flash memory, a fixed size block of memory cells that are programmed and read together is called page. Data can be read from the Flash memory at the page level or in smaller units such as bytes is written to the Flash memory at the page level but it is not possible to write to individual bits or bytes within the pages. And the controller or software specifies the page address where the data should be written. 
+In FLASH memory, the **programming operation** involves **changing the state of individual memory cells from 1** (erased state) **to 0** (programmed state). This is **done by applying a high voltage to the memory cell**, which **causes electrons to be injected into the floating gate of the cell**, **changing its threshold voltage**.
 
-- The collection of the pages is called block. Block is the unit of erasure in Flash memory. While data is programmed at the page level, the erase operation is performed at the block level. A block is a collection of multiple pages, and all the pages within a block must be erased together before they can be reprogrammed with new data.
-- The collection of the blocks is called plane.
-- The collection of the planes id called die.
-- The collection of the die is called Flash chip.
+When you want to **write data to flash memory**, you **must do so one page at a time**. This means that **all the memory cells within a page are programmed together**, **in a single operation**, **regardless of whether you want to change all the bits or just a subset of them**.
 
-The Flash chip supports three basic functions: 
-- read: retrieves data from a spceific page in the Flash memory.
-- erase: clears data in a block and sets all bits in that block to 1 (default).
-- program: writes data to a specific page in the Flash memory.
+- The **collection of the pages is called block**. **Block is the unit of erasure in flash memory**. While data is programmed at the page level, the erase operation is performed at the block level. A **block is a collection of multiple pages**, and **all the pages within a block must be erased together before they can be reprogrammed** with new data. And the reason for this is explained in previous section.
+- The **collection of the blocks is called plane**.
+- The **collection of the planes ids called die**.
+- The **collection of the die is called flash chip**.
+
+The flash chip supports three basic functions: 
+- **read: retrieves data from a spceific page in the flash memory.**
+- **erase: clears data in a block and sets all bits in that block to 1 (default).**
+- **program: writes data to a specific page in the flash memory.**
+
+And **write** operation is basically the **combination of erase and program operations.**
 
 # Difference Between SSDs and Hard Drives
 
-**Construction/Data Organization**: Hard disk drives use mechanical components such as disk heads, cylinders, spindles, etc. And data is organized as tracks and sectors. 
+**Construction/Data Organization**: **Hard disk drives use mechanical components** such as **disk heads**, **cylinders**, **spindles**, etc. And **data is organized as tracks and sectors**. 
 
-SSDs, however, use Flash memory chips. Data is organized as blocks and there is no spinning component. Reading and writing are handled electronically. 
+**SSDs**, however, **use flash memory chips**. **Data is organized as blocks** and there is **no spinning component**. **Reading and writing are handled electronically**. 
 
-**Read Performance**: Accessing data from non-contiguous or non-sequential locations on the storage device is called random read. And accessing data from contiguous or sequential locations on the storage device is called sequential read. 
+**Read Performance**: **Accessing data** from **non-contiguous** or **non-sequential** **locations on the storage device** is called **random read**. And **accessing data from contiguous or sequential locations on the storage device** is called **sequential read**. 
 
-Because hard disk drives use spinning disks and moving read/write heads, the heads have to move and seek to different locations on the disk platters. In addition, the head may still need to wait for the desired sector to rotate under the head once the head is over the right track. That's why hard disk drives have slow random reads. 
+Because **hard disk drives use spinning disks and moving read/write heads**, **the heads have to move and seek to different locations** on the disk platters. In addition, **the head may still need to wait for the desired sector to rotate under the head** once the head is over the right track. That's why **hard disk drives have slow random reads**. 
 
-SSDs are based on Flash memory which don't have any moving mechanical components. Because data can be read electronically from any location with similar latencies, and because there is no mechanical seek time involved since data locations are addressed electronically bt the SSD controller, and lastly because SSDs don't have rotating disks and rotational latency delays, SSDs have fast random and sequential reads.
+In addition, pre-fetching is a technique where the hard drive controller or the operating system anticipates that the next data to be read will be the one following the current block being read. In other words, it predicts that the read operation will continue sequentially.
 
-**Write Performance**: Just like random reads, writing to random non-contiguous locations requires the disk heads to move and seek to different locations on the disk platters. And similarly, the head may need to wait for the desired sector to rotate under the head once the head is over the right track. That's why hard disk drives have slow random writes. 
+Pre-fetching can be initiated by the operating system. In this case, the OS keeps track of the read patterns and notices when an application is performing sequential reads. It then instructs the hard drive to **pre-fetch the next block of data in advance, so that it's readily available when needed.**
 
-Although SSDs have fast random and sequential reads, it has slow random writes as well. Because of Flash memory, if we want to write data to SSD, an entire block must be erased before this. This erase operation takes time. And because of this erase operation, the writing process is slower in SSDs compared to HDDs. 
+**Pre-fetching can also be implemented within the hard drive itself.** **Modern hard drives have built-in caches and intelligent controllers** that can detect sequential read patterns. **When the controller identifies a sequential read operation**, **it automatically pre-fetches the next block of data** and **stores it in the drive's cache**, **anticipating that it will be requested next.**
 
-Also hard disk drives can use disk caching and 
+**SSDs are based on flash memory** which **don't have any moving mechanical components**. Because **data can be read electronically from any location with similar latencies**, and **because** there is **no mechanical seek time involved** since data locations are addressed electronically by the SSD controller, and lastly **because SSDs don't have rotating disks and rotational latency delays**, **SSDs have fast random and sequential reads**.
 
-**Failures**: HDDs can experience complete disk failure. If a mechanical component of HDDs such as spindle motors, arms, read/write heads, etc. fail (if the read/write heads make physical contact with the disk platters it can cause a big damage and complete disk failure) the entire disk can become unusable.
+**Write Performance**: Just like random reads, **writing to random non-contiguous locations requires the disk heads to move and seek to different locations on the disk platters.** And similarly, **the head may need to wait for the desired sector to rotate under the head** once the head is over the right track. That's why **hard disk drives have slow random writes.** 
 
-Since SSDs do not have moving mechanical components, they are built with electronic Flash memory, and data is stored in individual blocks, SSDs experience block failures which means a failure affects individual blocks rather than entire SSD.
+Although **SSDs have fast random and sequential reads**, it has **slow random writes as well**. Because of flash memory, **if we want to write data to SSD,** **an entire block must be erased before this**. **This erase operation takes time.** And because of this erase operation, the **writing process is slower in SSDs compared to HDDs.** 
 
-**Recovery/Failure Prevention**: For HDDs, recovery is implemented at the array (a group of multiple HDDs that are combined to work together as a single logical unit) level. This is commonly known as a RAID configuration. So when a drive in the RAID array fails, the array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives. This is what is meant by "recovery is implemented at the array level).
+A disk cache is a small amount of fast memory (usually RAM) built into the hard drive controller or the disk itself. When the operating system or an application sends data to be written to the hard drive, the data is first stored in the disk cache. The disk cache acts as a buffer, allowing the hard drive to quickly accept the write request and temporarily store the data. The actual writing of data from the cache to the physical disk platters happens asynchronously, at a later time, when the disk is not busy with other tasks. By caching the write requests, the hard drive can optimize the write operations and minimize the impact on overall system performance.
 
-For SSDs, the recovery can be done at disk level or array level (?).
+Write coalescing is a technique employed by the operating system to combine multiple small write requests into fewer, larger write operations. When applications perform many small, scattered write operations, the operating system may buffer these write requests in memory (RAM) instead of immediately sending them to the hard drive. The operating system waits for a certain amount of data to accumulate or for a specific time interval before flushing the buffered write requests to the hard drive in a single, larger write operation. By coalescing the writes, the operating system reduces the number of I/O operations required, which can improve overall write performance.
 
-**Striping for Arrays**: Because HDDs have mechanical components and these mechanical components require some time to move from location A to location B, HDDs typically prefer large stripe size because if it chooses small stripe size, the disk head has to move quite frequently for small amount of data and this would not be convenient and efficient. 
+The combination of disk caching and write coalescing helps buffer a few writes by:
 
-SSDs, on the other hand, prefer smaller stripe sizes (?)
+1. Temporarily storing write requests in the disk cache, allowing the hard drive to quickly accept the data without immediately writing it to the physical platters.
+2. Combining multiple small write requests into larger, more efficient write operations through OS coalescing, reducing the total number of IO operations.
+
+These techniques help mitigate the performance impact of write operations, especially when dealing with many small, random writes. By buffering the writes in the disk cache and coalescing them at the OS level, the hard drive can optimize the write operations and improve overall system performance.
+
+**Failures**: HDDs can experience complete disk failure. If a **mechanical component of HDDs such as spindle motors, arms, read/write heads**, etc. **fail** (if the read/write heads make physical contact with the disk platters it can cause a big damage and complete disk failure) the **entire disk can become unusable.**
+
+Since **SSDs do not have moving mechanical components**, **they are built with electronic Flash memory**, and **data is stored in individual blocks**, **SSDs experience block failures which means a failure affects individual blocks rather than entire SSD**.
+
+**Recovery/Failure Prevention**: For HDDs, **recovery/failure prevention is implemented at the array** (a group of multiple HDDs that are combined to work together as a single logical unit) **level**. This is commonly known as a **RAID configuration**. So **when a drive in the RAID array fails**, the **array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives**. This is what is meant by "recovery is implemented at the array level".
+
+For SSDs, **the recovery** can be done at **disk level** or **array level**. 
+
+**Disk level methods** refer to the **techniques and mechanisms implemented within an individual SSD** to **ensure data integrity**, **prevent failures**, and **facilitate data recovery**. **These methods are specific to each SSD** and are **handled by the SSD controller and firmware**. Examples of disk level methods include:
+ - **Error Correction Codes (ECC):** SSDs use ECC (e.g., hamming code) to **detect and correct bit errors that may occur during data storage or retrieval**. **ECC helps maintain data integrity** and **prevents data corruption**.
+ - **Wear Leveling**: **SSD controllers** **employ** **wear leveling algorithms** to **distribute write operations evenly across all the flash memory cells**. **This prevents certain cells from wearing out faster than others** and **extends the lifespan of the SSD**.
+
+**Array level methods** refer to the **techniques** and **mechanisms** **implemented at the level of multiple SSDs working together in a storage array or system**. These methods **involve coordinating the operation and data distribution across multiple SSDs to ensure data integrity, fault tolerance, and performance**. **Examples of array level methods** include:
+  - **RAID** (Redundant Array of Independent Disks): RAID configurations, such as RAID 1 (mirroring) or RAID 5 (striping with parity), can be used to distribute data across multiple SSDs. RAID provides data redundancy and helps protect against data loss due to SSD failures.
+  - **Data Replication**: In storage systems with multiple SSDs, data can be replicated across different drives to ensure data availability and recoverability in case of SSD failures.
+  - **Logical Volume Management**: Storage systems can use **logical volume management** to **create logical volumes** that **span across multiple SSDs**. This allows for **flexible data allocation**, **load balancing**, and **easier data migration or recovery**.
+
+At the time it was written, the focus and advancements in recovery and failure prevention methods for SSDs were primarily at the individual disk level. SSD manufacturers were concentrating on improving the reliability and resilience of each SSD through advanced error correction, wear leveling, bad block management, and other disk-level techniques.
+
+However, it's important to note that array level methods are equally important and are commonly used in enterprise storage systems and data centers. The combination of disk level and array level methods provides a comprehensive approach to data recovery and failure prevention in SSD-based storage systems.
+
+As SSD technology continues to evolve, both disk level and array level methods are being continuously improved and new techniques are being developed to enhance the reliability, performance, and data protection capabilities of SSDs and storage systems.
+
+**Striping for Arrays**: Because **HDDs have mechanical components** and **these mechanical components require some time to move from location A to location B**, **HDDs typically prefer large stripe size** because **if it chooses small stripe** size, the **disk head has to move quite frequently** for small amount of data and **this would not be convenient and efficient**. 
+
+**SSDs**, on the other hand, **prefer smaller stripe sizes**. **With smaller stripe sizes**, **IO operations can be spread across multiple disks more effectively**, **enabling higher levels of parallelism and improved overall performance**. **When data is written to an SSD in a RAID array**, **only the affected stripes need to be updated**. **With smaller stripe sizes**, **the amount of data that needs to be rewritten during an update operation is minimized**.
 
 # IO Scheduler Changes
 
-In SSDs, there is no read/write head, that's why there is no seek time. Also, regardless of the location of the block, accessing to any block takes nearly same time. That's why IO schedulers focus on reducing the amount of time that is spent for write operation rather than optimizing for seek time as well. 
+In **SSDs**, there is **no read/write head**, that's why there is **no seek time**. Also, **regardless of the location of the block**, **accessing to any block takes nearly same time**. That's why **IO schedulers focus on reducing the amount of time that is spent for write operation rather than optimizing for seek time**.
 
-Imagine writing a multiple 4KB blocks. 
-- Writing to 1st 4KB block: SSD needs to read the entire 128KB block that contains the target page, erase the block, and then write the updated 128KB block back to the SSD
-- Writing to 2nd 4KB block: SSD repeats the same process: reading the entire 128KB block that contains the target page, erase the block, and then write the updated 128KB block back to the SSD.
+Imagine **writing a multiple 4KB blocks**. 
+- **Writing to 1st 4KB block**: **SSD needs to read the entire 128KB block that contains the target page**, **erase the block**, and then **write the updated 128KB block back to the SSD**
+- **Writing to 2nd 4KB block**: **SSD repeats the same process**: **reading the entire 128KB block that contains the target page**, **erase the block**, and then **write the updated 128KB block back to the SSD**.
 
-And this process is repeated for each write request. This leads to inefficient usage of the SSDs resources and potential write amplification. To solve this inefficiency, IO schedulers should store incoming write requests in a buffer temporarily and delay the writing process slightly. Through this way, the scheduler can wait for subsequent write requests and this allows the scedhuler to group multiple small write requests into fewer, larger write operations. 
+And **this process is repeated for each write request**. **This leads to inefficient usage of the SSDs resources and potential write amplification**. To solve this inefficiency, **IO schedulers should store incoming write requests in a buffer temporarily and delay the writing process slightly**. Through this way, **the scheduler can wait for subsequent write requests and this allows the scedhuler to group multiple small write requests into fewer, larger write operations**. 
 
-Also by buffering and combining multiple write requests, IO scheduler can reduce the number of read/erase/program cycles that are required to write the data to the SSD. Instead of performing a read/erase/program cycle for each 4KB write request, the scheduler can coalesce the requests into a single, larger write operation that aligns with the SSD's erase block size (e.g., 128KB).
+Also **by buffering and combining multiple write requests**, **IO scheduler can reduce the number of read/erase/program cycles that are required to write the data to the SSD**. **Instead of performing a read/erase/program cycle for each 4KB write request**, **the scheduler can coalesce the requests into a single, larger write operation that aligns with the SSD's erase block size** (e.g., 128KB).
 
-Here's an example of how write coalescing can improve efficiency:
+**Here's an example of how write coalescing can improve efficiency**:
 
-- Without coalescing: Writing two consecutive 4KB blocks would require 2 read/erase/program cycles, each processing 128KB of data (2 * (128KB read + 128KB erase + 128KB program)).
+- **Without** **coalescing**: **Writing two consecutive 4KB blocks would require 2 read/erase/program cycles**, each **processing 128KB of data** (2 * (128KB read + 128KB erase + 128KB program)).
 
-- With coalescing: The I/O scheduler buffers the two 4KB write requests and combines them into a single 8KB write operation. This requires only 1 read/erase/program cycle, processing 128KB of data (1 * (128KB read + 128KB erase + 128KB program)).
+- **With coalescing**: The **IO scheduler buffers the two 4KB write requests and combines them into a single 8KB write operation**. **This requires only 1 read/erase/program cycle**, **processing 128KB of data** (1 * (128KB read + 128KB erase + 128KB program)).
