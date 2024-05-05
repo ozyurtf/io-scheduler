@@ -1506,22 +1506,30 @@ Cache memory takes advantage of the **principle of locality**. And **locality** 
 +--------------------+
 ```
 
-# Solid State Disks and Flash Memory 
+# Solid State Drive and Flash Memory 
 
-Solid State Disk (SSD) is a storage device. It doesn't contain any mechanical parts unlike hard disk drives and it is entirely electronic. It is made out of FLASH memory which is basically non-volatile memory that retains data even when power is turned off.
+**Solid State Drive (SSD) is a storage device**. It **doesn't contain any mechanical parts** unlike hard disk drives and it is **entirely electronic.** It is **made out of** **FLASH memory** which is basically **non-volatile memory that retains data even when power is turned off**.
 
-FLASH memory is evolved from 
-- RAM (Random Access Memory): The power needs to be turned on to maintain the contents and whenever the power is turned off, the data in the RAM is lost. 
-- EPROM (Erasable Programmable Read-Only Memory): It does not require the power to be turned on to maintain its conents. Therefore, it can keep the data even after the power is turned off. But it can be programmed only once. When an EPROM is produced, all the memory cells are initialized to '1' and this is the default state. And the "programmed" means selectively changing the state of memory cells from '1' to '0' to represent the desired data or instructions. The EPROM can store data for 10-20 years and the data can be erased with ultraviolet (UV) light. 
-- EEPROM (Electrically Erasable Programmable Read-Only Memory): It is the improved version of EPROM. Unlike EPROM, it can be erased and the reprogrammed multiple times without the power. And it can maintain the programmed value without power beign turned on.
+Flash memory is evolved from 
+- **RAM (Random Access Memory):** The **power needs to be turned on to maintain the contents** and **whenever the power is turned off**, the **data** in the RAM is **lost**. 
+- **EPROM (Erasable Programmable Read-Only Memory):** It does **not require the power to be turned on to maintain its conents**. Therefore, it **can keep the data even after the power is turned off**. But **it can be programmed only once**. **When** an **EPROM** is **produced**, all the **memory cells are initialized to '1'** and **this is the default state**. And the **"programmed" means selectively changing the state of memory cells from '1' to '0' to represent the desired data or instructions.** The **EPROM can store data for 10-20 years** and the **data can be erased with ultraviolet (UV) light**, not **electrically** 
+- **EEPROM (Electrically Erasable Programmable Read-Only Memory):** It is the **improved version of EPROM**. Unlike EPROM, it **can be erased and the reprogrammed multiple times without the power**. And it **can maintain the programmed value without power being turned on**.
 
-**Note**: ROM in here refers to Read-Only Memory. As we might understand from its name, the data can only be read from ROM and it is not easy to write data to it. Also, ROM retains data after the power is turned off. Since the data in the ROM is permanent and not easily modifiable, the data that is essential for proper functioning of the system and that does not require frequent updates is generally stored in the ROM. 
+**Flash memory** is a **specific type of EEPROM** and it is **used in many different electronic devices** such as **smartphones**, **tablets**, **digital cameras**, **USB flash drives**, and **solid state drives (SSDs).**
 
-It stores the firmware (low-level software that is closely tied to the hardware), bootloaders (small program that is responsible for initializing system and loading operating system when computer/device is turned on, etc). 
+**Note**: **ROM** in here refers to **Read-Only Memory**. As we might understand from its name, the data **can be read from ROM** and it is **not easy to write data to it**. Also, ROM retains data after the power is turned off. Since the data in the ROM is permanent and not easily modifiable, the data that is essential for proper functioning of the system and that does not require frequent updates is generally stored in the ROM. **It stores the firmware** (low-level software that is closely tied to the hardware), **bootloaders**(small program that is responsible for initializing system and loading operating system when computer/device is turned on), etc. **The data that is in the ROM is typically programmed during the manufacturing process of the computer/device and it remains permanent after this**. 
 
-The data that is in the ROM is typically programmed during the manufacturing process of the computer/device and it remains permanent after this. 
+**Although individual memory locations can be read arbitrarily**, an **entire block of memory needs to be erased at once before it can be reprogrammed**. The reason behind this is due to the underlying technology and the way flash memory cells work. A flash memory cell consists of a floating gate transistor, which has two gates: a control gate and a floating gate. The floating gate is insulated by an oxide layer, which allows it to trap and hold electrons. The presence or absence of electrons on the floating gate determines the cell's state, which is interpreted as a binary 0 or 1. 
 
-In addition, although individual memory locations can be read arbitrarily, an entire block of memory needs to be erased at once before it can be reprogrammed. The erasure voltage is applied to the entire block because the memory cells are physically connected and share common electrical lines. So it is not feasible to selectively apply the erasure voltage to individual pages or memory cells within a block. The physical architecture of flash memory is designed to optimize for high storage density and manufacturing efficiency, which leads to the block-level erasure constraint. 
+When a cell is erased, electrons are removed from the floating gate, setting the cell's state to 1. To program a cell (change its state to 0), electrons are injected onto the floating gate. The key point is that the process of injecting electrons onto the floating gate is unidirectional. You can add electrons to the floating gate (program the cell), but you cannot remove electrons from an individual cell's floating gate without affecting the other cells in the same block.
+
+To remove electrons from the floating gate and change a cell's state back to 1, you must apply a high voltage to the entire block, which removes electrons from all the cells in that block simultaneously. This process is called block erasure.
+
+The block erasure process is a hardware limitation of flash memory technology. It is designed this way to simplify the circuitry and keep the cost low, as having the ability to erase individual cells would require more complex and expensive circuitry.
+
+In summary, changing a single cell back to a 1 requires erasing the entire block containing that cell because of the unidirectional nature of the cell programming process and the design of flash memory technology, which optimizes for simplicity and lower cost.
+
+That's why the term ROM (Read-Only Memory) is used because we can read any arbitrary location but an entire block needs to be erasted to update a single cell.
 
 ## Usage of EEPROMs
 EEPROMs might be suitable to use in a systems that need to be programmed occasionally. One example of this systems is embedded processors. And because the embedded systems did not require frequent updates, programming an EEPROM was not time-critical event in the past. The number of times EEPROMs could be programs were limited but this was not a big problem for embedded systems since they were programmed only small amount of times during their lifetime.
@@ -1535,7 +1543,7 @@ In summary, SSDs are electronic storage devices that use FLASH memory, which evo
 
 # Flash Chip 
 
-In Flash memory, a fixed size block of memory cells that are programmed and read together is called page. Data can be read from the Flash memory at the page level or in smaller units such as bytes is written to the Flash memory at the page level but it is not possible to write to individual bits or bytes within the pages. And the controller or software specifies the page address where the data should be written. 
+In flash memory, a fixed size block of memory cells that are programmed and read together is called page. Data can be read from the Flash memory at the page level or in smaller units such as bytes is written to the Flash memory at the page level but it is not possible to write to individual bits or bytes within the pages. And the controller or software specifies the page address where the data should be written. 
 
 - The collection of the pages is called block. Block is the unit of erasure in Flash memory. While data is programmed at the page level, the erase operation is performed at the block level. A block is a collection of multiple pages, and all the pages within a block must be erased together before they can be reprogrammed with new data.
 - The collection of the blocks is called plane.
@@ -1594,7 +1602,3 @@ Here's an example of how write coalescing can improve efficiency:
 - Without coalescing: Writing two consecutive 4KB blocks would require 2 read/erase/program cycles, each processing 128KB of data (2 * (128KB read + 128KB erase + 128KB program)).
 
 - With coalescing: The I/O scheduler buffers the two 4KB write requests and combines them into a single 8KB write operation. This requires only 1 read/erase/program cycle, processing 128KB of data (1 * (128KB read + 128KB erase + 128KB program)).
-
-# Current Industry Trends 
-
-# File Systems 
