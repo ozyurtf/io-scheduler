@@ -612,7 +612,11 @@ Once the **IO device becomes ready** to run the IO operation,  **it raises an in
 
 ## Direct Memory Access (DMA) 
 
-In **programmed IO** and **interrupt-driven IO**, the **IO device controller was relying on the CPU** to **initiate** and **control** the **data transfer** between the **IO device** and **memory**. But the thing is **it is not efficient for the CPU to request data from the IO device one byte or one character at a time** and handle the data transfer this way since this is quite **time-consuming** and **inefficient**. 
+In **programmed IO** and **interrupt-driven IO**, the **IO device controller was relying on the CPU** to **initiate** and **control** the **data transfer** between the **IO device** and **memory**. 
+
+The reason why the CPU is involved in these data transfers is that the IO devices themselves do not have the capability to autonomously transfer data to or from memory without the CPU's control and coordination in these system. IO devices are designed to perform specific tasks and rely on the CPU to manage and orchestrate the overall system operation.
+
+But the thing is **it is not efficient for the CPU to request data from the IO device one byte or one character at a time** and handle the data transfer this way since this is quite **time-consuming** and **inefficient**. 
 
 And **DMA** is a method that is used to **allow the IO devices to transfer data** **to/from the main memory directly**. In this scenario, **CPU** is **not used during the data transfer**. And this process is **handled by the DMA controller**. 
 
