@@ -806,18 +806,18 @@ If we want to look from more detailed perspective:
 
 ```
 
-And here is the how the workflow looks like between the IO software and the hardware of the IO device: 
+And here is the **how the workflow looks like** between the **IO software** and the **hardware of the IO device**: 
 
-1) The IO software initiates an IO request by making a system call.
-2) The operating system receives the IO request and determines which device driver is responsible for handling the request based on the device type and the nature of the operation.
-3) The operating system forwards the IO request to the appropriate device driver.
-4) The device driver translates the IO request into device-specific commands and communicates with the device controller.
-5) The device controller xreceives the commands from the device driver and interacts directly with the IO device to perform the requested operation.
-6) The device controller transfers data between the IO device and main memory, either through direct memory access (DMA), or programmed IO.
-7) If the IO operation generates an interrupt, the device controller notifies the device driver through the interrupt mechanism.
-8) The device driver handles the interrupt, performs any necessary processing, and communicates the result or status back to the operating system.
+1) The **IO software initiates an IO request** by making a system call.
+2) The **operating system receives the IO request** and **determines which device driver is responsible for handling the request** based on the device type and the nature of the operation.
+3) The **operating system forwards the IO request to the appropriate device driver**.
+4) The **device driver translates the IO request into device-specific commands** and **communicates with the device controller**.
+5) The **device controller receives the commands from the device driver** and **interacts directly with the IO device to perform the requested operation**.
+6) The **device controller transfers data between the IO device and main memory**, either **through direct memory access (DMA),** or programmed IO.
+7) If the IO operation **generates an interrupt**, the **device controller notifies the device driver through the interrupt mechanism**.
+8) The **device driver handles the interrupt**, **performs any necessary processing**, and **communicates the result or status back to the operating system**.
 9) The operating system receives the result or status from the device driver and returns it to the IO software.
-10) The IO software receives the result or status and continues its execution.
+10) The **IO software receives the result or status and continues its execution**.
 
 ## Device Drivers 
 
