@@ -1039,10 +1039,16 @@ Device drivers vs IO software:
 
 # Hard Disk (Magnetic) Architecture 
 
-- Surface: We see one or more surfaces (platters) in a hard disk. Each surface is divided into a group of circular tracks.
-- Track: A track is a group of sectors that are arranged in a circular pattern on the surface of the disk. Each track is further divided into smaller units that are called sectors. 
-- Sector: A sector is a group of bytes and the smallest unit of data that can be read from the disk or written into the disk.
-- Cylinder: It is the collection of tracks located at the same position across all surfaces of the disk. If a vertical line passes through the tracks at the same location on each surface, it forms a cylindrical shape for example. That's why we call this cylinder.
+- Surface: We see **one or more surfaces (platters) in a hard disk**. Each **surface** is **divided into a group of circular tracks**.
+- Track: A **track** is a **group of sectors** that are **arranged in a circular pattern on the surface of the disk**. Each **track** is further **divided into smaller units** that are called **sectors**. 
+- Sector: A **sector** is a **group of bytes and the smallest unit of data that can be read from the disk or written into the disk**. 
+- Cylinder: It is the **collection of tracks located at the same position across all surfaces of the disk**. If a vertical line passes through the tracks at the same location on each surface, it forms a cylindrical shape for example. That's why we call this cylinder.
+
+The importance of cylinders lies in the fact that the **read/write heads, one for each surface, are physically attached to the same actuator arm**. This means that when the **actuator arm moves**, **all the read/write heads move together**, **positioning themselves over the tracks that form a cylinder**. In hard disk drives (HDDs), the **read/write (R/W) heads cannot move independently** from each other. They are **physically connected to the same actuator arm**, which means that when **the actuator arm moves**, **all the R/W heads move together**.
+
+**By organizing tracks into cylinders**, the **HDD can efficiently access data stored on multiple surfaces simultaneously, as the read/write heads are already aligned over the correct tracks**. This parallel access from multiple platters contributes to **higher data transfer rates and improved performance**.
+
+It's worth noting that the concept of cylinders is specific to HDDs with multiple platters and moving read/write heads. In modern solid-state drives (SSDs), which use flash memory chips, the data organization and access mechanisms are different, and the concept of cylinders does not apply. 
 
 ```
 Surface 1
@@ -1130,31 +1136,35 @@ Track   ...    | Preamble |    4096 Data bits    | E C C |    | |     | | |    |
                                                                   | |
                                                                     
 ```
-RW (Read-write) head is an electromagnetic device. It consists of a tiny metal coil and a magnetic pole that generates or senses the magnetic fields on the disk surface. It is responsible from reading data from and writing data to the surface of the disk. During the read operation, the RW head senses the magnetic patterns on the disk and converts them into electrical signals that represent stored data. During the write operation, the RW head receives electrical signals from the disk storage controller and generates magnetic fields to record the data onto the disk surface. The RW head is mounted on the disk arm and flies very close to the disk surface without touching it.
+**RW (Read-write) head** is an **electromagnetic device**. It consists of a tiny metal coil and a magnetic pole that **generates or senses the magnetic fields on the disk surface**. It is responsible from **reading data from and writing data to the surface of the disk**. 
 
-The disk arm is a mechanical component that holds and positions the RW head over the desired track on the disk surface. The disk arm moves the RW head radially. 
+During the **read operation**, the **RW head senses the magnetic patterns on the disk** and **converts them into electrical signals that represent stored data**. 
+
+During the **write operation**, the **RW head receives electrical signals from the disk storage controller** and **generates magnetic fields to record the data onto the disk surface**. 
+
+The **RW head is mounted on the disk arm** and **flies very close to the disk surface without touching it**.
+
+The **disk arm** is a **mechanical component** that **holds and positions the RW head over the desired track on the disk surface**. The **disk arm moves the RW head radially**. 
 
 And the direction of arm motion refers to the path along which the disk arm moves the RW head across the disk surface. 
 
 # Hard Disk Performance
 
-**Seek time**: It is the time that is required to put the RW head over the desired cylinder (track) on the disk surface.
-**Rotational delay**: It is the time that is required for the desired sector to rotate underneath the RW heads. It depends on the disk's rotational speed which is measured in the number of revolutions per minute (rpm)
-**Transfer bytes**: It is the amount of data in bytes that is read/writen from/to the disk surface. 
+**Seek time**: It is the **time** that is **required to put the RW head over the desired cylinder/track on the disk surface**.
+**Rotational delay**: It is the **time** that is **required for the desired sector to rotate underneath the RW heads** after RW head is put over the desired cylinder/track on the disk surface. It **depends on the disk's rotational speed** which is **measured in the number of revolutions per minute** (rpm)
+**Transfer bytes**: It is the **amount of data in bytes that is read/writen from/to the disk surface**. 
 
-To calculate the total time data, for instace, we sum up the seek time, half of the rotational delay, and the transfer time. 
+To **calculate the total time data**, for instace, we **sum up the seek time**, **half of the rotational delay**, and the **transfer time**. 
 
-When the RW head is put on the desired track (cylinder), it needs to wait for the specific sector that contains the requested data before it starts reading/writing operation. And the actual rotational delay can vary. Therefore, we generally assume that the RW head will need to wait for half a rotation to reach the desired sector. That's why we used half of the rotational delay when we give the calculatation of total time to transfer data. 
+**When the RW head is put on the desired track** (cylinder), it **needs to wait for the specific sector that contains the requested data** **before it starts reading/writing operation**. And the **actual rotational delay can vary**. Sometimes it may be very short. Sometimes it may be long. Therefore, we generally **assume that the RW head will need to wait for half a rotation to reach the desired sector**. That's why we used half of the rotational delay when we give the calculatation of total time to transfer data. 
 
-As we can imagine, there are more sectors in the sectors that are located in more outside tracks compared to the tracks that are located in more inner side. That's why data transfer rate is higher when we read from outer tracks compared to inner tracks.
+As we can imagine, there are more sectors in tracks that are located outside of the surface compared to the tracks that are located in more inner side. That's why **data transfer rate is higher when we read from outer tracks compared to inner tracks**.
 
-Disk transfer bandwith, which is also known as disk transfer rate, refers to the amount of data that can be read/written to/from a disk in a given amount of time. 
+**Disk transfer bandwith**, which is also known as **disk transfer rate**, refers to the **amount of data that can be read/written to/from a disk in a given amount of time**. 
 
-When the data we want to read is small, the seek time and rotational delay affect the performance the most because the amount of data that is transferred is quite small. That's why a significant portion of the disk transfer bandwitdh is wasted because the time that is spent on seeking and rotating is much larger compared to the actual data transfer time. To improve the performance we need disk scheduling algorithms to reduce seek time.
+**When** the **data** we want to read is **small**, the **seek time** and **rotational delay affect** the **performance the most** because the **amount of data that is transferred is quite small**. That's why a **significant portion of the disk transfer bandwitdh is wasted** because the **time that is spent on seeking and rotating is much larger** **compared to the actual data transfer time**. To improve the performance we need **disk scheduling algorithms so that we can reduce seek time**.
 
-On the other hand, the rate of disk transfer bandwith that is utilized increases as the size of data that will be transferred increases because larger block size means more data that is transferred in a single operation. 
-
-# Observations 
+On the other hand, **the rate of disk transfer bandwith** that is utilized **increases as the size of data that will be transferred increases because larger block size means more data that is transferred in a single operation**. 
 
 # Disk Scheduling 
 
