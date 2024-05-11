@@ -636,7 +636,7 @@ When an IO request is made, the process typically involves the following steps:
 - **Control logic**: This is used to control the overall operation of the DMA controller. The control unit receives DMA request and sends DMA acknowledge. It generates interrupts when the data transfer is completed.
 - **Bus interface**: The bus in here allows the DMA controller to communicate with the CPU, main memory, and IO devices.
 
-**When data transfer** is **initiated**, **CPU programs** (writes specific values into the control registers of the DMA controllers) **the DMA controller** by **writing the necessary information into the control registers of the DMA controller.** _(The control registers in the DMA controller contains bits for direction of the data transfer, data transfer size, interrupt enable, transfer mode -- single transfer mode for transferring one byte at a time or block transfer mode for transferring a block of data), etc.)_
+**When data transfer** is **initiated**, **CPU programs** **the DMA controller** by **writing the necessary information into the control registers of the DMA controller.** _(The control registers in the DMA controller contains bits for direction of the data transfer, data transfer size, interrupt enable, transfer mode -- single transfer mode for transferring one byte at a time or block transfer mode for transferring a block of data), etc.)_
 
 Then the **DMA controller sends** a **request** to the **disk controller** to **transfer** **data** **from disk** **to the main memory**. 
 
