@@ -52,7 +52,7 @@ Some examples of character devices are: **keyboards**, **mice**, **printers**, *
 
 One note is that **IO devices** are **separate hardware components**. These are **connected** to the **CPU** through a **bus** or **other communication channels**. But there are also some **other devices that are integrated to the CPU**. These are called **accelerators**. They contain **arithmetic logic unit** (it performs arithmetic & logical operations), **control unit** (it fetches and decodes instructions and controls the operation of the CPU), **registers** (these are temporary storage locations for data and addresses that are used during the execution of an instruction) and **cache** (small and fast storing unit that is used to store frequently accessed data and instructions). 
 
-**Accelerators** are **more tightly integrated** to the **CPU** through a **high-speed interconnects or buses** and they can be **invoked** by **applications** with **CPU instructions** (?) or **registers** (?) without utilizing the traditional IO path through the operating system. 
+**Accelerators** are **more tightly integrated** to the **CPU** through a **high-speed interconnects or buses** and they can be **invoked** by **applications** with **CPU instructions** or **registers**  without utilizing the traditional IO path through the operating system. 
 
 In addition, the **traditional** **IO devices** such as **keyboards**, **mouses**, etc. are **designed** for **data input, output** and **storage of the data** while **accelerators** are the devices that are designed to **perform specific computational** tasks. 
 
@@ -166,7 +166,7 @@ The **performance** of the **IO operation** is **affected by** many different fa
 
 Bus in here there is a hardware component and it consists of a set of parallel wires on the motherboard along with supporting circuitry and protocols. These wires carry electrical signals and through these signals data, address, and signals are carried between the CPU, memory, and IO devices, and communication between these components is handled this way. 
 
-**IO controller**, also known as peripheral controller, is another **hardware component**. It **manages the communication and data transfer between the CPU and IO devices such as disk, network**. It acts like an **intermediate layer between the IO devices and CPU** and thanks to these IO devices, the CPU doesn't have to control & communicate with the IO devices directly. 
+**IO controller**, also known as peripheral controller, is another **hardware component**. It **manages the communication and data transfer between the CPU and IO devices such as disk, network**. It acts like an **intermediate layer between the IO devices and CPU** and thanks to these IO controllers, the CPU doesn't have to control & communicate with the IO devices directly. 
 
 ```
 
