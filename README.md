@@ -1504,13 +1504,13 @@ Overall, RAID 6 provides a higher level of data protection and availability comp
 
 As mentioned previously: 
 
-In RAID 0, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks and calculating parity information. 
-In RAID 1, data is not divided. Instead, it is copied to at least one disk so that the data is replicated across two or more disks. Parity information is not calculated.
-In RAID 2, data is divided into bits and distributed across all disks. Parity information is calculated and distributed across all disks as well.
-In RAID 3, data is divided into bits and distributed across all disks. Parity information is calculated and put into one disk that is dedicated for storing parity information.
-In RAID 4, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is stored in a separate disk. 
-In RAID 5, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is distributed to all disks.
-In RAID 6, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Two separate parity information of all disks are distributed to all disks.
+- In RAID 0, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks and calculating parity information. 
+- In RAID 1, data is not divided. Instead, it is copied to at least one disk so that the data is replicated across two or more disks. Parity information is not calculated.
+- In RAID 2, data is divided into bits and distributed across all disks. Parity information is calculated and distributed across all disks as well.
+- In RAID 3, data is divided into bits and distributed across all disks. Parity information is calculated and put into one disk that is dedicated for storing parity information.
+- In RAID 4, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is stored in a separate disk. 
+- In RAID 5, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Parity information of all disks is distributed to all disks.
+- In RAID 6, data is divided into blocks and distributed across disks without duplicating the blocks in multiple disks. Two separate parity information of all disks are distributed to all disks.
 
 ### Data Availability
 
