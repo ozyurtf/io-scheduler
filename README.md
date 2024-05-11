@@ -1323,26 +1323,27 @@ Also note that, the algorithm introduces a small delay after serving an IO reque
 By providing this implicit idle time/delay, the algorithm encourages processes to submit their IO requests in a timely manner, and this enables better request bundling and improves disk efficiency.
 
 # Common Hard Drive Errors
-- When the operating system or an application attempts to access a sector that doesn't exist in the hard drive, **programming error** occurs. 
-- If the expected checksum value does not match with the data read from a sector in the hard drive, **checksum error** occurs. If this error happens temporarily as a result of some dust on the head, for instance, this is called **transient checksum error** and these errors can be recovered by retrying the read operation. If there is a physcial damage in the disk block and as a result of this we observe checksum error, this is called **permanent checksum error**.
-- When the drive head fails to position itself over the requested cylinder/track on the disk platters, we call this **seek error**. If the drive arm is isntructed to move to cylinder 7 but it is positioned over cylinder 6, for example, we observe seek error.
-- When the device controller, which is responsible from from receiving commands from the operating system and translating these commands into low-level instructions, encounters an error or malfunction, it may refuse to accept commands from the operating system. In that case the device controller fails to accept or process commands and we call this **controller error**. These problems may occur because of firmware issues, hardware failures, or compatibility problems between the controller and other system components.
+
+- When the **operating system** or an **application attempts to access a sector that doesn't exist in the hard drive**, **programming error** occurs. The term "programming error" is used in the context of requesting a non-existent sector on a hard drive because it implies that the issue lies within the software or program code that is attempting to access the storage device. Specifically, a programming error in this case refers to a logical error, bug, or incorrect implementation in the code that deals with storage operations and addressing. When a program or operating system component tries to access a sector or block that does not exist within the addressable range of the hard drive, it is considered a programming error.
+- If the **expected checksum value** does **not match with the data read from a sector in the hard drive**, **checksum error** occurs. If this error happens **temporarily** as a result of some dust on the head, for instance, this is called **transient checksum error** and these errors can be recovered by retrying the read operation. If there is a **physcial damage in the disk block** and as a result of this **we observe checksum error**, this is called **permanent checksum error**.
+- When the **RW head fails to position itself over the requested cylinder/track on the disk platters**, we call this **seek error**. If the arm is instructed to move to track/cylinder 7 but it is positioned over track/cylinder 6, for example, we observe seek error.
+- When the **device controller**, which is **responsible from from receiving commands from the operating system and translating these commands into low-level instructions**, encounters an **error or malfunction**, it may **refuse to accept commands from the operating system**. In that case the **device controller fails to accept or process commands** and we call this **controller error**. These problems may occur because of **firmware issues, hardware failures, or compatibility problems between the controller and other system components**.
 
 # RAID (Redundant Array of Independent Disks)
 
-RAID is a method that combines multiple disk drives into a single logical unit. That's why RAID system presents itself to the operating system as a single, large, and expensive disk (SLED). From the perspective of operating system, a RAID system appears as a single, large, and expensive disk (SLED). _(Note: A group of hard drives that are combined and that are configured to work together as a single logical unit is called **array**)_
+RAID is a method that **combines multiple disk drives into a single logical unit**. That's why **RAID system presents itself to the operating system as a single, large, and expensive disk (SLED).** _(Note: A **group of hard drives** that are **combined** and that are **configured to work together as a single logical unit** is called **array**)_
 
-Therefore, the operating system interacts with the RAID system as if it were a single disk, abstracting the underlying complexity of multiple disks and their coordination.
+Therefore, the **operating system interacts with the RAID system as if it were a single disk**, **abstracting the underlying complexity of multiple disks** **and their coordination**.
 
-Because the data is distributed across multiple disks, this allows for concurrent read and write operations and significantly improves overall system performance because the system can handle multiple IO requests simultaneously and this reduces the bottleneck of a single disk. By distributing data across multiple disks, RAID can achieve higher read and write speeds in comparison with a single disk. 
+Because the **data is distributed across multiple disks**, this allows for **concurrent read and write operations** and **significantly improves overall system performance because the system can handle multiple IO requests simultaneously** and **this reduces the bottleneck of a single disk**. By distributing data across multiple disks, **RAID can achieve higher read and write speeds in comparison with a single disk**. 
 
-In addition, RAID provides the ability to store redundant data across multiple disks and this allows the system to continue operating even if one or more disks fail. 
+In addition, **RAID provides the ability to store redundant data across multiple disks** and **this allows the system to continue operating even if one or more disks fail**. 
 
 In summary, RAID offers several advantages:
 
-- **Improved performance**: RAID can significantly enhance read and write speeds by distributing IO operations across multiple disks.
-- **Increased reliability**: RAID provides fault tolerance by storing redundant data across multiple disks, allowing the system to recover from disk failures.
-- **Increased storage capacity**: RAID combines the storage capacity of multiple physical disks into a single logical unit, providing a larger total storage capacity.
+- **Improved performance**: RAID can **significantly enhance read and write speeds by distributing IO operations across multiple disks**.
+- **Increased reliability**: RAID provides **fault tolerance by storing redundant data across multiple disks**, allowing the system to recover from disk failures.
+- **Increased storage capacity**: RAID **combines the storage capacity of multiple physical disks into a single logical unit**, **providing a larger total storage capacity**.
 
 There are different RAID levels (e.g., RAID 0, RAID 1, RAID 2, ..., RAID 6) that offer different combinations of performance, reliability, and capacity. Each RAID level employs different techniques for data distribution, redundancy, and fault tolerance.
 
