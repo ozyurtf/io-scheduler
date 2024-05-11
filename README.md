@@ -757,20 +757,30 @@ The idea in here is similar the way **applications** are **restricted** **to spe
 
 ```
          
-    +--------------------------------+
-    |     User-level IO software     |
-    +--------------------------------+
-    | Device-independent OS software |       
-    +--------------------------------+
-    |         Device drivers         |
-    |         +----------------------+        
-    |         |  Interrupt handlers  |
-+---+---------+----------------------+---+
-|               Hardware                 |
-+----------------------------------------+
+                        +--------------------------------+
+                        |     User-level IO software     |
+                        +--------------------------------+
+                        | Device-independent IO software |       
+                        +--------------------------------+
+                        |         Device drivers         |
+                        |         +----------------------+        
+                        |         |  Interrupt handlers  | <-------------+
+   -----------------+---+---------+-----+----------------+---+           | Interrupts
+                    | Device Controller | Device Controller  |           | 
+       Hardware     +-------------------+--------------------+ ----------+
+                    |    IO Device      |     IO Device      |
+   -----------------+-------------------+--------------------+
 ```
 
-If we want to look from more detailed perspective: 
+Interrupt handlers are part of device drivers, which are software components that provide an interface between the operating system and hardware devices. While the interrupt handlers are coded as part of device drivers, they are executed by the CPU, not the device driver itself. The reason for this is that the CPU is the central processing unit responsible for executing instructions and handling interrupts. Device drivers, including their interrupt handlers, are essentially software programs that need to be executed by the CPU. 
+
+When an interrupt occurs, the CPU temporarily suspends its current execution and transfers control to the appropriate interrupt handler routine. This routine is loaded into the CPU's execution pipeline, and the CPU executes the instructions within the interrupt handler. The interrupt handler code is not part of the CPU itself. The CPU is a hardware component, while interrupt handlers are software routines stored in memory (e.g., RAM or ROM). The CPU fetches and executes these instructions from memory.
+
+By having the CPU execute the interrupt handlers, the system can efficiently handle interrupts and perform the necessary actions in response to hardware events or requests. This allows the operating system and device drivers to interact with and control the hardware devices.
+
+In summary, while interrupt handlers are coded as part of device drivers, they are executed by the CPU itself. The CPU temporarily suspends its current task, loads the interrupt handler instructions into its execution pipeline, and executes the handler's code to respond to the interrupt and manage the associated hardware device.
+
+If we want to look the diagram above from a more detailed perspective: 
 
 ```
                User process       
