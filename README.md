@@ -62,7 +62,7 @@ So in summary, we can think the **accelerators** more like a **functional unit**
 
 Okay but who is managing the IO operations and all of these devices ? 
 
-# Operating System and IO 
+# IO and Operating System 
 
 **Operating system** plays the role of an **interface/layer** _(set of rules, and protocols that govern the exchange of data and commands between the applications and hardware devices)_ **between the devices and the rest of the system**. 
 
