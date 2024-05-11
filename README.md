@@ -113,7 +113,7 @@ And the **operating system**, as we mentioned earlier, acts like an **intermedia
 
 Now let's talk about the challenges behind managing IO devices.
 
-# IO Devices: Challenges
+# Challenges in IO Management
 
 Different IO devices perform a wide range of different tasks. 
 
