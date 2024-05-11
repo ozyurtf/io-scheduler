@@ -753,7 +753,7 @@ The idea in here is similar the way **applications** are **restricted** **to spe
       IO Device                 CPU       
 ```
 
-# Operating System Software Layers for IO
+# IO Software Layers
 
 ```
          
