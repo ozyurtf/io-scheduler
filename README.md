@@ -297,9 +297,9 @@ In **memory-mapped IO**, each IO device's registers are mapped to a specific add
 
 When the CPU wants to perform a load operation or store operation on IO device's corresponding control registers in the memory address space, the IO device itselfs monitors these memory accesses. And the range of memory addresses IO device should monitor is predetermined. When a load or store operation is requested within this range, the IO device acts accordingly. 
 
-One note is that: as we explained, **memory mapped IO** **treats control registers** of the IO devices **as memory addresses**. Therefore, **CPU caches can try to cache the values of these control registers from the main memory address space**. And **these cached values** **may not reflect the actual state of the IO device**. In that kind of case, we **observe data corruption** and **incorrect behavior**. 
+One note is that: as we explained, **memory mapped IO** **treats control registers** of the IO devices **as memory addresses**. Therefore, **CPU caches can try to cache the values of these control registers from the main memory address space**. And **these cached values** **may not reflect the actual state of the IO device**. This is because **IO devices can update their control registers independently of the CPU, and the cached values in the CPU may not be aware of these updates**. In that kind of case, we **observe data corruption** and **incorrect behavior**. 
 
-To solve this problem, we can use a mechanism that **disable caching operation** **for certain memory regions**. We can use a **"cache disabled bit"** in the **PTE** and **make the memory addresses that correspond to IO device registers non-cachable**. Through this way, we can ensure that **CPU does not cache the values read from these addresses.**
+To solve this problem, we can use a mechanism that **disable caching operation** **for certain memory regions**. We can use a **"cache disabled bit"** in the **PTE** and **make the memory addresses that correspond to IO device registers non-cachable**. Through this way, we can ensure that **CPU does not cache the values read from these addresses.** and it will always **read the latest values directly from the IO device instead of relying on cached copies**.
 
 The modern computers today use memory-mapped IO method in general.
 
