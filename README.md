@@ -758,13 +758,13 @@ The idea in here is similar the way **applications** are **restricted** **to spe
 ```
          
                         +--------------------------------+
-                        |     User-level IO software     |
+                        |     User-Level IO Software     |
                         +--------------------------------+
-                        | Device-independent IO software |       
+                        | Device-Independent IO Software |       
                         +--------------------------------+
-                        |         Device drivers         |
+                        |         Device Drivers         |
                         |         +----------------------+        
-                        |         |  Interrupt handlers  | <-------------+
+                        |         |  Interrupt Handlers  | <-------------+
    -----------------+---+---------+-----+----------------+---+           | Interrupts
                     | Device Controller | Device Controller  |           | 
        Hardware     +-------------------+--------------------+ ----------+
@@ -772,62 +772,23 @@ The idea in here is similar the way **applications** are **restricted** **to spe
    -----------------+-------------------+--------------------+
 ```
 
-Interrupt handlers are part of device drivers, which are software components that provide an interface between the operating system and hardware devices. While the interrupt handlers are coded as part of device drivers, they are executed by the CPU, not the device driver itself. The reason for this is that the CPU is the central processing unit responsible for executing instructions and handling interrupts. Device drivers, including their interrupt handlers, are essentially software programs that need to be executed by the CPU. 
+## User-Level IO Software
 
-When an interrupt occurs, the CPU temporarily suspends its current execution and transfers control to the appropriate interrupt handler routine. This routine is loaded into the CPU's execution pipeline, and the CPU executes the instructions within the interrupt handler. The interrupt handler code is not part of the CPU itself. The CPU is a hardware component, while interrupt handlers are software routines stored in memory (e.g., RAM or ROM). The CPU fetches and executes these instructions from memory.
+User-level IO software is one of the IO software layer that
+- runs in user space or application space, outside the operating system kernel.
+- provides high-level APIs and libraries for applications to perform IO operations.
+- cannot directly access hardware or interact with device drivers.
+- relies on system calls (kernel APIs) to communicate with the kernel and initiate I/O operations.
 
-By having the CPU execute the interrupt handlers, the system can efficiently handle interrupts and perform the necessary actions in response to hardware events or requests. This allows the operating system and device drivers to interact with and control the hardware devices.
+## Device Independent IO Software
 
-In summary, while interrupt handlers are coded as part of device drivers, they are executed by the CPU itself. The CPU temporarily suspends its current task, loads the interrupt handler instructions into its execution pipeline, and executes the handler's code to respond to the interrupt and manage the associated hardware device.
+There are **several capabilites** that **should be provided by** the **device independent IO software**: 
 
-If we want to look the diagram above from a more detailed perspective: 
-
-```
-               User process       
-                    |
-+-------------------|--------------------------+----------------
-|           +----------------+                 | 
-|           |  User program  |                 |  User space
-|           +----------------+                 |
-+-------------------|--------------------------+----------------
-|                   |                          |
-|   +----------------------------------+       |
-|   |   Rest of the operating system   |       |
-|   +----------------------------------+       |
-|       |           |               |          |
-|   +-------+   +---------+     +------+       |  Kernel space
-|   |Printer|   |Camcorder|     |CDRom |       |
-|   |driver |   |driver   |     |driver|       |  
-|   +-------+   +---------+     +------+       |
-|       |           |               |          |
-+-------|-----------|---------------|----------+----------------
-|       |           |               |          |    
-|       V           V               V          |
-|  +----------+ +----------+  +-----------+    |
-|  |Printer   | |Camcorder |  | CD-Rom    |    |  Hardware
-|  |controller| |controller|  | controller|    |
-|  +----------+ +----------+  +-----------+    |
-|       |           |               |          |
-+-------|-----------|---------------|----------+----------------
-|       |           |               |          | 
-|       V           V               V          |  Devices  
-|    Printer    Camcorder         CD-Rom       |    
-+----------------------------------------------+----------------
-
-```
-
-And here is the **how the workflow looks like** between the **IO software** and the **hardware of the IO device**: 
-
-1) The **IO software initiates an IO request** by making a system call.
-2) The **operating system receives the IO request** and **determines which device driver is responsible for handling the request** based on the device type and the nature of the operation.
-3) The **operating system forwards the IO request to the appropriate device driver**.
-4) The **device driver translates the IO request into device-specific commands** and **communicates with the device controller**.
-5) The **device controller receives the commands from the device driver** and **interacts directly with the IO device to perform the requested operation**.
-6) The **device controller transfers data between the IO device and main memory**, either **through direct memory access (DMA),** or programmed IO.
-7) If the IO operation **generates an interrupt**, the **device controller notifies the device driver through the interrupt mechanism**.
-8) The **device driver handles the interrupt**, **performs any necessary processing**, and **communicates the result or status back to the operating system**.
-9) The operating system receives the result or status from the device driver and returns it to the IO software.
-10) The **IO software receives the result or status and continues its execution**.
+1) It should provide an **interface** through which **different device drivers can interact** _(uniform interfacing for device drvers)_. The main goal in here is to **make all the devices appear the same to the operating system** **regardless of their specific hardware characteristics**. And we can do this by **functions for each group of devices that share similar properties** (e.g., **display devices, storage devices, network devices**, etc.) By **providing this uniform interface**, the **operating system** can **interact** with **different IO devices** **using the same functions** and this **simplifies** the **device management**. Also, the **device independent IO software layer maps the symbolic device names** (e.g., "printer", "disk", et.c) **to the appropriate device drivers**. When the **operating system** wants to **communicate** with a **device**, it uses its **symbolic name** and this **symbolic name** is **translated** to the **corresponding driver**. Through this way, the operating system can **refer** to  **devices** using **logical names** **instead of hardware specific details.**
+2) It should **handle** **buffering of data transfer** between the IO device and operating system _(buffering)_
+3) It should **report any errors** when they occur with the use of IO devices _(error reporting)_
+4) It should be able to **allocate and also release the dedicated devices** when needed.
+5) The **size of the blocks** provided by the IO software **for data transfer** should be **standardized** and **independent from the IO devices**.
 
 ## Device Drivers 
 
@@ -854,6 +815,15 @@ Main functions of IO device drivers:
 - The interrupt is received by the device driver. And the device driver executes the interrupt handler routine. The interrupt handler performs tasks such as acknowledging the interrupt, retrieving data from the device, updating device status, or notifying the operating system about the interrupt event.
 - Device drivers also log events (e.g., status changes, errors, performance metrics, etc.) that are related to the IO device they control.
 - Device drivers is responsible from implementing & controlling power management features such as low-power modes or sleep states to conserve energy when the device is not used actively.
+
+Interrupt handlers are part of device drivers, which are software components that provide an interface between the operating system and hardware devices. While the interrupt handlers are coded as part of device drivers, they are executed by the CPU, not the device driver itself. The reason for this is that the CPU is the central processing unit responsible for executing instructions and handling interrupts. Device drivers, including their interrupt handlers, are essentially software programs that need to be executed by the CPU. 
+
+When an interrupt occurs, the CPU temporarily suspends its current execution and transfers control to the appropriate interrupt handler routine. This routine is loaded into the CPU's execution pipeline, and the CPU executes the instructions within the interrupt handler. The interrupt handler code is not part of the CPU itself. The CPU is a hardware component, while interrupt handlers are software routines stored in memory (e.g., RAM or ROM). The CPU fetches and executes these instructions from memory.
+
+By having the CPU execute the interrupt handlers, the system can efficiently handle interrupts and perform the necessary actions in response to hardware events or requests. This allows the operating system and device drivers to interact with and control the hardware devices.
+
+In summary, while interrupt handlers are coded as part of device drivers, they are executed by the CPU itself. The CPU temporarily suspends its current task, loads the interrupt handler instructions into its execution pipeline, and executes the handler's code to respond to the interrupt and manage the associated hardware device.
+
 
 ```
    Abstract
@@ -884,15 +854,59 @@ Main functions of IO device drivers:
   +--------+
 ```
 
-# Device Independent IO Software
 
-There are **several capabilites** that **should be provided by** the **device independent IO software**: 
+We can see the  workflow between operating system, device drivers, device controllers, and IO devices in the diagram below in more detail:
 
-1) The **software should provide an interface** through which **different device drivers can interact** _(uniform interfacing for device drvers)_. The main goal in here is to **make all the devices appear the same to the operating system** **regardless of their specific hardware characteristics**. And we can do this by **functions for each group of devices that share similar properties** (e.g., **display devices, storage devices, network devices**, etc.) By **providing this uniform interface**, the **operating system** can **interact** with **different IO devices** **using the same functions** and this **simplifies** the **device management**. Also, the **device independent IO software layer maps the symbolic device names** (e.g., "printer", "disk", et.c) **to the appropriate device drivers**. When the **operating system** wants to **communicate** with a **device**, it uses its **symbolic name** and this **symbolic name** is **translated** to the **corresponding driver**. Through this way, the operating system can **refer** to  **devices** using **logical names** **instead of hardware specific details.**
-2) It should **handle** **buffering of data transfer** between the IO device and operating system _(buffering)_
-3) It should **report any errors** when they occur with the use of IO devices _(error reporting)_
-4) It should be able to **allocate and also release the dedicated devices** when needed.
-5) The **size of the blocks** provided by the IO software **for data transfer** should be **standardized** and **independent from the IO devices**.
+```
+               User process       
+                    |
++-------------------|--------------------------+----------------
+|           +----------------+                 | 
+|           |  User program  |                 |  User space
+|           +----------------+                 |
++-------------------|--------------------------+----------------
+|                   |                          |
+|   +----------------------------------+       |
+|   |   Rest of the operating system   |       |
+|   +----------------------------------+       |
+|       |           |               |          |
+|   +-------+   +---------+     +------+       |  Kernel space
+|   |Printer|   |Camcorder|     |CDRom |       |
+|   |driver |   |driver   |     |driver|       |  
+|   +-------+   +---------+     +------+       |
+|       |           |               |          |
++-------|-----------|---------------|----------+----------------
+|       |           |               |          |    
+|       V           V               V          |
+|  +----------+ +----------+  +-----------+    |
+|  |Printer   | |Camcorder |  | CD-Rom    |    |  
+|  |controller| |controller|  | controller|    |
+|  +----------+ +----------+  +-----------+    |
+|       |           |               |          |
++-------|-----------|---------------|----------+  Hardware  
+|       |           |               |          | 
+|       V           V               V          |  
+|   +-------+   +----------+  +-----------+    |
+|   |Printer|   |Camcorder |  |  CD-Rom   |    |  
+|   +-------+   +----------+  +-----------+    |
+|                                              |
++----------------------------------------------+----------------
+
+```
+
+And here is the **how the workflow looks like** between the **IO software** and the **hardware of the IO device**: 
+
+1) The **user-level IO software initiates an IO request** by making a system call.
+2) The **operating system receives the IO request** and **determines which device driver is responsible for handling the request** based on the device type and the nature of the operation.
+3) The **operating system forwards the IO request to the appropriate device driver**.
+4) The **device driver translates the IO request into device-specific commands** and **communicates with the device controller**.
+5) The **device controller receives the commands from the device driver** and **interacts directly with the IO device to perform the requested operation**.
+6) The **device controller transfers data between the IO device and main memory**, either **through direct memory access (DMA),** or programmed IO.
+7) If the IO operation **generates an interrupt**, the **device controller notifies the device driver through the interrupt mechanism**.
+8) The **device driver handles the interrupt**, **performs any necessary processing**, and **communicates the result or status back to the operating system**.
+9) The operating system receives the result or status from the device driver and returns it to the IO software.
+10) The **IO software receives the result or status and continues its execution**.
+
 
 # Examples of IO Devices
 
