@@ -423,7 +423,8 @@ Fetch unit -> Decode unit -> Execute unit
 
 And **when** an **interrupt occurs**, we might **see some instructions that have completed their executions**, **some instructions waiting to enter the pipeline of fetching + decoding + executing**, and **some others that are in the middle of their executions** etc.
 
-In these cases, **when an interrupt occurs**, **the value of the program counter will be pointing to the address of the next instruction** **that will be fetched** **instead of pointing to the address of the instruction that has just completed its execution**.
+**When an interrupt occurs**, **the value of the program counter will be pointing to the address of the next instruction** **that will be fetched** **instead of pointing to the address of the instruction that has just completed its execution**. Because, the program counter is incremented to point to the next instruction to be fetched before the current instruction completes its execution. The PC is not updated to point to the instruction that has just completed execution.
+
 
 In the situation like below,
 
