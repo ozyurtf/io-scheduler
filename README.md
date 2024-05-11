@@ -490,7 +490,14 @@ And another note is that most of the times, the **data coming from the IO device
 ## Programmed IO 
 The simplest form of handling IO operations is to **make the CPU to do all of these IO operations**. This method is called **programmed IO**.
 
-Let's give an example. Assume that you want to **print** the string **"ABCDEFGH"** with printer. 
+Here is how programmed IO works step by step:
+1) CPU initiates the IO operation by sending a command to the IO device. This command is about specifying the IO operation (e.g., read, write)
+2) CPU then continuously checks if the IO device is ready for data transfer (busy-waiting)
+3) Once the IO device becomes available, data transfer is made by the CPU.
+4) This process (checking the availability of IO device continuously and performing data transfer) continues until entire IO operation is complete.
+5) Once the entire IO operation is complete, CPU resumes the execution of the main program.
+
+Let's no give an example. Assume that you want to **print** the string **"ABCDEFGH"** with printer. 
 
 **In the first step**, the **IO software stores this string in buffer in user space**. Then the **user process makes a system call to open the printer**. **If** the **printer** is **currently being used** by another process, this **system call will fail** and either **return an error** to the user process **or will block its system call** **until the printer becomes available** depending on the OS. 
 
