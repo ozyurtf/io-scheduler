@@ -1186,7 +1186,7 @@ Because IO requests are processed strictly based on their arrival time in FIFO, 
 
 ## Shortest Seek Time First (SSTF) 
 
-In Shortest Seek Time First algorithm, the IO request that is closest to the current position of the head and that requires smallest time for the disk to rotate and position the requested sector under the disk head is chosen to be prcoessed in the next step. The way it works is that the IO requests are placed in a queue and each IO request contains information such as block address or the track number that needs to be accessed. And for each request in the queue, SSTF algorithm computes the seek time required to move the disk head from the current position to the requested track and computes how long it takes to rotate and position the requested track under the disk head. These two times are summed and then the IO request that has the shortest time is chosen from the current head position. 
+In Shortest Seek Time First algorithm, the IO request that is closest to the current position of the head is chosen to be prcoessed in the next step. The way it works is that the IO requests are placed in a queue and each IO request contains information such as block address or the track number that needs to be accessed. And for each request in the queue, SSTF algorithm computes the seek time required to move the disk head from the current position to the requested track and computes how long it takes to rotate and position the requested track under the disk head. These two times are summed and then the IO request that has the shortest time is chosen from the current head position. 
 
 ### Pros
 
