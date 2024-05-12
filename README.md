@@ -1222,11 +1222,11 @@ If there IO requests keep coming to the one of the end of the disk, the IO reque
  
 ## Circular Scan (C-SCAN)
 
-In C-SCAN the head moves only in one direction. After the head starts in a direction, it services the IO requests in that direction based on the shortest seek time. After reaching the last IO request in that direction, it basically returns back to the IO request at the beginning and continue servicing the IO requests in the original direction again. 
+In C-SCAN the head moves only in one direction. After the head starts in a direction, it services the IO requests in that direction based on the shortest seek time. After reaching the last track in that direction, it basically returns back to the IO request at the beginning and continue servicing the IO requests in the original direction again. 
 
 ### Pros
 
-The main advantage of C-SCAN algorithm over the SCAN is that C-SCAN provides more uniform waiting for the IO requests. By returning to the first IO request in the disk instead of reversing the direction, the algorithm ensures that thew waiting time for the IO requests is more evenly distributed. This feature is especially beneficial when there is a high number of IO requests in one end of the disk. 
+The main advantage of C-SCAN algorithm over the SCAN is that C-SCAN provides more uniform waiting for the IO requests. By returning to the first IO request in the disk instead of reversing the direction, the algorithm ensures that the waiting time for the IO requests is more evenly distributed. This feature is especially beneficial when there is a high number of IO requests in one end of the disk. 
 
 By returning to the beginning of the disk after each sweep, the C-SCAN algorithm ensures that requests located at the beginning or middle of the disk have a chance to be serviced sooner.
 
