@@ -1531,8 +1531,6 @@ In RAID 6, data availability is the highest because parity information is comput
 
 The conclusion we can arrive in here is that distributing data across the disks increases the data transfer amount for read operations. Similarly as we divide data into smaller and smaller units before distributing them, we obtain higher data transfer amount for read operations. In addition, putting the parity blocks across multiple disks is something that decreases the data transfer amount in write operations. In RAID 2 and 3, we distribute the parity blocks across disks as well but the unit of data is bit in those cases. That's why thye data transfer amount is still highest in these configurations.
 
-### Small IO Request Rate
-
 # Logical Volume Manager (LVM) 
 
 LVM is a **storage management system**. It basically **creates a logical view of the storage devices** and **provides abstracted way to manage disk storage**.
