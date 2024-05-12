@@ -1574,7 +1574,7 @@ Cache memory takes advantage of the **principle of locality**. And **locality** 
 +--------------------+
 ```
 
-# Solid State Drive and Flash Memory 
+# Solid State Drive (SSD)
 
 **Solid State Drive (SSD) is a storage device**. It **doesn't contain any mechanical parts** unlike hard disk drives and it is **entirely electronic.** It is **made out of** **FLASH memory** which is basically **non-volatile memory that retains data even when power is turned off**.
 
