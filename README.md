@@ -1617,23 +1617,24 @@ And **write** operation is basically the **combination of erase and program oper
 
 # Difference Between SSDs and Hard Drives
 
-**Construction/Data Organization**: **Hard disk drives use mechanical components** such as **disk heads**, **cylinders**, **spindles**, etc. And **data is organized as tracks and sectors**. 
+## Construction/Data Organization 
+
+**Hard disk drives use mechanical components** such as **disk heads**, **cylinders**, **spindles**, etc. And **data is organized as tracks and sectors**. 
 
 **SSDs**, however, **use flash memory chips**. **Data is organized as blocks** and there is **no spinning component**. **Reading and writing are handled electronically**. 
 
-**Read Performance**: **Accessing data** from **non-contiguous** or **non-sequential** **locations on the storage device** is called **random read**. And **accessing data from contiguous or sequential locations on the storage device** is called **sequential read**. 
+## Read Performance 
+
+**Accessing data** from **non-contiguous** or **non-sequential** **locations on the storage device** is called **random read**. And **accessing data from contiguous or sequential locations on the storage device** is called **sequential read**. 
 
 Because **hard disk drives use spinning disks and moving read/write heads**, **the heads have to move and seek to different locations** on the disk platters. In addition, **the head may still need to wait for the desired sector to rotate under the head** once the head is over the right track. That's why **hard disk drives have slow random reads**. 
 
-In addition, pre-fetching is a technique where the hard drive controller or the operating system anticipates that the next data to be read will be the one following the current block being read. In other words, it predicts that the read operation will continue sequentially.
-
-Pre-fetching can be initiated by the operating system. In this case, the OS keeps track of the read patterns and notices when an application is performing sequential reads. It then instructs the hard drive to **pre-fetch the next block of data in advance, so that it's readily available when needed.**
-
-**Pre-fetching can also be implemented within the hard drive itself.** **Modern hard drives have built-in caches and intelligent controllers** that can detect sequential read patterns. **When the controller identifies a sequential read operation**, **it automatically pre-fetches the next block of data** and **stores it in the drive's cache**, **anticipating that it will be requested next.**
+**Pre-fetching can be implemented within the hard drive itself.** _(Pre-fetching is a technique where the hard drive controller or the operating system anticipates that the next data to be read will be the one following the current block being read. In other words, it predicts that the read operation will continue sequentially. Pre-fetching can be initiated by the operating system. If it is initiated by the operating system, operating system keeps track of the read patterns and notices when an application is performing sequential reads. It then instructs the hard drive to **pre-fetch the next block of data in advance, so that it's readily available when needed.**)_ **Modern hard drives have built-in caches and intelligent controllers** that can detect sequential read patterns. **When the controller identifies a sequential read operation**, **it automatically pre-fetches the next block of data** and **stores it in the drive's cache**, **anticipating that it will be requested next.**
 
 **SSDs are based on flash memory** which **don't have any moving mechanical components**. Because **data can be read electronically from any location with similar latencies**, and **because** there is **no mechanical seek time involved** since data locations are addressed electronically by the SSD controller, and lastly **because SSDs don't have rotating disks and rotational latency delays**, **SSDs have fast random and sequential reads**.
 
-**Write Performance**: Just like random reads, **writing to random non-contiguous locations requires the disk heads to move and seek to different locations on the disk platters.** And similarly, **the head may need to wait for the desired sector to rotate under the head** once the head is over the right track. That's why **hard disk drives have slow random writes.** 
+## Write Performance 
+Just like random reads, **writing to random non-contiguous locations requires the disk heads to move and seek to different locations on the disk platters.** And similarly, **the head may need to wait for the desired sector to rotate under the head** once the head is over the right track. That's why **hard disk drives have slow random writes.** 
 
 Although **SSDs have fast random and sequential reads**, it has **slow random writes as well**. Because of flash memory, **if we want to write data to SSD,** **an entire block must be erased before this**. **This erase operation takes time.** And because of this erase operation, the **writing process is slower in SSDs compared to HDDs.** 
 
@@ -1648,11 +1649,15 @@ The combination of disk caching and write coalescing helps buffer a few writes b
 
 These techniques help mitigate the performance impact of write operations, especially when dealing with many small, random writes. By buffering the writes in the disk cache and coalescing them at the OS level, the hard drive can optimize the write operations and improve overall system performance.
 
-**Failures**: HDDs can experience complete disk failure. If a **mechanical component of HDDs such as spindle motors, arms, read/write heads**, etc. **fail** (if the read/write heads make physical contact with the disk platters it can cause a big damage and complete disk failure) the **entire disk can become unusable.**
+## Failures 
+
+HDDs can experience complete disk failure. If a **mechanical component of HDDs such as spindle motors, arms, read/write heads**, etc. **fail** (if the read/write heads make physical contact with the disk platters it can cause a big damage and complete disk failure) the **entire disk can become unusable.**
 
 Since **SSDs do not have moving mechanical components**, **they are built with electronic Flash memory**, and **data is stored in individual blocks**, **SSDs experience block failures which means a failure affects individual blocks rather than entire SSD**.
 
-**Recovery/Failure Prevention**: For HDDs, **recovery/failure prevention is implemented at the array** (a group of multiple HDDs that are combined to work together as a single logical unit) **level**. This is commonly known as a **RAID configuration**. So **when a drive in the RAID array fails**, the **array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives**. This is what is meant by "recovery is implemented at the array level".
+## Recovery/Failure Prevention
+
+For HDDs, **recovery/failure prevention is implemented at the array** (a group of multiple HDDs that are combined to work together as a single logical unit) **level**. This is commonly known as a **RAID configuration**. So **when a drive in the RAID array fails**, the **array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives**. This is what is meant by "recovery is implemented at the array level".
 
 For SSDs, **the recovery** can be done at **disk level** or **array level**. 
 
@@ -1671,7 +1676,9 @@ However, it's important to note that array level methods are equally important a
 
 As SSD technology continues to evolve, both disk level and array level methods are being continuously improved and new techniques are being developed to enhance the reliability, performance, and data protection capabilities of SSDs and storage systems.
 
-**Striping for Arrays**: Because **HDDs have mechanical components** and **these mechanical components require some time to move from location A to location B**, **HDDs typically prefer large stripe size** because **if it chooses small stripe** size, the **disk head has to move quite frequently** for small amount of data and **this would not be convenient and efficient**. 
+## Striping for Arrays
+
+Because **HDDs have mechanical components** and **these mechanical components require some time to move from location A to location B**, **HDDs typically prefer large stripe size** because **if it chooses small stripe** size, the **disk head has to move quite frequently** for small amount of data and **this would not be convenient and efficient**. 
 
 **SSDs**, on the other hand, **prefer smaller stripe sizes**. **With smaller stripe sizes**, **IO operations can be spread across multiple disks more effectively**, **enabling higher levels of parallelism and improved overall performance**. **When data is written to an SSD in a RAID array**, **only the affected stripes need to be updated**. **With smaller stripe sizes**, **the amount of data that needs to be rewritten during an update operation is minimized**.
 
