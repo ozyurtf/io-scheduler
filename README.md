@@ -1686,7 +1686,7 @@ Because **HDDs have mechanical components** and **these mechanical components re
 
 # IO Scheduler Changes
 
-In **SSDs**, there is **no read/write head**, that's why there is **no seek time**. Also, **regardless of the location of the block**, **accessing to any block takes nearly same time**. That's why **IO schedulers focus on reducing the amount of time that is spent for write operation rather than optimizing for seek time**.
+In **SSDs**, there is **no read/write head**, that's why there is **no seek time**. Also, **regardless of the location of the block**, **accessing to any block takes nearly same time**. That's why in SSDs, **IO schedulers focus on reducing the amount of time that is spent for write operation rather than optimizing for seek time**.
 
 Imagine **writing a multiple 4KB blocks**. 
 - **Writing to 1st 4KB block**: **SSD needs to read the entire 128KB block that contains the target page**, **erase the block**, and then **write the updated 128KB block back to the SSD**
