@@ -1540,7 +1540,7 @@ LVM is a **storage management system**. It basically **creates a logical view of
 **Key components** of LVM: 
 1) **Physical Volumes:** **Physical storage devices** that LVM uses as the **building blocks** to **create logical volumes**. The physical volumes can be **entire disks** or **partitions on a disk**. Physical volume can be seen as the **lowest level of abstraction in LVM** and it **represents the actual physical storage devices that LVM will engage/manage**.
 2) **Volume Groups**: A **collection of one or more physical volumes**. And the **logical volumes can be created from this collection**. **Volume groups allow you to combine multiple physical volumes into a single logical unit** and **this provide flexibility and scalability**. The **volume group acts as a pool of storage that can be divided into logical volumes.** 
-3) **Logical Volumes**: **Virtual partitions that are created from a volume group**. They are the **entities that are used to store data, create file systems, and mount them**. Logical volumes can be **created, resized, and managed independently of the underlying storage layout**.
+3) **Logical Volumes**: **Virtual partitions that are created from a volume group**. They are the **entities that are used to store data, create file systems, and mount them**. Logical volumes can be **created, resized, and managed independent from the underlying storage layout**.
 
 When **operating system performs IO operations on a logical volume**, **LVM maps these IO requests to the appropriate physical volumes**. And **when an IO request is made to the logical volume**, **LVM uses this metadata** and **determines which physical volume(s) contain the requested data**. 
 
