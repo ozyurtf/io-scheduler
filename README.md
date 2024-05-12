@@ -1283,20 +1283,13 @@ Finding the last IO request.
 
 The idea behind FSCAN is quite similar to the SCAN. The only difference is that the algorithm operates with two queues: active queue and add queue. We can see add queue as waiting queue. 
 
-Any new IO request is basically added to this add queue. And IO is scheduled only from the active queue. If the active queue is empty, this means that there is no active IO operation and the IO requests that are waiting in the add queue is transferred to the active queue. Next, an IO is scheduled from the active queue depending on the current direction of the disk head and shortest seek time. 
+Any new IO request is basically added to this add queue. And IO is scheduled only from the active queue. If the active queue is empty, this means that there is no active IO operation and the IO requests that are waiting in the add queue are transferred to the active queue. Next, an IO is scheduled from the active queue depending on the current direction of the disk head and shortest seek time. 
 
 Once the disk head reaches the end of the disk, the direction is reversed and IO requests keep being scheduled based on shortest seek time but this time in reverse order.
 
-### Pros 
-
-### Cons
-
 ## FLOOK 
+
 This is similar to the FSCAN. Here we have maintain two queues as well. The only difference is that the disk only goes to the last IO request in th disk and only then reverses its direction.
-
-### Pros
-
-### Cons
 
 ## Deadline Scheduler
 
