@@ -1659,6 +1659,8 @@ Since **SSDs do not have moving mechanical components**, **they are built with e
 
 For HDDs, **recovery/failure prevention is implemented at the array** (a group of multiple HDDs that are combined to work together as a single logical unit) **level**. This is commonly known as a **RAID configuration**. So **when a drive in the RAID array fails**, the **array can continue to function and data can be reconstructed or recovered using the redundant information that is stored in other drives**. This is what is meant by "recovery is implemented at the array level".
 
+HDDs have limited options for disk-level recovery due to their mechanical nature and the tight coupling between the components. If a critical mechanical component fails, such as the motor, spindle, or head actuator, it often renders the entire disk inoperable, making disk-level recovery challenging or impossible. Even if a specific sector or track becomes unreadable, it is difficult to isolate and recover data from that particular area without affecting the entire disk.
+
 For SSDs, **the recovery** can be done at **disk level** or **array level**. 
 
 **Disk level methods** refer to the **techniques and mechanisms implemented within an individual SSD** to **ensure data integrity**, **prevent failures**, and **facilitate data recovery**. **These methods are specific to each SSD** and are **handled by the SSD controller and firmware**. Examples of disk level methods include:
