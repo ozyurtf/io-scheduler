@@ -1596,7 +1596,7 @@ To overcome these limitations and enable faster and more frequent programming an
 
 SSDs are electronic storage devices that use FLASH memory, which evolved from earlier memory technologies like RAM, EPROM, and EEPROM. FLASH memory addressed the limitations of EEPROMs by allowing random programming and erasing of blocks, making it suitable for faster and more frequent data updates. The term 'ROM' is used because entire blocks need to be erased before they can be reprogrammed, even though individual memory locations can be read arbitrarily. The evolution of technology has led to the widespread adoption of SSDs as a high-performance and reliable storage solution.
 
-# Flash Chip 
+## Flash Chip 
 In flash memory, the **smallest programmable unit of data is called page**. It is a **contiguous block of memory cells that can be written to in a single programming operation**. In other words, all the memory cells in a page are written to at the same time. The size of page might be around 2KB, 4KB, 8KB, or 16KB. 
 
 In FLASH memory, the **programming operation** involves **changing the state of individual memory cells from 1** (erased state) **to 0** (programmed state). This is **done by applying a high voltage to the memory cell**, which **causes electrons to be injected into the floating gate of the cell**, **changing its threshold voltage**.
