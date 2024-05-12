@@ -1295,11 +1295,11 @@ This is similar to the FSCAN. Here we have maintain two queues as well. The only
 
 The algorithm assigns a deadline to an IO request whenever it receives that IO request. This deadline basically means the maximum time until which the IO request should be serviced. Through this way, the algorithm guarantees that each IO request will be processed within a specific time limit. 
 
-For example, for read operations, the deadline scheduler typically gives the expiration time of 500ms since the read operations are generally more urgent. Write operationsm, on the other hand, are typically given 5 seconds of expiration time. 
+For example, for read operations, the deadline scheduler typically gives the expiration time of 500ms since the read operations are generally more urgent. Write operations, on the other hand, are typically given 5 seconds of expiration time. 
 
 The deadline scheduler algorithm maintains 3 different queues: read queue, write queue, and sorted queue. The IO requests in the sorted queue are sorted based on the sector numbers of the IO requests on the disk. The sorted queue allows the scheduler to optimize the seek time by servicing the IO requests that are physically closer to each other. 
 
-If an IO requet is expired, the deadlien scheduler services that IO request immediately. If there is no IO request that is expired, the scheduler selectes a batch of IO requests from the sorted queue. 
+If an IO requet is expired, the deadline scheduler services that IO request immediately. If there is no IO request that is expired, the scheduler selectes a batch of IO requests from the sorted queue. 
 
 ## Completely Fair Queueing (CFQ)
 
@@ -1307,7 +1307,7 @@ The algorithm maintains a queue for each process separately. And when an IO requ
 
 An example of a process might be web server process, database server process, video encoding process, etc. 
 
-After that, the algorithm assigns a timeslice to each of these process queues. This timeslice determines the amount of time that a queue can access the disk. By allocating these timeslices, the algorithm ensrues that all processes get a fair share of disk access time and this prevents one process from using the disk excessively. 
+After that, the algorithm assigns a timeslice to each of these process queues. This timeslice determines the amount of time that a queue can access the disk. By allocating these timeslices, the algorithm ensures that all processes get a fair share of disk access time and this prevents one process from using the disk excessively. 
 
 And to determine the length of timeslice to assign these queues, the algorithm takes the IO priority of each process into account. As we might expect, if a process has higher priority, its queue gets larger timeslice. 
 
